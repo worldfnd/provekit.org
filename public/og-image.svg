@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="bg" cx="80%" cy="80%" r="60%">
+      <stop offset="0%" stop-color="#A2D0FC" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#F8FEFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#F8FEFF"/>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="80" y="160" font-family="Outfit, sans-serif" font-size="22" letter-spacing="2" fill="#6E6E6E">PROVEKIT</text>
+  <text x="80" y="320" font-family="Outfit, sans-serif" font-size="80" font-weight="500" fill="#2D2D2B">Client-side</text>
+  <text x="80" y="410" font-family="Outfit, sans-serif" font-size="80" font-weight="500" fill="#2D2D2B">zero-knowledge.</text>
+  <text x="80" y="540" font-family="Geist Mono, monospace" font-size="22" letter-spacing="2" fill="#6E6E6E">CARGO INSTALL PROVEKIT-CLI</text>
+</svg>
