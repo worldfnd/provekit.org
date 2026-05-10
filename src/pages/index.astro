@@ -2,6 +2,7 @@
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import TopBar from '~/components/nav/TopBar.astro';
 import Hero from '~/components/hero/Hero.astro';
+import InstallScript from '~/components/install/InstallScript.astro';
 ---
 
 <BaseLayout
@@ -15,7 +16,9 @@ import Hero from '~/components/hero/Hero.astro';
     <section aria-labelledby="hero-title" class="pk-gutter">
       <Hero />
     </section>
-    <section aria-labelledby="install-title" class="pk-gutter"></section>
+    <section aria-labelledby="install-title" class="pk-gutter">
+      <InstallScript />
+    </section>
     <section aria-labelledby="features-title" class="pk-gutter"></section>
     <section aria-labelledby="credit-title" class="pk-gutter"></section>
     <section aria-labelledby="benchmarks-title" class="pk-gutter"></section>

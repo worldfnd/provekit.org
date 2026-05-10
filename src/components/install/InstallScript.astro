@@ -1,0 +1,37 @@
+---
+const command = 'cargo install provekit-cli';
+---
+
+<div class="grid gap-12 py-24 md:grid-cols-2 md:items-center">
+  <div>
+    <p class="pk-eyebrow pk-reveal">INSTALL SCRIPT</p>
+    <h2 id="install-title" class="pk-h2 pk-reveal mt-4">
+      To install Provekit, run this simple install script.
+    </h2>
+    <p class="pk-body pk-reveal mt-6 max-w-md">
+      Discover Provekit. Check out the comprehensive guide for a seamless introduction and
+      installation.
+    </p>
+    <a href="#" class="pk-btn pk-btn--primary pk-reveal mt-8" data-todo="guide">Read Guide</a>
+  </div>
+
+  <figure
+    class="pk-reveal relative overflow-hidden rounded-md border border-[color:var(--color-line)] bg-white"
+  >
+    <figcaption
+      class="flex items-center justify-between border-b border-[color:var(--color-line)] px-4 py-3"
+    >
+      <span class="pk-mono text-xs text-[color:var(--color-mute)]">BASH</span>
+      <button
+        type="button"
+        class="pk-mono text-xs text-[color:var(--color-mute)] hover:text-[color:var(--color-ink)]"
+        data-copy={command}
+        aria-label="Copy install command"
+      >
+        <span data-copy-label>Copy</span>
+      </button>
+    </figcaption>
+    <pre
+      class="overflow-x-auto px-5 py-6 font-mono text-base text-[color:var(--color-ink)]"><code>{command}</code></pre>
+  </figure>
+</div>
