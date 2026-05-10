@@ -1,38 +1,31 @@
 ---
-const data = [
-  { metric: 'Proving time', toolkit1: 60, toolkit2: 78, provekit: 100 },
-  { metric: 'Memory footprint', toolkit1: 70, toolkit2: 65, provekit: 95 },
-  { metric: 'Verifier gates', toolkit1: 55, toolkit2: 72, provekit: 88 },
-];
-
 const series = [
-  { key: 'toolkit1', label: 'Toolkit A', color: 'var(--color-toolkit-1)' },
-  { key: 'toolkit2', label: 'Toolkit B', color: 'var(--color-toolkit-2)' },
-  { key: 'provekit', label: 'Provekit', color: 'var(--color-toolkit-3)' },
+  { key: 'toolkit1', label: 'TOOLKIT 1', color: 'var(--color-toolkit-1)' },
+  { key: 'toolkit2', label: 'TOOLKIT 2', color: 'var(--color-toolkit-2)' },
+  { key: 'provekit', label: 'PROVEKIT', color: 'var(--color-toolkit-3)' },
 ] as const;
+
+// One bar per metric, in the toolkit colour assigned to that metric (from Figma).
+const bars = [
+  { metric: 'METRIC 1', width: 28, color: 'var(--color-toolkit-1)' },
+  { metric: 'METRIC 2', width: 60, color: 'var(--color-toolkit-2)' },
+  { metric: 'METRIC 3', width: 92, color: 'var(--color-toolkit-3)' },
+];
 ---
 
-<figure class="space-y-6" aria-labelledby="bench-chart-label">
+<figure class="space-y-8" aria-labelledby="bench-chart-label">
   <figcaption id="bench-chart-label" class="sr-only">
-    Illustrative benchmark comparison; higher is better. {
-      data.map((row) => (
-        <span>
-          {row.metric}:{' '}
-          {series
-            .map((s, i) => `${s.label} ${row[s.key]}${i < series.length - 1 ? ', ' : ''}`)
-            .join('')}
-          .{' '}
-        </span>
-      ))
-    } Numbers are illustrative until full methodology is published.
+    Illustrative benchmark comparison; longer bars are better. {
+      bars.map((b) => `${b.metric.toLowerCase()} bar reaches ${b.width}%`).join('. ')
+    }. Numbers are illustrative until full methodology is published.
   </figcaption>
 
-  <div class="pk-mono flex flex-wrap items-center gap-4 text-xs" aria-hidden="true">
+  <div class="flex flex-wrap items-center gap-3">
     {
       series.map((s) => (
-        <span class="inline-flex items-center gap-2">
-          <span class="inline-block h-2 w-6 rounded-full" style={`background:${s.color}`} />
-          {s.label.toUpperCase()}
+        <span class="pk-eyebrow">
+          <span class="mr-2 inline-block h-2 w-2 rounded-sm" style={`background:${s.color}`} />
+          {s.label}
         </span>
       ))
     }
@@ -40,21 +33,12 @@ const series = [
 
   <div class="space-y-5" aria-hidden="true">
     {
-      data.map((row) => (
-        <div>
-          <div class="pk-mono mb-2 text-xs text-[color:var(--color-mute)]">
-            {row.metric.toUpperCase()}
+      bars.map((b) => (
+        <div class="flex items-center gap-4">
+          <div class="h-4 flex-1 overflow-hidden rounded-sm bg-[color:var(--color-line-soft)]">
+            <div class="h-full rounded-sm" style={`width:${b.width}%;background:${b.color}`} />
           </div>
-          <div class="space-y-1.5">
-            {series.map((s) => (
-              <div class="h-3 rounded-full bg-[color:var(--color-line-soft)]">
-                <div
-                  class="h-full rounded-full"
-                  style={`width:${row[s.key]}%;background:${s.color}`}
-                />
-              </div>
-            ))}
-          </div>
+          <span class="pk-mono w-20 text-xs text-[color:var(--color-mute)]">{b.metric}</span>
         </div>
       ))
     }

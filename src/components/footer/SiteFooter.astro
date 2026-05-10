@@ -1,61 +1,45 @@
 ---
 const product = [
-  { label: 'Docs', href: '#', todo: 'docs' },
-  { label: 'Guide', href: '#', todo: 'guide' },
-  { label: 'Benchmarks', href: '#', todo: 'benchmarks' },
+  { label: 'DOCS', href: '#', todo: 'docs' },
+  { label: 'GUIDE', href: '#', todo: 'guide' },
+  { label: 'BENCHMARKS', href: '#', todo: 'benchmarks' },
 ];
 const community = [
-  { label: 'Telegram', href: '#', todo: 'telegram' },
-  { label: 'Twitter', href: '#', todo: 'twitter' },
-  { label: 'GitHub', href: '#', todo: 'github' },
+  { label: 'TELEGRAM', href: '#', todo: 'telegram' },
+  { label: 'TWITTER', href: '#', todo: 'twitter' },
+  { label: 'GITHUB', href: '#', todo: 'github' },
 ];
 const year = new Date().getFullYear();
 ---
 
 <div class="border-t border-[color:var(--color-line)] py-16">
-  <div class="grid gap-12 md:grid-cols-3 md:items-start">
+  <div class="grid gap-12 md:grid-cols-[1fr_auto] md:items-start">
     <div>
       <a href="/" class="pk-mono text-sm font-medium tracking-[0.12em]">PROVEKIT</a>
       <p class="pk-body mt-4 max-w-xs text-base">
         Client-side zero-knowledge, built for the real world.
       </p>
     </div>
-    <nav aria-label="Product" class="space-y-3">
-      <h3 class="pk-mono text-xs text-[color:var(--color-mute)]">PRODUCT</h3>
-      <ul class="space-y-2">
+    <div class="flex flex-wrap items-start gap-12 md:flex-nowrap">
+      <nav aria-label="Product" class="flex flex-col items-start gap-2">
         {
           product.map((l) => (
-            <li>
-              <a
-                href={l.href}
-                class="pk-mono text-sm hover:text-[color:var(--color-brand)]"
-                data-todo={l.todo}
-              >
-                {l.label}
-              </a>
-            </li>
+            <a href={l.href} class="pk-eyebrow" data-todo={l.todo}>
+              {l.label}
+            </a>
           ))
         }
-      </ul>
-    </nav>
-    <nav aria-label="Community" class="space-y-3">
-      <h3 class="pk-mono text-xs text-[color:var(--color-mute)]">COMMUNITY</h3>
-      <ul class="space-y-2">
+      </nav>
+      <nav aria-label="Community" class="flex flex-col items-start gap-2">
         {
           community.map((l) => (
-            <li>
-              <a
-                href={l.href}
-                class="pk-mono text-sm hover:text-[color:var(--color-brand)]"
-                data-todo={l.todo}
-              >
-                {l.label}
-              </a>
-            </li>
+            <a href={l.href} class="pk-eyebrow" data-todo={l.todo}>
+              {l.label}
+            </a>
           ))
         }
-      </ul>
-    </nav>
+      </nav>
+    </div>
   </div>
   <p class="pk-mono mt-12 text-xs text-[color:var(--color-mute)]">
     © {year} Provekit · World × Atheon × Reilabs

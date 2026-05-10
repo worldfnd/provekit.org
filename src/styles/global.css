@@ -60,11 +60,22 @@
   }
 
   .pk-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding-inline: 12px;
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+    color: var(--color-ink);
     font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-mute);
+  }
+  .pk-eyebrow--solid {
+    background: var(--color-brand);
+    color: #fff;
+    border-color: var(--color-brand);
   }
 
   .pk-display {
@@ -124,6 +135,13 @@
   }
   .pk-btn--primary:hover {
     background: var(--color-brand-hover);
+  }
+  .pk-btn--secondary {
+    background: #f3f3f3;
+    color: var(--color-ink);
+  }
+  .pk-btn--secondary:hover {
+    background: #e8e8e8;
   }
   .pk-btn--ghost {
     background: transparent;

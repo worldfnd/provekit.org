@@ -22,7 +22,7 @@ const points = [
 <div class="py-24">
   <div class="grid gap-12 md:grid-cols-2 md:items-start">
     <div>
-      <p class="pk-eyebrow pk-reveal">BENCHMARKS</p>
+      <p class="pk-reveal"><span class="pk-eyebrow">BENCHMARKS</span></p>
       <h2 id="benchmarks-title" class="pk-h2 pk-reveal mt-4">
         A client-side ZK toolkit that excels in every aspect.
       </h2>
@@ -30,7 +30,9 @@ const points = [
         {
           points.map((p) => (
             <li class="grid grid-cols-[auto_1fr] gap-4">
-              <span class="pk-mono text-sm text-[color:var(--color-mute)]">{p.n}</span>
+              <span class="pk-mono text-sm" style="color:var(--color-brand)">
+                {p.n}
+              </span>
               <div>
                 <div class="pk-mono text-sm">{p.title}</div>
                 <p class="pk-body mt-2 text-base">{p.body}</p>
@@ -50,29 +52,17 @@ const points = [
     </div>
   </div>
 
-  <!-- +36% / +24% headline strip -->
-  <div class="pk-reveal mt-12 grid w-full grid-cols-1 gap-0 md:grid-cols-2">
+  <!-- +36% / +24% headline strip — plain white panels with thin border, no bloom -->
+  <div
+    class="pk-reveal mt-12 grid w-full grid-cols-1 border border-[color:var(--color-line)] md:grid-cols-2"
+  >
     <div
-      class="relative flex items-center justify-center overflow-hidden border border-[color:var(--color-line)] bg-white px-6 py-12 md:py-16"
+      class="flex items-center justify-center border-[color:var(--color-line)] bg-white px-6 py-12 md:border-r md:py-16"
     >
-      <span
-        class="absolute inset-0 -z-0 block opacity-90"
-        style="background: radial-gradient(closest-side at 50% 60%, var(--color-bloom-cyan) 0%, transparent 70%); filter: blur(40px);"
-        aria-hidden="true"></span>
-      <span class="pk-display relative z-10 text-[clamp(48px,5vw,72px)]"
-        ><span class="font-semibold">+36%</span> Faster</span
-      >
+      <span class="pk-display text-[clamp(48px,5vw,72px)]">+36% Faster</span>
     </div>
-    <div
-      class="relative flex items-center justify-center overflow-hidden border border-[color:var(--color-line)] bg-white px-6 py-12 md:border-l-0 md:py-16"
-    >
-      <span
-        class="absolute inset-0 -z-0 block opacity-90"
-        style="background: radial-gradient(closest-side at 50% 60%, var(--color-bloom-orange) 0%, transparent 70%); filter: blur(40px);"
-        aria-hidden="true"></span>
-      <span class="pk-display relative z-10 text-[clamp(48px,5vw,72px)]"
-        ><span class="font-semibold">+24%</span> Lighter</span
-      >
+    <div class="flex items-center justify-center bg-white px-6 py-12 md:py-16">
+      <span class="pk-display text-[clamp(48px,5vw,72px)]">+24% Lighter</span>
     </div>
   </div>
 </div>

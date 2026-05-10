@@ -10,11 +10,11 @@ const open = index === 0;
 
 <details class="group border-b border-[color:var(--color-line)] py-6" open={open}>
   <summary class="flex cursor-pointer list-none items-center justify-between gap-6">
-    <span class="pk-h3">{q}</span>
-    <span
-      class="pk-mono text-xl text-[color:var(--color-mute)] transition-transform group-open:rotate-45"
-      aria-hidden="true">+</span
-    >
+    <span class="pk-h3 font-semibold">{q}</span>
+    <span class="pk-mono text-xl text-[color:var(--color-ink)]" aria-hidden="true">
+      <span class="group-open:hidden">→</span>
+      <span class="hidden group-open:inline">−</span>
+    </span>
   </summary>
   <p class="pk-body mt-4 max-w-3xl">{a}</p>
 </details>
