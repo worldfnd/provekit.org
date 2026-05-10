@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import TopBar from '~/components/nav/TopBar.astro';
+import Hero from '~/components/hero/Hero.astro';
 ---
 
 <BaseLayout
@@ -11,7 +12,9 @@ import TopBar from '~/components/nav/TopBar.astro';
     <TopBar />
   </header>
   <main id="main">
-    <section aria-labelledby="hero-title" class="pk-gutter"></section>
+    <section aria-labelledby="hero-title" class="pk-gutter">
+      <Hero />
+    </section>
     <section aria-labelledby="install-title" class="pk-gutter"></section>
     <section aria-labelledby="features-title" class="pk-gutter"></section>
     <section aria-labelledby="credit-title" class="pk-gutter"></section>
