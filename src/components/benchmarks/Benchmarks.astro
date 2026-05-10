@@ -1,0 +1,49 @@
+---
+import BenchmarkChart from './BenchmarkChart.astro';
+const points = [
+  {
+    n: '1.',
+    title: 'Proving time',
+    body: 'Provekit generates proofs ~36% faster than comparable client-side toolkits on commodity hardware.',
+  },
+  {
+    n: '2.',
+    title: 'Memory footprint',
+    body: 'A streamlined Rust core keeps the resident set ~24% lighter than the next nearest toolkit.',
+  },
+  {
+    n: '3.',
+    title: 'Verification cost',
+    body: 'Verifier circuits compile to a fraction of the gate count, keeping cost low on chain and off.',
+  },
+];
+---
+
+<div class="grid gap-12 py-24 md:grid-cols-2 md:items-start">
+  <div>
+    <p class="pk-eyebrow pk-reveal">BENCHMARKS</p>
+    <h2 id="benchmarks-title" class="pk-h2 pk-reveal mt-4">
+      A client-side ZK toolkit that excels in every aspect.
+    </h2>
+    <ol class="pk-reveal mt-10 space-y-8">
+      {
+        points.map((p) => (
+          <li class="grid grid-cols-[auto_1fr] gap-4">
+            <span class="pk-mono text-sm text-[color:var(--color-mute)]">{p.n}</span>
+            <div>
+              <div class="pk-mono text-sm">{p.title}</div>
+              <p class="pk-body mt-2 text-base">{p.body}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+    <a href="#" class="pk-btn pk-btn--ghost pk-reveal mt-10" data-todo="benchmarks"
+      >All Benchmarks</a
+    >
+  </div>
+
+  <div class="pk-reveal rounded-md border border-[color:var(--color-line)] bg-white p-8">
+    <BenchmarkChart />
+  </div>
+</div>

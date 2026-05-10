@@ -1,0 +1,60 @@
+---
+const data = [
+  { metric: 'Metric 1', toolkit1: 60, toolkit2: 78, provekit: 100 },
+  { metric: 'Metric 2', toolkit1: 70, toolkit2: 65, provekit: 95 },
+  { metric: 'Metric 3', toolkit1: 55, toolkit2: 72, provekit: 88 },
+];
+const colors = {
+  toolkit1: 'var(--color-toolkit-1)',
+  toolkit2: 'var(--color-toolkit-2)',
+  provekit: 'var(--color-toolkit-3)',
+};
+---
+
+<figure class="space-y-6" aria-label="Benchmark comparison">
+  <div class="pk-mono flex flex-wrap items-center gap-4 text-xs">
+    {
+      (['toolkit1', 'toolkit2', 'provekit'] as const).map((k) => (
+        <span class="inline-flex items-center gap-2">
+          <span class="inline-block h-2 w-6 rounded-full" style={`background:${colors[k]}`} />
+          {k === 'provekit' ? 'PROVEKIT' : k.replace('toolkit', 'TOOLKIT ')}
+        </span>
+      ))
+    }
+  </div>
+  <div class="space-y-5">
+    {
+      data.map((row) => (
+        <div>
+          <div class="pk-mono mb-2 text-xs text-[color:var(--color-mute)]">
+            {row.metric.toUpperCase()}
+          </div>
+          <div class="space-y-1.5">
+            {(['toolkit1', 'toolkit2', 'provekit'] as const).map((k) => (
+              <div class="h-3 rounded-full bg-[color:var(--color-line-soft)]" aria-hidden="true">
+                <div
+                  class="h-full rounded-full"
+                  style={`width:${row[k]}%;background:${colors[k]}`}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+  <div class="flex flex-wrap gap-8 pt-2">
+    <div>
+      <div class="pk-display text-[clamp(36px,4vw,56px)]" style="color:var(--color-toolkit-3)">
+        +36%
+      </div>
+      <div class="pk-mono text-xs text-[color:var(--color-mute)]">FASTER</div>
+    </div>
+    <div>
+      <div class="pk-display text-[clamp(36px,4vw,56px)]" style="color:var(--color-toolkit-3)">
+        +24%
+      </div>
+      <div class="pk-mono text-xs text-[color:var(--color-mute)]">LIGHTER</div>
+    </div>
+  </div>
+</figure>
