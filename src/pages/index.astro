@@ -4,6 +4,7 @@ import TopBar from '~/components/nav/TopBar.astro';
 import Hero from '~/components/hero/Hero.astro';
 import InstallScript from '~/components/install/InstallScript.astro';
 import FeatureGrid from '~/components/features/FeatureGrid.astro';
+import EngineeringCredit from '~/components/credits/EngineeringCredit.astro';
 ---
 
 <BaseLayout
@@ -23,7 +24,9 @@ import FeatureGrid from '~/components/features/FeatureGrid.astro';
     <section aria-labelledby="features-title" class="pk-gutter">
       <FeatureGrid />
     </section>
-    <section aria-labelledby="credit-title" class="pk-gutter"></section>
+    <section aria-labelledby="credit-title" class="pk-gutter">
+      <EngineeringCredit />
+    </section>
     <section aria-labelledby="benchmarks-title" class="pk-gutter"></section>
     <section aria-labelledby="faq-title" class="pk-gutter"></section>
   </main>

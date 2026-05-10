@@ -1,0 +1,57 @@
+---
+const partners = [
+  { letter: 'W', name: 'world', href: '#' },
+  { letter: 'A', name: 'atheon', href: '#' },
+  { letter: 'R', name: 'reilabs', href: '#' },
+];
+---
+
+<div class="grid gap-12 py-24 md:grid-cols-2 md:items-center">
+  <div>
+    <p class="pk-eyebrow pk-reveal">BUILT FOR PERFORMANCE AND PRIVACY</p>
+    <h2 id="credit-title" class="pk-h2 pk-reveal mt-4">
+      Engineered by some of the best technical brains.
+    </h2>
+    <ul class="pk-reveal mt-8 flex flex-wrap items-center gap-6" data-todo="partner-logos">
+      {
+        partners.map((p) => (
+          <li>
+            <a
+              href={p.href}
+              class="flex items-center gap-2 text-[color:var(--color-mute)] hover:text-[color:var(--color-ink)]"
+            >
+              <span class="pk-mono grid h-8 w-8 place-items-center rounded-full border border-[color:var(--color-line)] text-xs">
+                {p.letter}
+              </span>
+              <span class="pk-mono text-sm">{p.name}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <a href="#" class="pk-btn pk-btn--ghost pk-reveal mt-10" data-todo="github">Visit GitHub</a>
+  </div>
+
+  <figure
+    class="pk-reveal relative aspect-square w-full max-w-md justify-self-center md:justify-self-end"
+    aria-hidden="true"
+  >
+    <svg viewBox="0 0 400 400" class="h-full w-full">
+      <defs>
+        <radialGradient id="hexGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="var(--color-bloom-cyan)" stop-opacity="0.6"></stop>
+          <stop offset="100%" stop-color="var(--color-bloom-cyan)" stop-opacity="0"></stop>
+        </radialGradient>
+      </defs>
+      <circle cx="200" cy="200" r="180" fill="url(#hexGrad)"></circle>
+      <g fill="none" stroke="var(--color-ink)" stroke-width="1.25" opacity="0.85">
+        <polygon points="200,60 320,130 320,270 200,340 80,270 80,130"></polygon>
+        <polygon points="200,100 285,150 285,250 200,300 115,250 115,150"></polygon>
+        <polygon points="200,140 250,170 250,230 200,260 150,230 150,170"></polygon>
+        <line x1="200" y1="60" x2="200" y2="340"></line>
+        <line x1="80" y1="130" x2="320" y2="270"></line>
+        <line x1="80" y1="270" x2="320" y2="130"></line>
+      </g>
+    </svg>
+  </figure>
+</div>
