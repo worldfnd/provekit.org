@@ -1,6 +1,7 @@
 function init() {
   const targets = document.querySelectorAll<HTMLElement>('.pk-reveal');
-  if (!('IntersectionObserver' in window) || targets.length === 0) {
+  if (targets.length === 0) return;
+  if (!('IntersectionObserver' in window)) {
     targets.forEach((el) => el.classList.add('is-visible'));
     return;
   }
@@ -13,9 +14,16 @@ function init() {
         }
       }
     },
-    { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
+    { rootMargin: '0px 0px 0px 0px', threshold: 0.01 },
   );
   targets.forEach((el) => io.observe(el));
+
+  // Safety: anything still unrevealed after 2s gets promoted unconditionally.
+  window.setTimeout(() => {
+    document
+      .querySelectorAll<HTMLElement>('.pk-reveal:not(.is-visible)')
+      .forEach((el) => el.classList.add('is-visible'));
+  }, 2000);
 }
 
 if (typeof document !== 'undefined') {

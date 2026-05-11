@@ -8,9 +8,7 @@ const { q, a, open = false } = Astro.props;
 ---
 
 <details class="pk-faq-row" open={open}>
-  <summary
-    style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none;gap:24px"
-  >
+  <summary class="pk-faq-summary">
     <h3
       style="margin:0;font:500 28px/1 var(--pk-font-sans);letter-spacing:-0.02em;color:var(--pk-ink-alt)"
     >
@@ -19,7 +17,7 @@ const { q, a, open = false } = Astro.props;
     <span
       class="pk-faq-glyph"
       aria-hidden="true"
-      style="font:400 24px/1 var(--pk-font-mono);color:var(--pk-ink-alt)"
+      style="font:400 24px/1 var(--pk-font-mono);color:var(--pk-ink-alt);transition:transform 0.2s ease, color 0.2s ease"
     >
       <span class="pk-faq-glyph-closed">→</span><span class="pk-faq-glyph-open">−</span>
     </span>
@@ -28,6 +26,14 @@ const { q, a, open = false } = Astro.props;
 </details>
 
 <style is:global>
+  .pk-faq-row .pk-faq-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    list-style: none;
+    gap: 24px;
+  }
   .pk-faq-row summary::-webkit-details-marker {
     display: none;
   }
@@ -39,5 +45,12 @@ const { q, a, open = false } = Astro.props;
   }
   .pk-faq-row[open] .pk-faq-glyph-open {
     display: inline;
+  }
+  .pk-faq-row:hover .pk-faq-glyph {
+    color: var(--pk-brand);
+    transform: translateX(2px);
+  }
+  .pk-faq-row[open]:hover .pk-faq-glyph {
+    transform: rotate(180deg);
   }
 </style>
