@@ -50,7 +50,6 @@ sortable chart data (`src/data/benchmarks.ts`).
 
 ```
 provekit.org/
-├── design-system/        # Canonical brand source (JSX components, tokens, raster assets)
 ├── public/
 │   └── figma/            # Brand-approved raster + SVG assets used by the site
 ├── src/
@@ -73,13 +72,12 @@ provekit.org/
 │   ├── pages/            # index.astro, benchmarks.astro
 │   ├── scripts/          # Vanilla TS bundled to the client
 │   └── styles/           # Tokens + component CSS
-├── tests/                # Playwright e2e
-└── docs/                 # Design spec and implementation plan
+└── tests/                # Playwright e2e
 ```
 
-The `design-system/` folder is the canonical brand reference. Changes to the
-visual language land there first; the Astro components in `src/components/`
-mirror them.
+The Astro components in `src/components/` mirror the JSX source shipped in
+the Provekit Design System bundle. Code comments throughout `src/` reference
+the corresponding JSX files for provenance.
 
 ---
 
