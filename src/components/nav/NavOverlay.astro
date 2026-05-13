@@ -1,0 +1,406 @@
+---
+/*
+ * NavOverlay — full-page navigation sheet that slides down from the header.
+ *
+ * Ported from the design system reference at
+ *   project/ui_kits/landing/Header.jsx (NavOverlay)
+ *
+ * The hamburger button in `TopBar.astro` toggles `data-open="true"` on the
+ * `[data-nav-overlay]` root; CSS transitions handle the open/close motion.
+ * `scripts/nav-overlay.ts` is the small controller that wires:
+ *   - aria-expanded + data-open state sync between hamburger and overlay
+ *   - ESC to close, backdrop click to close
+ *   - body scroll lock while open
+ *   - hamburger ↔ X icon swap
+ */
+
+const NAV_ITEMS = [
+  { num: '01', label: 'Home', href: '/', meta: 'The landing page' },
+  { num: '02', label: 'Benchmarks', href: '/benchmarks', meta: 'Compare performance' },
+  { num: '03', label: 'Documentation', href: '#', meta: 'Guides & API reference', todo: 'docs' },
+  { num: '04', label: 'GitHub', href: '#', meta: 'Source on GitHub', todo: 'github' },
+  { num: '05', label: 'Contact', href: 'mailto:hello@provekit.org', meta: 'Reach the team' },
+] as const;
+
+const NAV_META = [
+  {
+    tab: 'RESOURCES',
+    links: [
+      { label: 'Whitepaper', todo: 'whitepaper' },
+      { label: 'Changelog', todo: 'changelog' },
+      { label: 'Brand kit', todo: 'brand-kit' },
+      { label: 'Press', todo: 'press' },
+    ],
+  },
+  {
+    tab: 'COMMUNITY',
+    links: [
+      { label: 'X / Twitter', todo: 'twitter' },
+      { label: 'Discord', todo: 'discord' },
+      { label: 'Telegram', todo: 'telegram' },
+      { label: 'Forum', todo: 'forum' },
+    ],
+  },
+] as const;
+---
+
+<div data-nav-overlay aria-hidden="true">
+  <div data-nav-backdrop class="pk-nav-backdrop"></div>
+
+  <div
+    role="dialog"
+    aria-modal="true"
+    aria-label="Site navigation"
+    class="pk-nav-sheet-wrap"
+  >
+    <div class="pk-nav-sheet">
+      <div class="pk-nav-sheet__meta">
+        <span>NAVIGATION — v0.1.0</span>
+        <span>PRESS ESC TO CLOSE</span>
+      </div>
+
+      <ul class="pk-nav-items">
+        {
+          NAV_ITEMS.map((it, i) => (
+            <li>
+              <a
+                class="pk-nav-item"
+                href={it.href}
+                data-todo={'todo' in it ? it.todo : undefined}
+                data-first={i === 0 ? 'true' : undefined}
+              >
+                <span class="pk-nav-item__num">{it.num}</span>
+                <span class="pk-nav-item__label">{it.label}</span>
+                <span class="pk-nav-item__meta">
+                  <span>{it.meta}</span>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="square"
+                    aria-hidden="true"
+                  >
+                    <path d="M7 17L17 7M9 7h8v8"></path>
+                  </svg>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="pk-nav-cols">
+        {
+          NAV_META.map((col) => (
+            <div class="pk-nav-col">
+              <span class="pk-nav-col__tab">{col.tab}</span>
+              <ul>
+                {col.links.map((l) => (
+                  <li>
+                    <a href="#" data-todo={l.todo}>
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="pk-nav-cta">
+        <span>GET STARTED</span>
+        <a
+          href="#"
+          class="pk-btn pk-btn--primary"
+          style="height:52px;padding:8px 16px;min-width:240px"
+          data-todo="install"
+        >
+          INSTALL PROVEKIT
+          <span class="pk-arrow" aria-hidden="true">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="square"
+              ><path d="M5 12h14M13 6l6 6-6 6"></path></svg
+            >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="square"
+              ><path d="M5 12h14M13 6l6 6-6 6"></path></svg
+            >
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  [data-nav-overlay] {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none;
+  }
+
+  .pk-nav-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 13, 11, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  [data-nav-overlay][data-open='true'] .pk-nav-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  [data-nav-overlay][data-open='true'] {
+    pointer-events: auto;
+  }
+
+  .pk-nav-sheet-wrap {
+    position: absolute;
+    top: 76px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    padding: 0 88px;
+    pointer-events: none;
+  }
+  [data-nav-overlay][data-open='true'] .pk-nav-sheet-wrap {
+    pointer-events: auto;
+  }
+  .pk-nav-sheet {
+    width: 1600px;
+    max-width: 100%;
+    background: #fff;
+    border-left: 1px solid var(--pk-line);
+    border-right: 1px solid var(--pk-line);
+    border-bottom: 1px solid var(--pk-line);
+    opacity: 0;
+    transform: translateY(-24px);
+    transition:
+      opacity 0.32s ease,
+      transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+  }
+  [data-nav-overlay][data-open='true'] .pk-nav-sheet {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .pk-nav-sheet__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--pk-line);
+    font: 400 12px/1 var(--pk-font-mono);
+    letter-spacing: 0.12em;
+    color: var(--pk-mute-2);
+  }
+
+  .pk-nav-items {
+    list-style: none;
+    margin: 0;
+    padding: 8px 32px 24px;
+  }
+  .pk-nav-item {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    align-items: center;
+    gap: 24px;
+    padding: 20px 0;
+    border-top: 1px solid var(--pk-line);
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+  .pk-nav-item[data-first='true'] {
+    border-top: 0;
+  }
+  .pk-nav-item__num {
+    font: 400 14px/1 var(--pk-font-mono);
+    letter-spacing: 0.08em;
+    color: var(--pk-mute-2);
+    transition: color 0.2s ease;
+  }
+  .pk-nav-item__label {
+    font: 500 56px/1 var(--pk-font-sans);
+    letter-spacing: -0.02em;
+    color: var(--pk-ink);
+    transition:
+      color 0.2s ease,
+      transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: block;
+  }
+  .pk-nav-item__meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font: 400 14px/1 var(--pk-font-mono);
+    letter-spacing: 0.04em;
+    color: var(--pk-mute-2);
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+  }
+  .pk-nav-item__meta svg {
+    transition:
+      transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+      stroke 0.2s ease;
+  }
+  .pk-nav-item:hover .pk-nav-item__num,
+  .pk-nav-item:focus-visible .pk-nav-item__num {
+    color: var(--pk-brand);
+  }
+  .pk-nav-item:hover .pk-nav-item__label,
+  .pk-nav-item:focus-visible .pk-nav-item__label {
+    color: var(--pk-brand);
+    transform: translateX(12px);
+  }
+  .pk-nav-item:hover .pk-nav-item__meta,
+  .pk-nav-item:focus-visible .pk-nav-item__meta {
+    color: var(--pk-ink);
+  }
+  .pk-nav-item:hover .pk-nav-item__meta svg,
+  .pk-nav-item:focus-visible .pk-nav-item__meta svg {
+    transform: translate(8px, -8px);
+    stroke: var(--pk-brand);
+  }
+
+  .pk-nav-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding: 0 32px 24px;
+    border-top: 1px solid var(--pk-line);
+  }
+  .pk-nav-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 24px;
+  }
+  .pk-nav-col__tab {
+    font: 400 12px/1 var(--pk-font-mono);
+    letter-spacing: 0.12em;
+    color: var(--pk-mute-2);
+  }
+  .pk-nav-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .pk-nav-col a {
+    font: 400 18px/1.2 var(--pk-font-sans);
+    color: var(--pk-ink);
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    padding-bottom: 2px;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition:
+      background-size 0.25s ease,
+      color 0.2s ease;
+  }
+  .pk-nav-col a:hover,
+  .pk-nav-col a:focus-visible {
+    background-size: 100% 1px;
+    color: var(--pk-brand);
+  }
+
+  .pk-nav-cta {
+    padding: 20px 32px;
+    border-top: 1px solid var(--pk-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .pk-nav-cta > span {
+    font: 400 12px/1 var(--pk-font-mono);
+    letter-spacing: 0.12em;
+    color: var(--pk-mute-2);
+  }
+
+  /* Hamburger ↔ X swap (controlled by [data-nav-toggle][aria-expanded]). */
+  .pk-hamburger {
+    transition: transform 0.3s cubic-bezier(0.4, 1.4, 0.5, 1);
+  }
+  [data-nav-toggle][aria-expanded='true'] .pk-hamburger {
+    transform: rotate(90deg);
+  }
+  [data-nav-toggle][aria-expanded='true'] {
+    background: var(--pk-ink) !important;
+  }
+  [data-nav-toggle][aria-expanded='true'] .pk-hamburger {
+    stroke: #fff;
+  }
+  .pk-hamburger__bars,
+  .pk-hamburger__x {
+    transition: opacity 0.18s ease;
+  }
+  [data-nav-toggle][aria-expanded='true'] .pk-hamburger__bars {
+    opacity: 0;
+  }
+  [data-nav-toggle][aria-expanded='true'] .pk-hamburger__x {
+    opacity: 1;
+  }
+
+  @media (max-width: 720px) {
+    .pk-nav-sheet-wrap {
+      padding: 0 16px;
+    }
+    .pk-nav-item {
+      grid-template-columns: 40px 1fr;
+    }
+    .pk-nav-item__label {
+      font-size: 40px;
+    }
+    .pk-nav-item__meta {
+      display: none;
+    }
+    .pk-nav-cols {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pk-nav-backdrop,
+    .pk-nav-sheet,
+    .pk-nav-item__label,
+    .pk-nav-item__meta svg,
+    .pk-hamburger,
+    .pk-nav-col a {
+      transition: none !important;
+    }
+    .pk-nav-item:hover .pk-nav-item__label,
+    .pk-nav-item:focus-visible .pk-nav-item__label {
+      transform: none;
+    }
+  }
+</style>

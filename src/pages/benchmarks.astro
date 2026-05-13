@@ -2,6 +2,7 @@
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import TopBar from '~/components/nav/TopBar.astro';
 import BenchmarksHero from '~/components/benchmarks-page/BenchmarksHero.astro';
+import LiveDemoSection from '~/components/demo/LiveDemoSection.astro';
 import BenchmarksMethodology from '~/components/benchmarks-page/BenchmarksMethodology.astro';
 import BenchmarkDetail from '~/components/benchmarks-page/BenchmarkDetail.astro';
 import BenchmarksSummary from '~/components/benchmarks-page/BenchmarksSummary.astro';
@@ -17,6 +18,8 @@ import SiteFooter from '~/components/footer/SiteFooter.astro';
   <main id="main" class="pk-stage">
     <div class="pk-strip" aria-hidden="true"></div>
     <BenchmarksHero />
+    <div class="pk-strip" aria-hidden="true"></div>
+    <LiveDemoSection />
     <div class="pk-strip" aria-hidden="true"></div>
     <BenchmarksMethodology />
     <div class="pk-strip" aria-hidden="true"></div>

@@ -1,5 +1,6 @@
 ---
 import ArrowRight from '~/components/icons/ArrowRight.astro';
+import NavOverlay from '~/components/nav/NavOverlay.astro';
 ---
 
 <header
@@ -31,10 +32,14 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       </a>
       <button
         type="button"
+        data-nav-toggle
+        aria-controls="provekit-nav"
+        aria-expanded="false"
         aria-label="Open menu"
-        style="width:56px;height:52px;background:#fff;border:1px solid var(--pk-line);border-left:0;display:flex;align-items:center;justify-content:center;cursor:pointer"
+        style="width:56px;height:52px;background:#fff;border:1px solid var(--pk-line);border-left:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.25s ease"
       >
         <svg
+          class="pk-hamburger"
           width="20"
           height="20"
           viewBox="0 0 24 24"
@@ -44,9 +49,21 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
           stroke-linecap="square"
           aria-hidden="true"
         >
-          <path d="M3 6h18M3 12h18M3 18h18"></path>
+          <path class="pk-hamburger__bars" d="M3 6h18M3 12h18M3 18h18"></path>
+          <path
+            class="pk-hamburger__x"
+            d="M5 5l14 14M19 5L5 19"
+            style="opacity:0"></path>
         </svg>
       </button>
     </div>
   </div>
 </header>
+
+<div id="provekit-nav">
+  <NavOverlay />
+</div>
+
+<script>
+  import '~/scripts/nav-overlay';
+</script>
