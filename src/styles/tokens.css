@@ -9,6 +9,8 @@
 @import 'tailwindcss';
 
 :root {
+  color-scheme: only light;
+
   /* Ink + neutrals.
    * The Figma source uses #949494 / #808080 / #B7B7B7. Both --pk-mute and
    * --pk-mute-2 are darkened slightly to clear WCAG AA 4.5:1 contrast on
