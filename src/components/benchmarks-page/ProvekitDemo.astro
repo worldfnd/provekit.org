@@ -1255,7 +1255,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       } catch (e) {
         console.error('runtime boot failed', e);
         const sab = typeof SharedArrayBuffer !== 'undefined';
-        const coi = (globalThis as any).crossOriginIsolated;
+        const coi = self.crossOriginIsolated;
         const diag = `SAB=${sab} COI=${coi} HC=${navigator.hardwareConcurrency} | `;
         lastError = diag + (e instanceof Error ? e.message : String(e));
         phase = 'error';
