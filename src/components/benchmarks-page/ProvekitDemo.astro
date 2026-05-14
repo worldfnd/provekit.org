@@ -1244,6 +1244,11 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
           Math.round(runtimeBootMs),
           'ms',
         );
+        const statusInfoEl = document.querySelector('[data-demo-status-info]');
+        if (statusInfoEl) {
+          const t = typeof threads === 'number' ? `${threads} thread${threads === 1 ? '' : 's'}` : '1 thread';
+          statusInfoEl.textContent = `SHA-256 preimage · up to 1024 bytes · ${t}`;
+        }
         timings.runtime = 0;
         phase = 'ready';
         setGoLabel();
