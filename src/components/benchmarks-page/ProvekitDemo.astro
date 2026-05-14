@@ -1231,12 +1231,9 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       try {
         const { Verity, Backend } = await import('@atheonxyz/verity');
         const hasSAB = typeof SharedArrayBuffer !== 'undefined';
-        // Vendored verity WASM is threaded-only; falling back to threads:false
-        // throws "backend not available". Use the available SAB threads, capped
-        // low on mobile so a phone doesn't spin up 8 workers it can't sustain.
-        const isMobile = /iPhone|iPad|iPod|Android/.test(navigator.userAgent);
-        const cap = isMobile ? 2 : navigator.hardwareConcurrency || 4;
-        const threads = hasSAB ? cap : false;
+        // Use every available hardware thread on every device. SAB-less
+        // environments fall back to single-threaded.
+        const threads = hasSAB ? navigator.hardwareConcurrency || 4 : false;
         const bootStart = performance.now();
         runtime = await Verity.create(Backend.ProveKit, { threads });
         runtimeBootMs = performance.now() - bootStart;
