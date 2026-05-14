@@ -45,7 +45,7 @@ export const METRICS: [LineMetric, BarsMetric, ColumnsMetric] = [
   {
     key: 'proving',
     title: 'Proving time',
-    body: 'Provekit generates proofs ~36% faster than comparable client-side toolkits on commodity hardware.',
+    body: 'ProveKit generates proofs ~36% faster than comparable client-side toolkits on commodity hardware.',
     chart: 'line',
     unit: 's',
     xLabels: ['2¹⁰', '2¹⁴', '2¹⁸', '2²²'],
@@ -121,7 +121,7 @@ export const DETAIL_EXTRAS: Record<
     notes: [
       'Peak resident set sampled at 50 ms during proving',
       'Heap profile captured with macOS leaks(1) and dtrace',
-      'Provekit reuses witness arenas across batched proofs',
+      'ProveKit reuses witness arenas across batched proofs',
     ],
   },
   verify: {

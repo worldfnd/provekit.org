@@ -6,19 +6,20 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
 <Panel
   tab="BUILT FOR PERFORMANCE AND PRIVACY"
   titleId="credit-title"
-  contentStyle="padding:72px 48px;display:flex;justify-content:flex-start;align-items:stretch;gap:48px;position:relative"
+  contentStyle="padding:var(--pk-pad-panel-y) var(--pk-pad-panel-x);display:flex;justify-content:flex-start;align-items:stretch;gap:48px;position:relative"
 >
   <div
     class="pk-reveal"
-    style="display:flex;flex-direction:column;gap:48px;position:relative;z-index:1;flex:1 1 0"
+    style="display:flex;flex-direction:column;gap:48px;position:relative;z-index:1;flex:1 1 0;min-width:0"
   >
     <h2
       id="credit-title"
+      class="pk-display-headline"
       style="margin:0;font:500 72px/80px var(--pk-font-sans);letter-spacing:-0.02em;color:var(--pk-ink);white-space:pre-line"
     >
       {'Engineered by some of\nthe best technical brains'}
     </h2>
-    <div style="display:flex;align-items:center;gap:36px;flex-wrap:wrap">
+    <div class="pk-partner-row" style="display:flex;align-items:center;gap:36px;flex-wrap:wrap">
       <div style="display:flex;align-items:center;height:48px;padding:0 16px">
         <img
           src="/figma/world-logo.svg"
@@ -50,13 +51,25 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
           style="height:36px;width:auto;display:block"
         />
       </div>
+      <div style="width:0;height:40px;border-left:2px solid var(--pk-line-soft)" aria-hidden="true">
+      </div>
+      <div style="display:flex;align-items:center;height:48px;padding:0 16px">
+        <img
+          src="/figma/nethermind-logo.svg"
+          alt="Nethermind"
+          loading="lazy"
+          decoding="async"
+          style="height:28px;width:auto;display:block"
+        />
+      </div>
     </div>
     <div>
       <a
-        href="#"
+        href="https://github.com/worldfnd/provekit"
         class="pk-btn pk-btn--primary"
         style="height:52px;padding:8px 16px;min-width:237px"
-        data-todo="github"
+        target="_blank"
+        rel="noopener"
       >
         VISIT GITHUB
         <ArrowRight />
@@ -66,11 +79,53 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
 
   <img
     slot="extras"
-    src="/figma/partners-graphic.png"
+    src="/figma/partners-graphic-v2.png"
     alt=""
     aria-hidden="true"
     loading="lazy"
     decoding="async"
-    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center;display:block;transform:translateX(60px);pointer-events:none"
+    class="pk-partners-bg"
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:right center;display:block;pointer-events:none"
   />
 </Panel>
+
+<style>
+  @media (max-width: 720px) {
+    .pk-partner-row {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 !important;
+      border: 1px solid var(--pk-line);
+    }
+    .pk-partner-row > div[aria-hidden] {
+      display: none;
+    }
+    /* Clean 2×2 grid: each cell gets bottom+right dividers, outer border
+     * comes from the row. Avoids the negative-margin alignment glitches. */
+    .pk-partner-row > div {
+      height: 64px !important;
+      padding: 0 !important;
+      justify-content: center;
+      border: 0 !important;
+      border-bottom: 1px solid var(--pk-line-soft) !important;
+      border-right: 1px solid var(--pk-line-soft) !important;
+      margin: 0 !important;
+    }
+    .pk-partner-row > div:nth-child(2n) {
+      border-right: 0 !important;
+    }
+    .pk-partner-row > div:nth-last-child(-n + 2) {
+      border-bottom: 0 !important;
+    }
+    /* On mobile, pin the graphic behind the headline only so it doesn't
+     * clash with the 2x2 logo grid below. */
+    .pk-partners-bg {
+      inset: 0 0 auto 0 !important;
+      width: 100% !important;
+      height: 220px !important;
+      object-position: right top !important;
+      opacity: 0.28 !important;
+      transform: none !important;
+    }
+  }
+</style>

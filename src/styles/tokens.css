@@ -1,4 +1,4 @@
-/* Provekit design tokens.
+/* ProveKit design tokens.
  *
  * Mirror of design-system/colors_and_type.css, trimmed to the tokens
  * actually referenced by the implementation. Source values that the
@@ -26,18 +26,32 @@
   --pk-surface-tint: rgb(190 225 255 / 0.04);
   --pk-line: #d1f5ff;
   --pk-line-soft: #eef7ff;
+  --pk-line-mid: #bceeff;
 
   /* Brand */
   --pk-brand: #0d74ff;
   --pk-brand-hover: #0a66e0;
+  --pk-brand-ink: #a2d0fc;
 
   /* Type */
   --pk-font-sans: 'Outfit', system-ui, sans-serif;
   --pk-font-mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+  --pk-fs-display: 72px;
+  --pk-fs-h1: 48px;
+  --pk-fs-h3: 28px;
+  --pk-fs-body: 24px;
   --pk-fs-mono: 24px;
+  --pk-fs-mono-lg: 24px;
+
+  --pk-lh-display: 1.111;
+  --pk-lh-body: 1.333;
+
   --pk-tracking-mono: 0.02em;
+  --pk-tracking-tight: -0.02em;
 
   /* Layout */
+  --pk-pad-panel-y: 72px;
+  --pk-pad-panel-x: 48px;
   --pk-gap-strip: 80px;
   --pk-gutter: 88px;
 
@@ -47,4 +61,29 @@
   /* Motion */
   --pk-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
   --pk-dur-fast: 120ms;
+}
+
+/* Mobile token overrides — narrower viewports scale the entire ramp down
+ * so the 1600px desktop layout collapses to a phone-friendly 430px column.
+ * Mirrors mobile/tokens.css from the design system. */
+@media (max-width: 720px) {
+  :root {
+    --pk-fs-display: 36px;
+    --pk-fs-h1: 24px;
+    --pk-fs-h3: 18px;
+    --pk-fs-body: 15px;
+    /* Chrome (tab badges, code labels) sits at 12px; buttons step up to 13px. */
+    --pk-fs-mono: 12px;
+    --pk-fs-mono-lg: 13px;
+
+    --pk-lh-display: 1.08;
+    --pk-lh-body: 1.45;
+
+    --pk-tracking-mono: 0.04em;
+
+    --pk-pad-panel-y: 28px;
+    --pk-pad-panel-x: 20px;
+    --pk-gap-strip: 32px;
+    --pk-gutter: 0px;
+  }
 }

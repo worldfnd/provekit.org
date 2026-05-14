@@ -15,6 +15,15 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Site is designed to feel like browser-zoom 75% — apply on desktop only,
+   * leave mobile at native scale since its layout was authored for phones. */
+  @media (min-width: 721px) {
+    html {
+      zoom: 0.75;
+    }
+  }
+
+
   body {
     margin: 0;
     min-height: 100vh;
@@ -31,6 +40,10 @@
 
   button {
     font-family: inherit;
+  }
+
+  img {
+    max-width: 100%;
   }
 
   :focus-visible {
@@ -108,6 +121,14 @@
   .pk-btn--secondary:hover {
     background: #e8e8e8;
   }
+  .pk-btn--ghost {
+    background: transparent;
+    color: var(--pk-ink);
+    border: var(--pk-border);
+  }
+  .pk-btn--ghost:hover {
+    background: var(--pk-line-soft);
+  }
 
   /* Arrow swap on hover: existing arrow exits right, new arrow enters from left */
   .pk-arrow {
@@ -152,7 +173,11 @@
     color: var(--pk-ink);
     background: var(--pk-surface);
     box-sizing: border-box;
-    width: fit-content;
+    width: max-content;
+    white-space: nowrap;
+    /* Stay above absolutely-positioned siblings (e.g. the partners bloom). */
+    position: relative;
+    z-index: 2;
   }
   .pk-tab--brand {
     background: var(--pk-brand);
@@ -267,5 +292,59 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+}
+
+/* Responsive section.
+ * The desktop layout is a fixed 1600px stage with sections shaped like
+ * folder panels. On phones we collapse the stage to full-width, scale
+ * down the type ramp via tokens, and stack flex rows that were row-on-desktop. */
+@media (max-width: 720px) {
+  .pk-stage,
+  .pk-strip {
+    width: 100%;
+  }
+
+  /* Headlines shrink and re-wrap on phones. */
+  .pk-display-headline {
+    font: 500 var(--pk-fs-display) / var(--pk-lh-display) var(--pk-font-sans) !important;
+    letter-spacing: var(--pk-tracking-tight) !important;
+    /* Prevent single-word orphan lines on narrow viewports (e.g. 320px). */
+    text-wrap: balance;
+  }
+  .pk-sub-deck {
+    font: 300 var(--pk-fs-body) / var(--pk-lh-body) var(--pk-font-sans) !important;
+    line-height: var(--pk-lh-body) !important;
+  }
+
+  /* Buttons collapse to full width, step up to the larger mono ramp (13px). */
+  .pk-btn {
+    height: 44px;
+    padding: 0 14px;
+    font: 400 var(--pk-fs-mono-lg) / 1 var(--pk-font-mono);
+    letter-spacing: var(--pk-tracking-mono);
+    width: 100%;
+    min-width: 0 !important;
+  }
+  .pk-arrow {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Tab badge slimmer */
+  .pk-tab {
+    height: 36px;
+    padding: 0 14px;
+    font: 400 var(--pk-fs-mono) / 1 var(--pk-font-mono);
+  }
+
+  /* Any element that uses .pk-row-stack collapses its desktop row direction. */
+  .pk-row-stack {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+  }
+  .pk-row-stack > * {
+    width: 100% !important;
   }
 }

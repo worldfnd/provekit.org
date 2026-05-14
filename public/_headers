@@ -1,0 +1,19 @@
+/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Access-Control-Allow-Origin: *
+
+/*.wasm
+  Content-Type: application/wasm
+  Cross-Origin-Resource-Policy: cross-origin
+
+/*.pkp
+  Content-Type: application/octet-stream
+  Cross-Origin-Resource-Policy: cross-origin
+
+/*.pkv
+  Content-Type: application/octet-stream
+  Cross-Origin-Resource-Policy: cross-origin
+
+/artifacts/*
+  Cross-Origin-Resource-Policy: cross-origin

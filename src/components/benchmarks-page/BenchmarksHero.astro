@@ -6,41 +6,46 @@ import Panel from '~/components/panel/Panel.astro';
   tab="BENCHMARKS"
   tabBrand
   titleId="benchmarks-hero-title"
-  contentStyle="padding:72px 48px;display:flex;flex-direction:column;gap:48px"
+  contentStyle="padding:var(--pk-pad-panel-y) var(--pk-pad-panel-x);display:flex;flex-direction:column;gap:48px"
 >
   <div
+    class="pk-bench-hero-row"
     style="display:flex;gap:48px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap"
   >
-    <div style="flex:1 1 0;min-width:0">
+    <div class="pk-bench-hero-copy" style="flex:1 1 320px;min-width:0">
       <div
         class="pk-reveal"
         style="font:400 18px/1 var(--pk-font-mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--pk-mute-2);margin-bottom:24px"
       >
-        v0.4.2 · April 2026
+        v1.0.0 · April 2026
       </div>
       <h1
         id="benchmarks-hero-title"
-        class="pk-reveal"
+        class="pk-reveal pk-display-headline"
         style="margin:0;font:500 64px/72px var(--pk-font-sans);letter-spacing:-0.02em;color:var(--pk-ink);white-space:pre-line"
       >
-        {'Provekit, measured\nagainst the field'}
+        {'ProveKit, measured\nagainst the field'}
       </h1>
       <p
         class="pk-reveal"
         style="margin:16px 0 0;max-width:720px;font:400 22px/1.4 var(--pk-font-sans);color:var(--pk-mute-2)"
       >
-        A reproducible look at how Provekit performs against TOOLKIT 1 and TOOLKIT 2 across proving
-        time, memory, and verification cost — measured on commodity client hardware, with the
-        dataset and methodology published in full below.
+        A reproducible look at how ProveKit performs against TOOLKIT 1 and TOOLKIT 2 across proving
+        time, memory, and verification cost, measured on commodity client hardware, with the dataset
+        and methodology published in full below.
       </p>
     </div>
-    <div class="pk-reveal" style="display:flex;gap:12px;flex-shrink:0">
+    <div
+      class="pk-reveal pk-bench-hero-cta"
+      style="display:flex;gap:12px;flex-shrink:0;flex-wrap:wrap"
+    >
       <a href="/" class="pk-btn pk-btn--secondary" style="height:52px;padding:8px 16px"> ← BACK </a>
       <a
-        href="#"
+        href="https://ethproofs.org/csp-benchmarks"
         class="pk-btn pk-btn--primary"
         style="height:52px;padding:8px 16px;min-width:200px"
-        data-todo="raw-results"
+        target="_blank"
+        rel="noopener"
       >
         RAW RESULTS
         <span style="font:400 22px/1 var(--pk-font-mono);letter-spacing:0.02em">{'{ }'}</span>
@@ -48,3 +53,28 @@ import Panel from '~/components/panel/Panel.astro';
     </div>
   </div>
 </Panel>
+
+<style>
+  @media (max-width: 720px) {
+    .pk-bench-hero-row {
+      flex-direction: column;
+      align-items: stretch !important;
+      gap: 24px !important;
+    }
+    .pk-bench-hero-copy h1 {
+      font: 500 32px/36px var(--pk-font-sans) !important;
+    }
+    .pk-bench-hero-copy p {
+      font-size: 14px !important;
+      line-height: 1.5 !important;
+    }
+    .pk-bench-hero-cta {
+      flex-direction: column;
+      gap: 8px !important;
+    }
+    .pk-bench-hero-cta a {
+      width: 100% !important;
+      min-width: 0 !important;
+    }
+  }
+</style>

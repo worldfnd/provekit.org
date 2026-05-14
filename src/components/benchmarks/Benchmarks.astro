@@ -17,6 +17,7 @@ const legend = [
   class="pk-bench"
   style="width:1600px;max-width:100%;display:flex"
   aria-labelledby="benchmarks-title"
+  data-bench-teaser
 >
   <!-- LEFT -->
   <div
@@ -89,9 +90,16 @@ const legend = [
     style="flex:1 1 0;background:#fff;border:1px solid var(--pk-line);border-left:0;display:flex;flex-direction:column;justify-content:space-between;min-width:0"
   >
     <div style="padding:72px 48px;display:flex;flex-direction:column;flex:1">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+      <!-- Sweep indicator (brand-blue bar that wipes across when switching metrics) -->
+      <div class="pk-bench-sweep-rail" aria-hidden="true">
+        <div data-bench-sweep class="pk-bench-sweep-fill"></div>
+      </div>
+      <div
+        style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;overflow:hidden"
+      >
         <span
-          class="pk-bench-chart-label"
+          data-bench-label
+          class="pk-bench-chart-label pk-bench-anim"
           style="font:400 14px/1 var(--pk-font-mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--pk-mute-2)"
         >
           {labels[0]}
@@ -101,7 +109,11 @@ const legend = [
         class="pk-reveal"
         style="flex:1;display:flex;flex-direction:column;justify-content:center;position:relative"
       >
-        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px">
+        <div
+          data-bench-legend
+          class="pk-bench-anim"
+          style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px"
+        >
           {
             legend.map((s) => (
               <div style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid var(--pk-line);font:400 18px/1 var(--pk-font-mono);letter-spacing:0.02em;text-transform:uppercase">
@@ -114,22 +126,24 @@ const legend = [
             ))
           }
         </div>
-        <div data-chart="0">
+        <div data-chart="0" class="pk-bench-anim pk-bench-chart">
           <LineChart metric={METRICS[0]} />
         </div>
-        <div data-chart="1" hidden>
+        <div data-chart="1" class="pk-bench-anim pk-bench-chart" hidden>
           <BarsChart metric={METRICS[1]} />
         </div>
-        <div data-chart="2" hidden>
+        <div data-chart="2" class="pk-bench-anim pk-bench-chart" hidden>
           <ColumnsChart metric={METRICS[2]} hatchId="pk-col-hatch-landing" />
         </div>
       </div>
     </div>
     {
       METRICS.map((m, i) => (
-        <div data-kpis={i} hidden={i !== 0} style="display:flex">
+        <div data-kpis={i} class="pk-bench-anim" hidden={i !== 0} style="display:flex">
           {m.kpis.map((k, j) => (
             <div
+              data-bench-kpi
+              data-kpi-value={k.value}
               style={`flex:1;padding:48px 24px;text-align:center;border-top:1px solid var(--pk-line);${j < m.kpis.length - 1 ? 'border-right:1px solid var(--pk-line);' : ''}font:300 48px/1 var(--pk-font-sans);letter-spacing:-0.02em`}
             >
               {k.value}
@@ -141,20 +155,164 @@ const legend = [
   </div>
 </section>
 
+<style>
+  /* Direction-aware exit/enter transitions on metric switch. The --dir
+   * custom property is set on the section root in JS to +1 (next) or -1 (prev). */
+  .pk-bench-sweep-rail {
+    position: relative;
+    margin-bottom: 24px;
+    height: 1px;
+    background: transparent;
+  }
+  .pk-bench-sweep-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--pk-brand);
+    transform-origin: left center;
+    transform: scaleX(0);
+  }
+  .pk-bench.is-transitioning .pk-bench-sweep-fill {
+    animation: pk-bench-sweep 940ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  @keyframes pk-bench-sweep {
+    0% {
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+    45% {
+      transform: scaleX(1);
+      transform-origin: left center;
+    }
+    46% {
+      transform-origin: right center;
+    }
+    100% {
+      transform: scaleX(0);
+      transform-origin: right center;
+    }
+  }
+  @keyframes pk-bench-out {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(calc(var(--dir, 1) * -10px)) scale(0.985);
+      filter: blur(3px);
+    }
+  }
+  @keyframes pk-bench-in {
+    0% {
+      opacity: 0;
+      transform: translateY(calc(var(--dir, 1) * 18px)) scale(0.97);
+      filter: blur(8px);
+    }
+    60% {
+      opacity: 1;
+      filter: blur(0);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+  }
+  @keyframes pk-flip-num {
+    0% {
+      opacity: 0;
+      transform: translateY(calc(var(--dir, 1) * 14px)) rotateX(calc(var(--dir, 1) * -60deg));
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) rotateX(0);
+    }
+  }
+  .pk-bench.is-exit .pk-bench-anim {
+    animation: pk-bench-out 220ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  .pk-bench.is-enter .pk-bench-anim {
+    animation: pk-bench-in 620ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .pk-bench.is-enter [data-bench-kpi] {
+    perspective: 600px;
+    display: inline-block;
+  }
+  .pk-bench.is-enter [data-bench-kpi] .pk-flip-num-char {
+    display: inline-block;
+    animation: pk-flip-num 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    transform-origin: center bottom;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pk-bench-sweep-fill,
+    .pk-bench-anim,
+    .pk-flip-num-char {
+      animation: none !important;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .pk-bench {
+      flex-direction: column;
+    }
+    .pk-bench > div:first-child > div:nth-child(2) {
+      padding: 28px 20px !important;
+      gap: 24px !important;
+    }
+    .pk-bench > div:first-child h2 {
+      font: 500 28px/32px var(--pk-font-sans) !important;
+    }
+    .pk-bench .pk-bench-num,
+    .pk-bench .pk-bench-title {
+      font-size: 18px !important;
+    }
+    .pk-bench > div:first-child span[style*='var(--pk-mute-2)'] {
+      font-size: 14px !important;
+    }
+    .pk-bench > div:nth-child(2) {
+      border-left: 1px solid var(--pk-line) !important;
+      border-top: 0 !important;
+    }
+    .pk-bench > div:nth-child(2) > div:first-child {
+      padding: 28px 20px !important;
+    }
+    .pk-bench [data-kpis] > div {
+      padding: 20px 10px !important;
+      font: 300 22px/1.15 var(--pk-font-sans) !important;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+  }
+  @media (max-width: 360px) {
+    .pk-bench [data-kpis] > div {
+      padding: 16px 6px !important;
+      font-size: 18px !important;
+    }
+  }
+</style>
+
 <script>
+  // Landing benchmark teaser: tab-switch transitions with direction-aware
+  // exit/enter, brand-blue sweep indicator, and per-character KPI flip.
+  // Ported from canonical BenchmarkSection in ProveKit Landing.html.
   const root = document.querySelector<HTMLElement>('.pk-bench');
   if (root) {
     const items = root.querySelectorAll<HTMLElement>('[data-idx]');
     const charts = root.querySelectorAll<HTMLElement>('[data-chart]');
     const kpis = root.querySelectorAll<HTMLElement>('[data-kpis]');
-    const label = root.querySelector<HTMLElement>('.pk-bench-chart-label');
+    const label = root.querySelector<HTMLElement>('[data-bench-label]');
     const labels = [
       'Proving time · Line',
       'Memory footprint · Bars',
       'Verification cost · Columns',
     ];
 
-    function setActive(idx: number) {
+    let displayIdx = 0;
+    let token = 0;
+
+    function paintActiveItem(idx: number) {
       items.forEach((el, i) => {
         const active = i === idx;
         el.style.borderLeftColor = active ? 'var(--pk-brand)' : 'transparent';
@@ -164,9 +322,50 @@ const legend = [
         if (num) num.style.color = active ? 'var(--pk-brand)' : 'var(--pk-ink)';
         if (title) title.style.color = active ? 'var(--pk-brand)' : 'var(--pk-ink)';
       });
+    }
+
+    function showChart(idx: number) {
       charts.forEach((el, i) => el.toggleAttribute('hidden', i !== idx));
       kpis.forEach((el, i) => el.toggleAttribute('hidden', i !== idx));
       if (label) label.textContent = labels[idx] ?? '';
+    }
+
+    function wrapKpiChars(kpiPane: HTMLElement) {
+      kpiPane.querySelectorAll<HTMLElement>('[data-bench-kpi]').forEach((cell) => {
+        const v = cell.dataset.kpiValue ?? cell.textContent ?? '';
+        const out: string[] = [];
+        for (let i = 0; i < v.length; i++) {
+          const c = v[i] === ' ' ? '&nbsp;' : (v[i] as string);
+          out.push(
+            `<span class="pk-flip-num-char" style="animation-delay:${i * 28}ms">${c}</span>`,
+          );
+        }
+        cell.innerHTML = out.join('');
+      });
+    }
+
+    function setActive(idx: number) {
+      if (idx === displayIdx) return;
+      const dir = idx > displayIdx ? 1 : -1;
+      root.style.setProperty('--dir', String(dir));
+      const myToken = ++token;
+      paintActiveItem(idx);
+
+      root.classList.add('is-transitioning', 'is-exit');
+      window.setTimeout(() => {
+        if (token !== myToken) return;
+        displayIdx = idx;
+        showChart(idx);
+        // Wrap KPI chars for the new pane
+        const newKpi = kpis[idx] as HTMLElement | undefined;
+        if (newKpi) wrapKpiChars(newKpi);
+        root.classList.remove('is-exit');
+        root.classList.add('is-enter');
+        window.setTimeout(() => {
+          if (token !== myToken) return;
+          root.classList.remove('is-enter', 'is-transitioning');
+        }, 720);
+      }, 220);
     }
 
     items.forEach((el, i) => {
@@ -178,6 +377,6 @@ const legend = [
         }
       });
     });
-    setActive(0);
+    paintActiveItem(0);
   }
 </script>

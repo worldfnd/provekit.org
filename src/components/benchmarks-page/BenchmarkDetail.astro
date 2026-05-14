@@ -22,6 +22,7 @@ const headlineKpi = metric.kpis[0]?.value ?? '';
 >
   <!-- Header -->
   <div
+    class="pk-bench-detail-head"
     style="padding:56px 48px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:48px;flex-wrap:wrap"
   >
     <div style="flex:1 1 0;min-width:0">
@@ -40,7 +41,7 @@ const headlineKpi = metric.kpis[0]?.value ?? '';
       </p>
     </div>
     <div
-      class="pk-reveal"
+      class="pk-reveal pk-bench-detail-headkpi"
       style="padding:16px 24px;border:1px solid var(--pk-brand);font:300 44px/1 var(--pk-font-sans);letter-spacing:-0.02em;color:var(--pk-brand);white-space:nowrap"
     >
       {headlineKpi}
@@ -49,6 +50,7 @@ const headlineKpi = metric.kpis[0]?.value ?? '';
 
   <!-- Chart row -->
   <div
+    class="pk-bench-detail-row"
     style="padding:48px 48px 56px;display:grid;grid-template-columns:260px 1fr;gap:48px;align-items:start"
   >
     <div style="display:flex;flex-direction:column;gap:20px">
@@ -98,18 +100,26 @@ const headlineKpi = metric.kpis[0]?.value ?? '';
   </div>
 
   <!-- KPI strip -->
-  <div style="display:flex;border-top:1px solid var(--pk-line);flex-wrap:wrap">
+  <div
+    class="pk-bench-detail-kpis"
+    style="display:flex;border-top:1px solid var(--pk-line);flex-wrap:wrap"
+  >
     {
       extra.extraKpis.map((k, i) => {
         const accent = i === extra.extraKpis.length - 1;
         return (
           <div
+            class="pk-bench-detail-kpi"
             style={`flex:1 1 0;min-width:160px;padding:36px 24px;${i < extra.extraKpis.length - 1 ? 'border-right:1px solid var(--pk-line);' : ''}display:flex;flex-direction:column;gap:8px`}
           >
-            <div style="font:400 13px/1 var(--pk-font-mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--pk-mute-2)">
+            <div
+              class="pk-bench-detail-kpi-label"
+              style="font:400 13px/1 var(--pk-font-mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--pk-mute-2)"
+            >
               {k.label}
             </div>
             <div
+              class="pk-bench-detail-kpi-value"
               style={`font:300 44px/1 var(--pk-font-sans);letter-spacing:-0.02em;color:${accent ? 'var(--pk-brand)' : 'var(--pk-ink)'}`}
             >
               {k.value}
@@ -120,3 +130,51 @@ const headlineKpi = metric.kpis[0]?.value ?? '';
     }
   </div>
 </Panel>
+
+<style>
+  @media (max-width: 720px) {
+    .pk-bench-detail-head {
+      padding: 32px 20px 0 !important;
+      gap: 16px !important;
+    }
+    .pk-bench-detail-head h2 {
+      font: 500 28px/32px var(--pk-font-sans) !important;
+    }
+    .pk-bench-detail-head p {
+      font-size: 14px !important;
+      line-height: 1.5 !important;
+    }
+    .pk-bench-detail-row {
+      padding: 24px 20px 32px !important;
+      grid-template-columns: 1fr !important;
+      gap: 20px !important;
+    }
+    /* Headline KPI chip beside the title — shrink so it doesn't dominate. */
+    .pk-bench-detail-headkpi {
+      padding: 10px 14px !important;
+      font-size: 26px !important;
+    }
+    /* KPI strip: was a wrapping flex with min-width:160px which forced odd
+     * orphan rows at 390px. Use a 2-col grid so 4 cells split cleanly. */
+    .pk-bench-detail-kpis {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr;
+      flex-wrap: unset !important;
+    }
+    .pk-bench-detail-kpi {
+      min-width: 0 !important;
+      padding: 20px 16px !important;
+      border-right: 0 !important;
+      border-bottom: 1px solid var(--pk-line);
+    }
+    .pk-bench-detail-kpi:nth-child(odd) {
+      border-right: 1px solid var(--pk-line) !important;
+    }
+    .pk-bench-detail-kpi:nth-last-child(-n + 2) {
+      border-bottom: 0;
+    }
+    .pk-bench-detail-kpi-value {
+      font-size: 26px !important;
+    }
+  }
+</style>

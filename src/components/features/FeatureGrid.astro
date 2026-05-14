@@ -6,7 +6,8 @@ import FeatureCard from './FeatureCard.astro';
 <Panel
   tab="CORE FEATURES"
   titleId="features-title"
-  contentStyle="padding:48px;display:flex;gap:24px;justify-content:space-between;flex-wrap:wrap"
+  contentClass="pk-feature-grid"
+  contentStyle="padding:var(--pk-pad-panel-x);display:flex;gap:24px;justify-content:space-between;flex-wrap:wrap"
 >
   <h2 id="features-title" class="sr-only">Core features</h2>
   <FeatureCard
@@ -14,20 +15,29 @@ import FeatureCard from './FeatureCard.astro';
     title="Modularity"
     borderColor="#BCEEFF"
     image="/figma/feature-modularity.png"
-    body="Cleanly separates proving, verification, and compilation into independent components, making it easy to customize and extend."
+    body="Proving, verification, and compilation are separate, swappable pieces. Use the parts you need, drop the ones you don't, and keep the same proof artifacts working everywhere."
   />
   <FeatureCard
     num="2"
     title="Mobile friendly"
     borderColor="#FFE5C6"
     image="/figma/feature-mobile.png"
-    body="Designed for client-side proving, generates zero-knowledge proofs directly on a user's device without relying on heavy server infrastructure."
+    body="Proofs are generated right on the user's device, whether a phone, a browser tab, or a laptop. Private data never has to leave it, and no heavy backend is required."
   />
   <FeatureCard
     num="3"
-    title="Light weight"
+    title="Post-quantum secure"
     borderColor="#FFDEE7"
     image="/figma/feature-lightweight.png"
-    body="Built in Rust with optimized field arithmetic, Provekit keeps resource usage minimal so it runs efficiently even on constrained hardware."
+    body="The base proof is built on hash functions, so its soundness holds even against a quantum attacker. Verifiable today, and still safe when quantum computers arrive."
   />
 </Panel>
+
+<style>
+  @media (max-width: 720px) {
+    .pk-feature-grid {
+      flex-direction: column !important;
+      gap: 16px !important;
+    }
+  }
+</style>

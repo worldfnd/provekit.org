@@ -4,12 +4,21 @@ interface Props {
   tabBrand?: boolean;
   /** Inline style string applied to the inner content wrapper */
   contentStyle?: string;
+  /** Optional class applied to the inner content wrapper (responsive hook) */
+  contentClass?: string;
   /** Optional id for aria-labelledby targeting */
   titleId?: string;
   /** Inline style string applied to the outer panel section */
   style?: string;
 }
-const { tab, tabBrand = false, contentStyle = '', titleId, style = '' } = Astro.props;
+const {
+  tab,
+  tabBrand = false,
+  contentStyle = '',
+  contentClass = '',
+  titleId,
+  style = '',
+} = Astro.props;
 ---
 
 <section
@@ -24,6 +33,6 @@ const { tab, tabBrand = false, contentStyle = '', titleId, style = '' } = Astro.
       </div>
     )
   }
-  <div style={contentStyle}><slot /></div>
+  <div class={contentClass} style={contentStyle}><slot /></div>
   <slot name="extras" />
 </section>
