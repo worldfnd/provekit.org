@@ -1,0 +1,8 @@
+# wasm-bindgen-rayon's worker does `await import('../../..')` from
+# /vendor/verity/dist/wasm/snippets/.../workerHelpers.js, which resolves
+# to the directory /vendor/verity/dist/wasm/. CF Pages has no directory
+# index resolution and falls back to the SPA index.html; the browser
+# then tries to parse that HTML as an ESM module and the runtime hangs
+# on "LOADING RUNTIME…". Rewrite the directory request to the explicit
+# re-export module so the import resolves to a real ESM file.
+/vendor/verity/dist/wasm/  /vendor/verity/dist/wasm/index.js  200
