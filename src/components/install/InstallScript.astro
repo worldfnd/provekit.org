@@ -7,7 +7,7 @@ const command = 'cargo install provekit-cli';
 <Panel
   tab="INSTALL SCRIPT"
   titleId="install-title"
-  contentClass="pk-row-stack"
+  contentClass="pk-row-stack pk-row-stack-tablet"
   contentStyle="display:flex;padding:0;align-items:stretch"
 >
   <div
@@ -20,14 +20,14 @@ const command = 'cargo install provekit-cli';
         class="pk-display-headline"
         style="margin:0;font:500 72px/80px var(--pk-font-sans);letter-spacing:-0.02em;color:var(--pk-ink);white-space:pre-line"
       >
-        {'Get proving in\none command'}
+        {'To install Provekit\nrun this simple install script'}
       </h2>
       <p
         class="pk-sub-deck"
         style="margin:16px 0 0;max-width:655px;font:300 24px/32px var(--pk-font-sans);color:var(--pk-mute)"
       >
-        Install the CLI from Cargo and you have everything you need to compile a Noir circuit,
-        generate a proof, and verify it in minutes, right from your terminal.
+        Discover Provekit. Check out the comprehensive guide for a seamless introduction and
+        installation.
       </p>
     </div>
     <div>
@@ -370,6 +370,23 @@ const command = 'cargo install provekit-cli';
     }
     to {
       transform: scaleX(1);
+    }
+  }
+
+  @media (min-width: 721px) and (max-width: 1199px) {
+    .pk-install-code {
+      width: 100% !important;
+      padding: 0 var(--pk-pad-panel-x) var(--pk-pad-panel-y) !important;
+    }
+    /* Inline style hardcodes 72px — override via scoped block so !important wins */
+    #install-title {
+      font-size: 38px !important;
+      line-height: 1.15 !important;
+      white-space: normal !important;
+    }
+    .pk-sub-deck {
+      font-size: 18px !important;
+      line-height: 1.45 !important;
     }
   }
 

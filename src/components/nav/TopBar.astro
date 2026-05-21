@@ -290,7 +290,7 @@ const NAV_ITEMS = [
     top: 76px;
     left: 50%;
     transform: translateX(-50%) translateY(-24px);
-    width: min(1600px, calc(100vw - 176px));
+    width: min(1600px, calc(100vw - 2 * var(--pk-gutter)));
     max-height: calc(100vh - 76px);
     overflow-y: auto;
     background: #fff;
@@ -439,6 +439,21 @@ const NAV_ITEMS = [
     font: 400 12px/1 var(--pk-font-mono);
     letter-spacing: 0.12em;
     color: #808080;
+  }
+
+  @media (min-width: 721px) and (max-width: 1199px) {
+    .pk-topbar-inner {
+      width: 100%;
+    }
+    .pk-topbar-brand {
+      margin-left: 0;
+    }
+    .pk-topbar-actions {
+      margin-right: 0;
+    }
+    .pk-nav-label {
+      font-size: 40px;
+    }
   }
 
   @media (max-width: 720px) {

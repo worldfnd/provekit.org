@@ -26,14 +26,39 @@ import FeatureCard from './FeatureCard.astro';
   />
   <FeatureCard
     num="3"
-    title="Post-quantum secure"
+    title="Light weight"
     borderColor="#FFDEE7"
     image="/figma/feature-lightweight.png"
-    body="The base proof is built on hash functions, so its soundness holds even against a quantum attacker. Verifiable today, and still safe when quantum computers arrive."
+    body="Built in Rust with optimized field arithmetic, Provekit keeps resource usage minimal so it runs efficiently even on constrained hardware."
   />
 </Panel>
 
 <style>
+  @media (min-width: 721px) and (max-width: 1199px) {
+    /* Two columns at mid-tablet, single column at small tablet */
+    .pk-feature-grid {
+      gap: 20px !important;
+    }
+    /* Each card grows to fill available space but caps at ~50% so two fit per row */
+    .pk-feature-grid > :global(*) {
+      flex: 1 1 calc(50% - 12px);
+      min-width: 260px;
+    }
+  }
+
+  @media (min-width: 721px) and (max-width: 899px) {
+    /* Single column on small tablets */
+    .pk-feature-grid {
+      flex-direction: column !important;
+      gap: 16px !important;
+    }
+    .pk-feature-grid > :global(*) {
+      flex: none;
+      width: 100%;
+      min-width: 0;
+    }
+  }
+
   @media (max-width: 720px) {
     .pk-feature-grid {
       flex-direction: column !important;

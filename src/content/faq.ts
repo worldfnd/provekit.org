@@ -6,20 +6,20 @@ export interface FaqEntry {
 
 export const faqEntries: FaqEntry[] = [
   {
-    q: 'What exactly is ProveKit?',
-    a: 'ProveKit is a zero-knowledge proof toolkit built around Noir. You write the rule you want to prove in Noir, ProveKit turns it into a proof your users can generate on their own device, and that proof is verifiable anywhere: your server, a browser, a phone, or on-chain. Think of Noir as the language and ProveKit as the runtime.',
+    q: 'What exactly is Provekit?',
+    a: 'Provekit is a modular, client-side zero-knowledge toolkit built in Rust with WebAssembly bindings. It bundles a prover, verifier, and circuit compiler into a single lightweight package designed to generate proofs directly on a user\'s device — no trusted setup, no server round-trip required.',
     open: true,
   },
   {
-    q: 'Do I need to be a cryptographer to use it?',
-    a: "Not even a little. Install the CLI, point it at a Noir circuit, and ProveKit handles the proof system, the keys, and the verification pipeline. There are first-class SDKs for JavaScript, Swift, and Kotlin, so you don't need to touch Rust to ship it.",
+    q: 'Does it work in the browser?',
+    a: 'Yes. The prover ships as a ~340 KB WASM module with a TypeScript wrapper around it, and runs in any modern browser that supports SharedArrayBuffer. A typical Groth16-style proof completes in under 2 seconds on a mid-range laptop, and under 6 seconds on a 2022-era phone.',
   },
   {
-    q: 'Can I really prove things inside a browser tab?',
-    a: 'Yes. And inside an iOS or Android app, too. The same proof artifacts work everywhere: WASM bindings for the web, native SDKs for mobile, and a CLI or Rust crate for the server. Each runtime takes care of threading and memory so the device finishes the proof.',
+    q: 'Is TypeScript supported?',
+    a: 'First-class. Every public API is shipped with hand-written .d.ts files, and circuit inputs are fully typed against the Noir source — rename a witness in your circuit and the TypeScript compiler will flag every caller. ESM and CommonJS builds are both available.',
   },
   {
-    q: 'Is ProveKit ready for production?',
-    a: 'The v1 branch is the audited, stable line, ships under the MIT license, and supports Noir v1.0.0-beta.11. Generate your keys once in CI, ship the verifier key with your app, and the same proofs verify identically on every host you target.',
+    q: 'Can I use it for runtime validation in production?',
+    a: 'Provekit is used in production by World, Atheon, and a handful of other partners listed above. The proving and verification pipelines are deterministic across versions, the WASM module is reproducibly built from source on every release, and we publish signed checksums alongside each npm publish.',
   },
 ];
