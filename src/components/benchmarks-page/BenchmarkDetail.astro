@@ -1,6 +1,5 @@
 ---
 import Panel from '~/components/panel/Panel.astro';
-import LineChart from '~/components/charts/LineChart.astro';
 import BarsChart from '~/components/charts/BarsChart.astro';
 import ColumnsChart from '~/components/charts/ColumnsChart.astro';
 import { METRICS, DETAIL_EXTRAS } from '~/data/benchmarks';
@@ -89,7 +88,6 @@ const headlineKpi = metric.kpis[0]?.value ?? '';
       </div>
     </div>
     <div class="pk-reveal" style="min-width:0">
-      {metric.chart === 'line' && <LineChart metric={metric} />}
       {metric.chart === 'bars' && <BarsChart metric={metric} />}
       {
         metric.chart === 'columns' && (

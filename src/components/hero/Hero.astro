@@ -48,8 +48,8 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       class="pk-sub-deck"
       style="margin:16px 0 0;max-width:720px;font:300 24px/32px var(--pk-font-sans);color:var(--pk-mute)"
     >
-      Turn a Noir circuit into a proof your users generate on their own device. Verify it
-      anywhere you need to, from a server to a browser tab to a smart contract.
+      Turn a Noir circuit into a proof your users generate on their own device. Verify it anywhere
+      you need to, from a server to a browser tab to a smart contract.
     </p>
   </div>
   <div class="pk-reveal pk-row-stack" style="display:flex;gap:24px;flex-wrap:wrap">
@@ -583,10 +583,10 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         ctx!.strokeRect(mx - 6, my - 6, 12, 12);
       }
 
-      raf = requestAnimationFrame(tick);
+      requestAnimationFrame(tick);
     }
 
-    let raf = requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
 
     function getPoint(e: MouseEvent | TouchEvent): { x: number; y: number } | null {
       // Translate viewport coords → canvas CSS-pixel coords. Under CSS `zoom`,

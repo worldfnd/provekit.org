@@ -25,8 +25,8 @@ test('no horizontal scroll at desktop', async ({ page }, testInfo) => {
 
 test('faq toggles open and closed', async ({ page }) => {
   await page.goto('/');
-  const first = page.locator('details').first();
-  await expect(first).toHaveAttribute('open', '');
-  await first.locator('summary').click();
-  await expect(first).not.toHaveAttribute('open', '');
+  const trigger = page.locator('[data-pk-faq-trigger]').first();
+  await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+  await trigger.click();
+  await expect(trigger).toHaveAttribute('aria-expanded', 'false');
 });

@@ -1,10 +1,17 @@
 // Mirror of design-system/ui_kits/landing/BenchmarkSection.jsx METRICS + DETAIL_EXTRAS
+//
+// Data: ProveKit-team measurements of three toolkits proving the same
+// SHA-256 preimage circuit on a MacBook Air (Apple M2 · 16 GB), witness
+// generation included, June 2026. Systems: ProveKit v1 (WHIR · 52,029
+// R1CS constraints), Barretenberg (UltraHonk · 20,524 gates), Circom
+// (Groth16 · native rapidsnark · 90,633 R1CS).
 
 export type ChartKind = 'line' | 'bars' | 'columns';
+export type MetricKey = 'proving' | 'memory' | 'artifacts';
 
 export interface LineMetric {
-  key: 'proving';
-  title: 'Proving time';
+  key: MetricKey;
+  title: string;
   body: string;
   chart: 'line';
   unit: string;
@@ -16,8 +23,8 @@ export interface LineMetric {
 }
 
 export interface BarsMetric {
-  key: 'memory';
-  title: 'Memory footprint';
+  key: MetricKey;
+  title: string;
   body: string;
   chart: 'bars';
   unit: string;
@@ -27,8 +34,8 @@ export interface BarsMetric {
 }
 
 export interface ColumnsMetric {
-  key: 'verify';
-  title: 'Verification cost';
+  key: MetricKey;
+  title: string;
   body: string;
   chart: 'columns';
   unit: string;
@@ -41,52 +48,52 @@ export interface ColumnsMetric {
 
 export type Metric = LineMetric | BarsMetric | ColumnsMetric;
 
-export const METRICS: [LineMetric, BarsMetric, ColumnsMetric] = [
+export const METRICS: [BarsMetric, ColumnsMetric, ColumnsMetric] = [
   {
     key: 'proving',
     title: 'Proving time',
-    body: 'ProveKit generates proofs ~36% faster than comparable client-side toolkits on commodity hardware.',
-    chart: 'line',
+    body: 'ProveKit proves SHA-256 in 0.37 s on a MacBook Air, ahead of Barretenberg at 0.39 s and Circom at 0.40 s, witness generation included.',
+    chart: 'bars',
     unit: 's',
-    xLabels: ['2¹⁰', '2¹⁴', '2¹⁸', '2²²'],
-    xAxisLabel: 'CIRCUIT SIZE',
     series: [
-      { label: 'TOOLKIT 1', color: '#DE00FF', values: [0.6, 2.4, 9.5, 38.4] },
-      { label: 'TOOLKIT 2', color: '#E91900', values: [0.4, 1.5, 6.0, 24.0] },
-      { label: 'PROVEKIT', color: '#0D74FF', values: [0.18, 0.7, 2.8, 11.2] },
+      { label: 'BARRETENBERG', color: '#DE00FF', value: 0.39 },
+      { label: 'CIRCOM', color: '#E91900', value: 0.4 },
+      { label: 'PROVEKIT', color: '#0D74FF', value: 0.37 },
     ],
-    yMax: 40,
-    kpis: [{ value: '+36% Faster' }, { value: '11.2s @ 2²²' }],
+    max: 0.5,
+    kpis: [{ value: '0.37s' }, { value: 'Fastest prover' }],
   },
   {
     key: 'memory',
     title: 'Memory footprint',
-    body: 'A streamlined Rust core keeps the resident set ~24% lighter than the next nearest toolkit.',
-    chart: 'bars',
-    unit: ' MB',
+    body: 'Proving peaks at 118.9 MiB resident, well within a phone-class memory budget.',
+    chart: 'columns',
+    unit: ' MiB',
+    xLabels: ['While proving'],
+    xAxisLabel: 'PEAK RSS',
     series: [
-      { label: 'TOOLKIT 1', color: '#DE00FF', value: 92 },
-      { label: 'TOOLKIT 2', color: '#E91900', value: 64 },
-      { label: 'PROVEKIT', color: '#0D74FF', value: 38 },
+      { label: 'BARRETENBERG', color: '#DE00FF', values: [157.9] },
+      { label: 'CIRCOM', color: '#E91900', values: [96.7] },
+      { label: 'PROVEKIT', color: '#0D74FF', values: [118.9] },
     ],
-    max: 100,
-    kpis: [{ value: '+24% Lighter' }, { value: '38 MB peak' }],
+    yMax: 160,
+    kpis: [{ value: '118.9 MiB' }, { value: 'Peak while proving' }],
   },
   {
-    key: 'verify',
-    title: 'Verification cost',
-    body: 'Verifier circuits compile to a fraction of the gate count, keeping verification cheap on chain and off.',
+    key: 'artifacts',
+    title: 'Setup artifacts',
+    body: 'A device downloads under 1 MiB of ProveKit keys to start proving, against a 128 MiB CRS for Barretenberg or a 50.9 MiB zkey for Circom.',
     chart: 'columns',
-    unit: 'k',
-    xLabels: ['Setup', 'Compile', 'Verify', 'Settle'],
-    xAxisLabel: 'STAGE',
+    unit: ' MiB',
+    xLabels: ['Per circuit'],
+    xAxisLabel: 'SHA-256 CIRCUIT',
     series: [
-      { label: 'TOOLKIT 1', color: '#DE00FF', values: [42, 38, 90, 120] },
-      { label: 'TOOLKIT 2', color: '#E91900', values: [28, 24, 64, 80] },
-      { label: 'PROVEKIT', color: '#0D74FF', values: [18, 14, 32, 42] },
+      { label: 'BARRETENBERG', color: '#DE00FF', values: [128] },
+      { label: 'CIRCOM', color: '#E91900', values: [50.9] },
+      { label: 'PROVEKIT', color: '#0D74FF', values: [1] },
     ],
-    yMax: 120,
-    kpis: [{ value: '−68% Gates' }, { value: '32k verify' }],
+    yMax: 140,
+    kpis: [{ value: '<1 MiB' }, { value: '50–128× smaller' }],
   },
 ];
 
@@ -100,41 +107,41 @@ export const DETAIL_EXTRAS: Record<
 > = {
   proving: {
     extraKpis: [
-      { label: 'Median', value: '2.8s' },
-      { label: 'p95', value: '4.1s' },
-      { label: 'p99', value: '6.3s' },
-      { label: 'Speedup', value: '+36%' },
+      { label: 'ProveKit', value: '0.37s' },
+      { label: 'Barretenberg', value: '0.39s' },
+      { label: 'Circom', value: '0.40s' },
+      { label: 'One-time setup', value: '2.86s' },
     ],
     notes: [
-      'Measured on Groth16 reference circuit, 2¹⁸ constraints',
-      'All toolkits compiled with Rust 1.79 · release · LTO fat',
-      'Single-threaded; multi-thread variants linked in raw results',
+      'SHA-256 preimage circuit · 52,029 R1CS constraints',
+      'Wall clock includes witness generation',
+      'Circom measured with native rapidsnark',
     ],
   },
   memory: {
     extraKpis: [
-      { label: 'Peak RSS', value: '38 MB' },
-      { label: 'Steady', value: '31 MB' },
-      { label: 'Page-ins', value: '0' },
-      { label: 'vs next', value: '−24%' },
+      { label: 'ProveKit', value: '118.9 MiB' },
+      { label: 'Barretenberg', value: '157.9 MiB' },
+      { label: 'Circom', value: '96.7 MiB' },
+      { label: 'Hardware', value: 'M2 Air' },
     ],
     notes: [
-      'Peak resident set sampled at 50 ms during proving',
-      'Heap profile captured with macOS leaks(1) and dtrace',
-      'ProveKit reuses witness arenas across batched proofs',
+      'Peak resident set while proving',
+      'Circom measured with native rapidsnark',
+      'All three fit comfortably in phone-class memory',
     ],
   },
-  verify: {
+  artifacts: {
     extraKpis: [
-      { label: 'Verify gates', value: '32k' },
-      { label: 'On-chain', value: '210k gas' },
-      { label: 'Proof bytes', value: '192 B' },
-      { label: 'vs Toolkit 1', value: '−68%' },
+      { label: 'Prover key (.pkp)', value: '426 KiB' },
+      { label: 'Verifier key (.pkv)', value: '572 KiB' },
+      { label: 'One-time prepare', value: '2.86s' },
+      { label: 'Trusted setup', value: 'None' },
     ],
     notes: [
-      'Gate counts measured at the verifier circuit only',
-      'On-chain costs reflect a Groth16 verifier on EVM Cancun',
-      'Proof bytes constant across circuit families',
+      'Everything a device needs before proving: keys under 1 MiB',
+      'Circom additionally needs a 288 MiB ptau for its ceremony',
+      'Hash-based WHIR commitment, no trusted setup ceremony',
     ],
   },
 };
@@ -148,16 +155,17 @@ export interface SummaryRow {
 }
 
 export const SUMMARY_ROWS: SummaryRow[] = [
-  { label: 'Proving time @ 2¹⁸', unit: 's', values: [9.5, 6.0, 2.8], better: 'low' },
-  { label: 'Memory peak', unit: ' MB', values: [92, 64, 38], better: 'low' },
-  { label: 'Verifier gates', unit: 'k', values: [90, 64, 32], better: 'low' },
-  { label: 'Proof bytes', unit: ' B', values: [256, 224, 192], better: 'low' },
-  { label: 'Verify (EVM)', unit: 'k gas', values: [620, 420, 210], better: 'low' },
-  { label: 'Throughput', unit: ' p/s', values: [0.1, 0.16, 0.36], better: 'high' },
+  { label: 'Prove', unit: 's', values: [0.39, 0.4, 0.37], better: 'low' },
+  { label: 'Verify', unit: 'ms', values: [10, 1, 50], better: 'low' },
+  { label: 'Prove peak RSS', unit: ' MiB', values: [157.9, 96.7, 118.9], better: 'low' },
+  { label: 'Verify peak RSS', unit: ' MiB', values: [6, 1.8, 45.9], better: 'low' },
+  { label: 'Proof size', unit: ' KiB', values: [14.3, 0.7, 617], better: 'low' },
+  { label: 'Prover artifacts', unit: ' MiB', values: [128, 50.9, 1], better: 'low' },
+  { label: 'One-time setup', unit: 's', values: [0.37, 46.4, 2.86], better: 'low' },
 ];
 
 export const SUMMARY_TOOLKITS = [
-  { label: 'TOOLKIT 1', color: '#DE00FF' },
-  { label: 'TOOLKIT 2', color: '#E91900' },
+  { label: 'BARRETENBERG', color: '#DE00FF' },
+  { label: 'CIRCOM', color: '#E91900' },
   { label: 'PROVEKIT', color: '#0D74FF' },
 ] as const;

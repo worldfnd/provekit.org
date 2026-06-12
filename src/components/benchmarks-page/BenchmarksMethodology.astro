@@ -2,11 +2,11 @@
 import Panel from '~/components/panel/Panel.astro';
 
 const cells = [
-  { label: 'Hardware', value: 'MacBook Pro', sub: 'M2 Pro · 16 GB · macOS 14.4' },
-  { label: 'Toolchain', value: 'rustc 1.79', sub: 'release · LTO fat · codegen 1' },
-  { label: 'Dataset', value: 'ZK-bench v3', sub: '2¹⁰ – 2²² constraints' },
-  { label: 'Runs', value: '50', sub: 'median reported · 10-run warmup' },
-  { label: 'Reproducible', value: 'SHA 4f1c…ae2', sub: 'harness pinned at HEAD' },
+  { label: 'Hardware', value: 'MacBook Air', sub: 'Apple M2 · 16 GB' },
+  { label: 'Circuit', value: 'SHA-256', sub: 'preimage proof · 52,029 R1CS constraints' },
+  { label: 'Systems', value: '3 stacks', sub: 'WHIR · UltraHonk · Groth16 (rapidsnark)' },
+  { label: 'Setup', value: '2.86 s', sub: 'one-time prepare · no ceremony' },
+  { label: 'Branch', value: 'v1.0.0', sub: 'audited release line' },
 ];
 ---
 
@@ -27,9 +27,10 @@ const cells = [
       class="pk-reveal"
       style="margin:16px 0 0;max-width:880px;font:300 20px/1.4 var(--pk-font-sans);color:var(--pk-mute-2)"
     >
-      Each toolkit ran the same Groth16 reference circuit against a fixed set of input batches. We
-      report the median of 50 runs after a 10-run warmup; raw timing data and the harness are linked
-      from the repo.
+      All three toolkits prove the same SHA-256 preimage statement on the same MacBook Air (Apple
+      M2, 16 GB). Timings are full wall clock including witness generation; memory is peak resident
+      set. ProveKit figures reflect the audited v1 branch. Circom is measured with native
+      rapidsnark.
     </p>
   </div>
   <div

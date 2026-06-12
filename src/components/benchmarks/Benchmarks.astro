@@ -1,14 +1,13 @@
 ---
 import ArrowRight from '~/components/icons/ArrowRight.astro';
-import LineChart from '~/components/charts/LineChart.astro';
 import BarsChart from '~/components/charts/BarsChart.astro';
 import ColumnsChart from '~/components/charts/ColumnsChart.astro';
 import { METRICS } from '~/data/benchmarks';
 
-const labels = ['Proving time · Line', 'Memory footprint · Bars', 'Verification cost · Columns'];
+const labels = ['Proving time · Bars', 'Memory footprint · Columns', 'Setup artifacts · Columns'];
 const legend = [
-  { label: 'TOOLKIT 1', color: '#DE00FF' },
-  { label: 'TOOLKIT 2', color: '#E91900' },
+  { label: 'BARRETENBERG', color: '#DE00FF' },
+  { label: 'CIRCOM', color: '#E91900' },
   { label: 'PROVEKIT', color: '#0D74FF' },
 ];
 ---
@@ -127,13 +126,13 @@ const legend = [
           }
         </div>
         <div data-chart="0" class="pk-bench-anim pk-bench-chart">
-          <LineChart metric={METRICS[0]} />
+          <BarsChart metric={METRICS[0]} />
         </div>
         <div data-chart="1" class="pk-bench-anim pk-bench-chart" hidden>
-          <BarsChart metric={METRICS[1]} />
+          <ColumnsChart metric={METRICS[1]} hatchId="pk-col-hatch-landing-1" />
         </div>
         <div data-chart="2" class="pk-bench-anim pk-bench-chart" hidden>
-          <ColumnsChart metric={METRICS[2]} hatchId="pk-col-hatch-landing" />
+          <ColumnsChart metric={METRICS[2]} hatchId="pk-col-hatch-landing-2" />
         </div>
       </div>
     </div>
@@ -297,16 +296,17 @@ const legend = [
   // Landing benchmark teaser: tab-switch transitions with direction-aware
   // exit/enter, brand-blue sweep indicator, and per-character KPI flip.
   // Ported from canonical BenchmarkSection in ProveKit Landing.html.
-  const root = document.querySelector<HTMLElement>('.pk-bench');
-  if (root) {
+  const benchEl = document.querySelector<HTMLElement>('.pk-bench');
+  if (benchEl) {
+    const root = benchEl;
     const items = root.querySelectorAll<HTMLElement>('[data-idx]');
     const charts = root.querySelectorAll<HTMLElement>('[data-chart]');
     const kpis = root.querySelectorAll<HTMLElement>('[data-kpis]');
     const label = root.querySelector<HTMLElement>('[data-bench-label]');
     const labels = [
-      'Proving time · Line',
-      'Memory footprint · Bars',
-      'Verification cost · Columns',
+      'Proving time · Bars',
+      'Memory footprint · Columns',
+      'Setup artifacts · Columns',
     ];
 
     let displayIdx = 0;
