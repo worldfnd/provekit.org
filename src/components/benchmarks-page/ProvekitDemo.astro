@@ -38,7 +38,8 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       <p class="pk-sub-deck pk-demo-sub">
         Pick a circuit, edit the private input, and generate a real zero-knowledge proof in your
         browser.<span class="pk-demo-mobile-hide">
-          Witness never leaves this page; only the public hash + proof get published.</span>
+          Witness never leaves this page; only the public hash + proof get published.</span
+        >
       </p>
     </div>
 
@@ -106,9 +107,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         <span class="pk-demo-block-label">03 · Public statement</span>
       </div>
       <div class="pk-demo-card pk-demo-card-ink">
-        <div class="pk-demo-statement" data-demo-statement
-          >I know x such that SHA256(x) = y</div
-        >
+        <div class="pk-demo-statement" data-demo-statement>I know x such that SHA256(x) = y</div>
         <div class="pk-demo-hash">
           <span class="pk-demo-hash-label">y</span>
           <code class="pk-demo-hash-value" data-demo-hash>revealed after proof</code>
@@ -947,13 +946,10 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       if (Array.isArray(value)) {
         // Determine if entries look like bytes (0..255 decimal-ish) or fields.
         const first = value[0];
-        const isField =
-          typeof first === 'string' && first.startsWith('0x') && first.length > 4;
+        const isField = typeof first === 'string' && first.startsWith('0x') && first.length > 4;
         if (isField) {
           // Concatenate field hex (strip "0x" except the leading one).
-          return (
-            '0x' + value.map((v) => v.replace(/^0x/, '').padStart(64, '0')).join('')
-          );
+          return '0x' + value.map((v) => v.replace(/^0x/, '').padStart(64, '0')).join('');
         }
         // Bytes: each value is 0..255.
         return (
@@ -1092,8 +1088,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       const revealNumbers = phase === 'done';
       // "Proving time" = the prove() step only (excludes runtime boot + verify).
       if (kpiTotal) kpiTotal.textContent = revealNumbers ? fmtMs(provingMs) : '…';
-      if (kpiSize)
-        kpiSize.textContent = revealNumbers && proofSize > 0 ? fmtBytes(proofSize) : '…';
+      if (kpiSize) kpiSize.textContent = revealNumbers && proofSize > 0 ? fmtBytes(proofSize) : '…';
       if (kpiConstraints)
         kpiConstraints.textContent =
           revealNumbers && constraintsCount ? constraintsCount.toLocaleString() : '…';
@@ -1278,7 +1273,10 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         );
         const statusInfoEl = document.querySelector('[data-demo-status-info]');
         if (statusInfoEl) {
-          const t = typeof threads === 'number' ? `${threads} thread${threads === 1 ? '' : 's'}` : '1 thread';
+          const t =
+            typeof threads === 'number'
+              ? `${threads} thread${threads === 1 ? '' : 's'}`
+              : '1 thread';
           statusInfoEl.textContent = `SHA-256 preimage · up to 1024 bytes · ${t}`;
         }
         timings.runtime = 0;

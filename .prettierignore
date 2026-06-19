@@ -5,3 +5,5 @@ pnpm-lock.yaml
 reference
 .omc
 src/env.d.ts
+public/vendor
+public/artifacts

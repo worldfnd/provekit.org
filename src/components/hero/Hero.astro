@@ -54,8 +54,8 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       class="pk-sub-deck"
       style="margin:16px 0 0;max-width:720px;font:300 24px/32px var(--pk-font-sans);color:var(--pk-mute)"
     >
-      Turn a Noir circuit into a proof your users generate on their own device. Verify it
-      anywhere you need to, from a server to a browser tab to a smart contract.
+      Turn a Noir circuit into a proof your users generate on their own device. Verify it anywhere
+      you need to, from a server to a browser tab to a smart contract.
     </p>
   </div>
   <div class="pk-reveal pk-row-stack" style="display:flex;gap:24px;flex-wrap:wrap">
@@ -157,7 +157,14 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
   .pk-hero-grain {
     position: absolute;
     inset: 0;
-    background: url('/figma/grain-texture.png') center/cover;
+    background-image: url('/figma/grain-texture.png');
+    background-image: image-set(
+      url('/figma/grain-texture.avif') type('image/avif'),
+      url('/figma/grain-texture.webp') type('image/webp'),
+      url('/figma/grain-texture.png') type('image/png')
+    );
+    background-position: center;
+    background-size: cover;
     opacity: 0.12;
     mix-blend-mode: overlay;
   }
@@ -341,7 +348,11 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
   }
   .pk-hero-corner {
     position: absolute;
-    font: 400 11px/1 ui-monospace, 'SF Mono', Menlo, monospace;
+    font:
+      400 11px/1 ui-monospace,
+      'SF Mono',
+      Menlo,
+      monospace;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     pointer-events: none;
@@ -677,10 +688,10 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         ctx!.strokeRect(mx - 6, my - 6, 12, 12);
       }
 
-      raf = requestAnimationFrame(tick);
+      requestAnimationFrame(tick);
     }
 
-    let raf = requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
 
     function getPoint(e: MouseEvent | TouchEvent): { x: number; y: number } | null {
       // Translate viewport coords → canvas CSS-pixel coords. Under CSS `zoom`,

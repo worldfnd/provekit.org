@@ -184,7 +184,8 @@ const { q, a, open = false } = Astro.props;
     function toggle() {
       const isOpen = row.classList.contains('is-open');
       // Close all rows in the same list
-      const siblings = row.closest('.pk-faq-list')?.querySelectorAll<HTMLElement>('[data-pk-faq]') ?? [];
+      const siblings =
+        row.closest('.pk-faq-list')?.querySelectorAll<HTMLElement>('[data-pk-faq]') ?? [];
       siblings.forEach((sibling) => {
         sibling.classList.remove('is-open');
         sibling.querySelector('[data-pk-faq-trigger]')?.setAttribute('aria-expanded', 'false');

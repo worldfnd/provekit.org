@@ -7,7 +7,7 @@ export interface FaqEntry {
 export const faqEntries: FaqEntry[] = [
   {
     q: 'What exactly is Provekit?',
-    a: 'Provekit is a modular, client-side zero-knowledge toolkit built in Rust with WebAssembly bindings. It bundles a prover, verifier, and circuit compiler into a single lightweight package designed to generate proofs directly on a user\'s device — no trusted setup, no server round-trip required.',
+    a: "Provekit is a modular, client-side zero-knowledge toolkit built in Rust with WebAssembly bindings. It bundles a prover, verifier, and circuit compiler into a single lightweight package designed to generate proofs directly on a user's device — no trusted setup, no server round-trip required.",
     open: true,
   },
   {
