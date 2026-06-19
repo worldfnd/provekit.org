@@ -20,13 +20,7 @@ const { q, a, open = false } = Astro.props;
   </div>
   <div class="pk-faq-panel" data-pk-faq-panel>
     <div class="pk-faq-panel-inner">
-      {
-        a ? (
-          <p class="pk-faq-a">{a}</p>
-        ) : (
-          <p class="pk-faq-a pk-faq-a-empty">Answer coming soon.</p>
-        )
-      }
+      {a ? <p class="pk-faq-a">{a}</p> : <p class="pk-faq-a pk-faq-a-empty">Answer coming soon.</p>}
     </div>
   </div>
 </div>

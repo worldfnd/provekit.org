@@ -18,7 +18,7 @@
     "lhci": "lhci autorun"
   },
   "dependencies": {
-    "@astrojs/sitemap": "3.2.1",
+    "@astrojs/sitemap": "3.7.3",
     "@atheonxyz/verity": "0.3.2-alpha",
     "@fontsource/geist-mono": "^5.1.0",
     "@fontsource/outfit": "^5.1.0",
@@ -27,12 +27,12 @@
     "@noir-lang/noirc_abi": "1.0.0-beta.19",
     "@noir-lang/types": "1.0.0-beta.19",
     "@tailwindcss/vite": "^4.0.0",
-    "astro": "^4.16.0",
+    "astro": "^6.4.6",
     "pako": "2.1.0",
     "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.4",
+    "@astrojs/check": "^0.9.9",
     "@lhci/cli": "^0.14.0",
     "@playwright/test": "^1.49.0",
     "@types/node": "^22.10.0",

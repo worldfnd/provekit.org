@@ -151,20 +151,6 @@ static — no edge functions, no server routes — so any static host works.
 
 ---
 
-## Replace placeholder URLs before launch
-
-Every external link starts as `href="#"`. See
-[`TODO_LINKS.md`](./TODO_LINKS.md) for the complete list of source locations.
-After replacing them, run
-
-```bash
-grep -rn 'data-todo=' src/
-```
-
-to verify zero unresolved links remain.
-
----
-
 ## Contributing
 
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md). Commits follow

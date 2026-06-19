@@ -5,7 +5,14 @@ export default [
   ...tseslint.configs.recommended,
   ...eslintPluginAstro.configs.recommended,
   {
-    ignores: ['dist/**', '.astro/**', 'node_modules/**', 'reference/**', 'src/env.d.ts'],
+    ignores: [
+      'dist/**',
+      '.astro/**',
+      'node_modules/**',
+      'reference/**',
+      'public/vendor/**',
+      'src/env.d.ts',
+    ],
   },
   {
     rules: {
