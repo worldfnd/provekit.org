@@ -3,6 +3,7 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import TopBar from '~/components/nav/TopBar.astro';
 import BenchmarksHero from '~/components/benchmarks-page/BenchmarksHero.astro';
 import LiveDemoSection from '~/components/demo/LiveDemoSection.astro';
+import ProvekitDemo from '~/components/benchmarks-page/ProvekitDemo.astro';
 import BenchmarksMethodology from '~/components/benchmarks-page/BenchmarksMethodology.astro';
 import BenchmarkDetail from '~/components/benchmarks-page/BenchmarkDetail.astro';
 import BenchmarksSummary from '~/components/benchmarks-page/BenchmarksSummary.astro';
@@ -10,14 +11,15 @@ import SiteFooter from '~/components/footer/SiteFooter.astro';
 ---
 
 <BaseLayout
-  title="Provekit — Benchmarks"
-  description="A reproducible look at how Provekit performs against TOOLKIT 1 and TOOLKIT 2 across proving time, memory, and verification cost — measured on commodity client hardware."
-  canonical="https://provekit.org/benchmarks"
+  title="ProveKit · Benchmarks"
+  description="A reproducible look at how ProveKit performs against Barretenberg and Circom across proving time, memory, and setup artifacts, measured on commodity client hardware."
+  canonical="https://provekit.atheon.xyz/benchmarks"
 >
   <TopBar />
   <main id="main" class="pk-stage">
-    <div class="pk-strip" aria-hidden="true"></div>
     <BenchmarksHero />
+    <div class="pk-strip" aria-hidden="true"></div>
+    <ProvekitDemo />
     <div class="pk-strip" aria-hidden="true"></div>
     <LiveDemoSection />
     <div class="pk-strip" aria-hidden="true"></div>

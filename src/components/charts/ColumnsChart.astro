@@ -107,10 +107,14 @@ const barW = (groupInner - (metric.series.length - 1) * 4) / metric.series.lengt
           />
           {metric.series.map((s, j) => {
             const x = innerLeft + j * (barW + 4);
-            const y = yAt(s.values[i] ?? 0);
+            // Floor tiny non-zero columns at 3px so near-zero values (e.g. a
+            // 200 B proof against a 180 KB axis) stay visible.
+            const v = s.values[i] ?? 0;
+            const h = v > 0 ? Math.max(CHART_H - PAD_B - yAt(v), 3) : 0;
+            const y = CHART_H - PAD_B - h;
             return (
               <g style="pointer-events:none">
-                <rect x={x} y={y} width={barW} height={CHART_H - PAD_B - y} fill={s.color} />
+                <rect x={x} y={y} width={barW} height={h} fill={s.color} />
                 <text
                   class="pk-col-value"
                   x={x + barW / 2}

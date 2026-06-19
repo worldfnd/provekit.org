@@ -45,8 +45,13 @@ function attach(svg: SVGSVGElement) {
   let lastGuideX = d.PAD_L;
   let lastTipTx = d.PAD_L;
   let lastTipTy = d.PAD_T;
+  // Track current bucket so we only re-render (and re-flip) when the
+  // cursor crosses into a new x-tick, not on every pixel of mousemove.
+  let currentIdx: number | null = null;
 
   function setHover(i: number | null) {
+    if (i === currentIdx) return;
+    currentIdx = i;
     if (i == null) {
       guide!.setAttribute(
         'style',

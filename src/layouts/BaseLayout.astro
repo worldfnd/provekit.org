@@ -16,7 +16,7 @@ interface Props {
 const {
   title,
   description,
-  canonical = 'https://provekit.org',
+  canonical = 'https://provekit.atheon.xyz',
   ogImage = '/og-image.png',
 } = Astro.props;
 ---
@@ -26,7 +26,8 @@ const {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="only light" />
+    <meta name="supported-color-schemes" content="light" />
     <meta name="theme-color" content="#F8FEFF" />
     <script is:inline>
       document.documentElement.classList.add('js');
@@ -70,8 +71,6 @@ const {
     <script>
       import '~/scripts/reveal.ts';
       import '~/scripts/copy.ts';
-      import '~/scripts/ascii-wordmark.ts';
-      import '~/scripts/line-chart-hover.ts';
     </script>
 
     <style is:global>

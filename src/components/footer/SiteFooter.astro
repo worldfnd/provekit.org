@@ -5,38 +5,42 @@ interface Props {
 const { onBenchmarks = false } = Astro.props;
 
 const product = [
-  { label: 'DOCS', href: '#', todo: 'docs' },
-  { label: 'GUIDE', href: '#', todo: 'guide' },
+  { label: 'DOCS', href: 'https://docs.provekit.atheon.xyz/', external: true },
+  { label: 'GUIDE', href: 'https://docs.provekit.atheon.xyz/', external: true },
   onBenchmarks
-    ? { label: 'HOME', href: '/', todo: undefined }
-    : { label: 'BENCHMARKS', href: '/benchmarks', todo: undefined },
+    ? { label: 'HOME', href: '/', external: false }
+    : { label: 'BENCHMARKS', href: '/benchmarks', external: false },
 ];
 const community = [
-  { label: 'TELEGRAM', href: '#', todo: 'telegram' },
-  { label: 'TWITTER', href: '#', todo: 'twitter' },
-  { label: 'GITHUB', href: '#', todo: 'github' },
+  { label: 'GITHUB', href: 'https://github.com/worldfnd/provekit', external: true },
 ];
 ---
 
-<footer
-  style="width:1600px;max-width:100%;padding:48px 24px 24px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;border-left:1px solid var(--pk-line);border-right:1px solid var(--pk-line);box-sizing:border-box"
->
-  <div
-    style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap"
-  >
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
+<footer class="pk-footer">
+  <div class="pk-footer-chips">
+    <div class="pk-footer-chip-group">
       {
         product.map((l) => (
-          <a class="pk-chip" href={l.href} data-todo={l.todo}>
+          <a
+            class="pk-chip"
+            href={l.href}
+            target={l.external ? '_blank' : undefined}
+            rel={l.external ? 'noopener' : undefined}
+          >
             {l.label}
           </a>
         ))
       }
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <div class="pk-footer-chip-group">
       {
         community.map((l) => (
-          <a class="pk-chip" href={l.href} data-todo={l.todo}>
+          <a
+            class="pk-chip"
+            href={l.href}
+            target={l.external ? '_blank' : undefined}
+            rel={l.external ? 'noopener' : undefined}
+          >
             {l.label}
           </a>
         ))
@@ -44,31 +48,53 @@ const community = [
     </div>
   </div>
 
-  <!-- Giant Provekit wordmark, full-bleed, clipped at the bottom.
-       On hover, fades into an ASCII-shader canvas rendering. -->
-  <div
-    data-ascii-wordmark
-    style="width:100%;margin-top:24px;margin-bottom:-32px;position:relative;cursor:pointer;overflow:hidden"
-    aria-hidden="true"
-  >
+  <!-- Giant ProveKit wordmark, full-bleed, clipped at the bottom. -->
+  <div class="pk-footer-wordmark" aria-hidden="true">
     <img
-      data-ascii-svg
       src="/figma/wordmark-large-blue.svg"
       alt=""
       loading="lazy"
       decoding="async"
-      style="width:100%;display:block;transition:opacity 0.25s ease"
+      style="width:100%;display:block"
     />
-    <canvas
-      data-ascii-canvas
-      aria-hidden="true"
-      style="position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;transition:opacity 0.25s ease;pointer-events:none;display:block"
-    >
-    </canvas>
   </div>
 </footer>
 
 <style is:global>
+  .pk-footer {
+    width: 1600px;
+    max-width: 100%;
+    padding: 48px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    border-left: 1px solid var(--pk-line);
+    border-right: 1px solid var(--pk-line);
+    box-sizing: border-box;
+  }
+  .pk-footer-chips {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .pk-footer-chip-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .pk-footer-wordmark {
+    width: 100%;
+    margin-top: 24px;
+    margin-bottom: -16px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
   .pk-chip {
     display: inline-flex;
     align-items: center;
@@ -90,5 +116,42 @@ const community = [
     background: var(--pk-brand);
     color: #fff;
     border-color: var(--pk-brand);
+  }
+
+  @media (max-width: 720px) {
+    .pk-footer {
+      padding: 24px 16px 0;
+      gap: 16px;
+    }
+    .pk-footer-chips {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+    .pk-footer-chip-group {
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .pk-chip {
+      flex: 1 1 calc(33.333% - 6px);
+      min-width: 0;
+      justify-content: center;
+      padding: 10px 12px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+    .pk-footer-wordmark {
+      margin-top: 16px;
+      margin-bottom: 0;
+      padding-bottom: 16px;
+    }
+  }
+  /* Drop to 2 chips per row at very narrow widths so labels stay readable. */
+  @media (max-width: 360px) {
+    .pk-chip {
+      flex: 1 1 calc(50% - 4px);
+      font-size: 11px;
+      padding: 10px 8px;
+    }
   }
 </style>

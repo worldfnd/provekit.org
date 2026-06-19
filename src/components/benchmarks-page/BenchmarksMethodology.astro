@@ -2,11 +2,11 @@
 import Panel from '~/components/panel/Panel.astro';
 
 const cells = [
-  { label: 'Hardware', value: 'MacBook Pro', sub: 'M2 Pro · 16 GB · macOS 14.4' },
-  { label: 'Toolchain', value: 'rustc 1.79', sub: 'release · LTO fat · codegen 1' },
-  { label: 'Dataset', value: 'ZK-bench v3', sub: '2¹⁰ – 2²² constraints' },
-  { label: 'Runs', value: '50', sub: 'median reported · 10-run warmup' },
-  { label: 'Reproducible', value: 'SHA 4f1c…ae2', sub: 'harness pinned at HEAD' },
+  { label: 'Hardware', value: 'MacBook Air', sub: 'Apple M2 · 16 GB' },
+  { label: 'Circuit', value: 'SHA-256', sub: 'preimage proof · 52,029 R1CS constraints' },
+  { label: 'Systems', value: '3 stacks', sub: 'WHIR · UltraHonk · Groth16 (rapidsnark)' },
+  { label: 'Setup', value: '2.86 s', sub: 'one-time prepare · no ceremony' },
+  { label: 'Branch', value: 'v1.0.0', sub: 'audited release line' },
 ];
 ---
 
@@ -15,10 +15,10 @@ const cells = [
   titleId="methodology-title"
   contentStyle="display:flex;flex-direction:column"
 >
-  <div style="padding:48px 48px 0">
+  <div class="pk-methodology-head" style="padding:var(--pk-pad-panel-x) var(--pk-pad-panel-x) 0">
     <h2
       id="methodology-title"
-      class="pk-reveal"
+      class="pk-reveal pk-methodology-title"
       style="margin:0;font:500 48px/56px var(--pk-font-sans);letter-spacing:-0.02em;color:var(--pk-ink)"
     >
       How these numbers were captured
@@ -27,15 +27,20 @@ const cells = [
       class="pk-reveal"
       style="margin:16px 0 0;max-width:880px;font:300 20px/1.4 var(--pk-font-sans);color:var(--pk-mute-2)"
     >
-      Each toolkit ran the same Groth16 reference circuit against a fixed set of input batches. We
-      report the median of 50 runs after a 10-run warmup; raw timing data and the harness are linked
-      from the repo.
+      All three toolkits prove the same SHA-256 preimage statement on the same MacBook Air (Apple
+      M2, 16 GB). Timings are full wall clock including witness generation; memory is peak resident
+      set. ProveKit figures reflect the audited v1 branch. Circom is measured with native
+      rapidsnark.
     </p>
   </div>
-  <div style="display:flex;margin-top:48px;border-top:1px solid var(--pk-line);flex-wrap:wrap">
+  <div
+    class="pk-methodology-cells"
+    style="display:flex;margin-top:48px;border-top:1px solid var(--pk-line);flex-wrap:wrap"
+  >
     {
       cells.map((c, i) => (
         <div
+          class="pk-methodology-cell"
           style={`flex:1 1 0;min-width:200px;padding:32px 24px;${i < cells.length - 1 ? 'border-right:1px solid var(--pk-line);' : ''}display:flex;flex-direction:column;gap:8px`}
         >
           <div style="font:400 14px/1 var(--pk-font-mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--pk-mute-2)">
@@ -50,3 +55,34 @@ const cells = [
     }
   </div>
 </Panel>
+
+<style>
+  @media (max-width: 720px) {
+    .pk-methodology-title {
+      font: 500 28px/32px var(--pk-font-sans) !important;
+    }
+    .pk-methodology-head p {
+      font-size: 14px !important;
+      line-height: 1.45 !important;
+    }
+    /* Stack cells vertically so labels never wrap character-by-character. */
+    .pk-methodology-cells {
+      flex-direction: column !important;
+    }
+    .pk-methodology-cell {
+      min-width: 0 !important;
+      padding: 18px 20px !important;
+      border-right: 0 !important;
+      border-bottom: 1px solid var(--pk-line);
+    }
+    .pk-methodology-cell:last-child {
+      border-bottom: 0;
+    }
+    .pk-methodology-cell > div:nth-child(2) {
+      font-size: 22px !important;
+    }
+    .pk-methodology-cell > div:nth-child(3) {
+      font-size: 13px !important;
+    }
+  }
+</style>

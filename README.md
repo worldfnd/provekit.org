@@ -5,10 +5,10 @@
 [![Astro](https://img.shields.io/badge/Astro-4.x-FF5D01.svg?logo=astro)](https://astro.build)
 [![pnpm](https://img.shields.io/badge/pnpm-9.x-F69220.svg?logo=pnpm)](https://pnpm.io)
 
-The landing page for **[Provekit](https://provekit.org)** — a client-side
+The landing page for **[ProveKit](https://provekit.org)** — a client-side
 zero-knowledge proving toolkit written in Rust.
 
-The site is a 1:1 implementation of the official Provekit Design System: a
+The site is a 1:1 implementation of the official ProveKit Design System: a
 fixed-width 1600px stage of stacked, bordered panels with category tabs,
 restrained mono chrome, and a soft pastel-bloom illustration language.
 
@@ -74,7 +74,7 @@ provekit.org/
 ```
 
 The Astro components in `src/components/` mirror the JSX source shipped in
-the Provekit Design System bundle. Code comments throughout `src/` reference
+the ProveKit Design System bundle. Code comments throughout `src/` reference
 the corresponding JSX files for provenance.
 
 ---
@@ -148,20 +148,6 @@ Cloudflare Pages auto-detects Astro:
 
 Preview deploys are enabled per pull request by default. The site is fully
 static — no edge functions, no server routes — so any static host works.
-
----
-
-## Replace placeholder URLs before launch
-
-Every external link starts as `href="#"`. See
-[`TODO_LINKS.md`](./TODO_LINKS.md) for the complete list of source locations.
-After replacing them, run
-
-```bash
-grep -rn 'data-todo=' src/
-```
-
-to verify zero unresolved links remain.
 
 ---
 

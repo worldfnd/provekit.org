@@ -40,6 +40,7 @@ const summaryData = JSON.stringify({ rows: SUMMARY_ROWS, toolkits: SUMMARY_TOOLK
 <Panel tab="SUMMARY" titleId="summary-title" contentStyle="display:flex;flex-direction:column">
   <div class="pk-summary" data-summary-data={summaryData} data-sort-idx={defaultSortIdx}>
     <div
+      class="pk-summary-head"
       style="padding:56px 48px 32px;display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap"
     >
       <div>
@@ -80,7 +81,7 @@ const summaryData = JSON.stringify({ rows: SUMMARY_ROWS, toolkits: SUMMARY_TOOLK
       </div>
     </div>
 
-    <div style="border-top:1px solid var(--pk-line)">
+    <div class="pk-summary-table-scroll" style="border-top:1px solid var(--pk-line)">
       <!-- Header row -->
       <div
         class="pk-summary-header"
@@ -139,6 +140,7 @@ const summaryData = JSON.stringify({ rows: SUMMARY_ROWS, toolkits: SUMMARY_TOOLK
               {row.values.map((v, i) => {
                 const win = isWinner(row.values, i, row.better);
                 const frac = barFraction(row.values, i, row.better);
+                const tk = SUMMARY_TOOLKITS[i];
                 return (
                   <div
                     class="pk-summary-cell"
@@ -147,14 +149,29 @@ const summaryData = JSON.stringify({ rows: SUMMARY_ROWS, toolkits: SUMMARY_TOOLK
                   >
                     <div
                       class="pk-summary-bar"
-                      style={`position:absolute;left:0;top:0;bottom:0;width:${frac * 100}%;background:${SUMMARY_TOOLKITS[i]?.color};opacity:0.08;transition:opacity 0.2s ease,width 0.4s cubic-bezier(.2,.8,.2,1)`}
+                      style={`position:absolute;left:0;top:0;bottom:0;width:${frac * 100}%;background:${tk?.color};opacity:0.08;transition:opacity 0.2s ease,width 0.4s cubic-bezier(.2,.8,.2,1)`}
                     />
                     <div
+                      class="pk-summary-cell-inner"
                       style={`position:relative;padding:28px 24px;display:flex;align-items:baseline;gap:8px;font:400 28px/1 var(--pk-font-mono);letter-spacing:0.02em;color:${win ? 'var(--pk-brand)' : 'var(--pk-ink)'}`}
                     >
-                      {fmtN(v, row.unit)}
+                      <span
+                        class="pk-summary-cell-meta"
+                        aria-hidden="true"
+                        style="display:none;align-items:center;gap:8px;font:400 12px/1 var(--pk-font-mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--pk-mute-2)"
+                      >
+                        <span
+                          class="pk-summary-cell-dot"
+                          style={`width:10px;height:10px;background:${tk?.color};display:inline-block;flex-shrink:0`}
+                        />
+                        {tk?.label}
+                      </span>
+                      <span class="pk-summary-cell-value">{fmtN(v, row.unit)}</span>
                       {win && (
-                        <span style="font:400 11px/1 var(--pk-font-mono);letter-spacing:0.08em;color:var(--pk-brand);text-transform:uppercase">
+                        <span
+                          class="pk-summary-cell-best"
+                          style="font:400 11px/1 var(--pk-font-mono);letter-spacing:0.08em;color:var(--pk-brand);text-transform:uppercase"
+                        >
                           best
                         </span>
                       )}
@@ -189,6 +206,71 @@ const summaryData = JSON.stringify({ rows: SUMMARY_ROWS, toolkits: SUMMARY_TOOLK
   }
   .pk-summary-cell[data-col-active='true'] {
     background: rgba(13, 116, 255, 0.06);
+  }
+
+  @media (max-width: 720px) {
+    .pk-summary-head {
+      padding: 28px 20px 16px !important;
+      gap: 16px !important;
+    }
+    .pk-summary-head h2 {
+      font: 500 24px/28px var(--pk-font-sans) !important;
+    }
+    .pk-summary-head p {
+      font-size: 14px !important;
+      line-height: 1.45 !important;
+    }
+    /* Collapse the 4-col table into per-metric cards so the comparison
+     * fits a 360px viewport without horizontal scroll. */
+    .pk-summary-table-scroll {
+      overflow-x: visible;
+      border-top: 0 !important;
+    }
+    .pk-summary-header {
+      display: none !important;
+    }
+    .pk-summary-row {
+      grid-template-columns: 1fr !important;
+      padding: 20px 20px 8px !important;
+      border-bottom: 1px solid var(--pk-line) !important;
+      gap: 4px;
+    }
+    .pk-summary-row > div:first-child {
+      padding: 0 0 12px !important;
+      gap: 8px !important;
+      font: 500 16px/1.2 var(--pk-font-sans) !important;
+      border-bottom: 1px solid var(--pk-line);
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .pk-summary-cell {
+      height: auto !important;
+      border-left: 0 !important;
+      border-bottom: 0 !important;
+    }
+    .pk-summary-cell-inner {
+      padding: 12px 0 !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      font: 400 18px/1 var(--pk-font-mono) !important;
+    }
+    .pk-summary-cell-meta {
+      display: inline-flex !important;
+      flex: 1;
+      min-width: 0;
+    }
+    .pk-summary-cell-value {
+      flex-shrink: 0;
+    }
+    .pk-summary-cell-best {
+      margin-left: 8px;
+    }
+    /* Bar fills become a thin underline at the bottom of each cell row. */
+    .pk-summary-bar {
+      top: auto !important;
+      height: 2px !important;
+      opacity: 0.45 !important;
+    }
   }
 </style>
 

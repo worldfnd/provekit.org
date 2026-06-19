@@ -1,0 +1,1306 @@
+---
+import Panel from '~/components/panel/Panel.astro';
+import ArrowRight from '~/components/icons/ArrowRight.astro';
+---
+
+<!-- Importmap for the in-browser ProveKit runtime (verity + Noir.js).
+     Vendored under /vendor — see public/vendor/. -->
+<script
+  is:inline
+  type="importmap"
+  set:html={`{
+  "imports": {
+    "@atheonxyz/verity": "/vendor/verity/dist/browser/index.js",
+    "@noir-lang/noir_js": "/vendor/noir/noir_js/lib/index.mjs",
+    "@noir-lang/acvm_js": "/vendor/noir/acvm_js/acvm_js.js",
+    "@noir-lang/noirc_abi": "/vendor/noir/noirc_abi/noirc_abi_wasm.js",
+    "@noir-lang/types": "/vendor/noir/types/lib/esm/types.js",
+    "pako": "/vendor/pako/pako.esm.mjs",
+    "provekit-inspector": "/vendor/verity/dist/wasm/provekit_wasm.js"
+  }
+}`}
+/>
+
+<Panel tab="LIVE DEMO" tabBrand titleId="demo-title" contentClass="pk-demo-grid">
+  <div class="pk-demo-left">
+    <div>
+      <div class="pk-demo-eyebrow">
+        Run on this device <span class="pk-demo-mobile-hide">· WebAssembly </span>· no server
+      </div>
+      <h2
+        id="demo-title"
+        class="pk-display-headline pk-demo-h"
+        style="margin:0;font:500 56px/64px var(--pk-font-sans);letter-spacing:-0.02em;color:var(--pk-ink);white-space:pre-line"
+      >
+        <span class="pk-demo-mobile-hide">{'Try ProveKit\nright here, right now'}</span>
+        <span class="pk-demo-mobile-only">Try the demo</span>
+      </h2>
+      <p class="pk-sub-deck pk-demo-sub">
+        Pick a circuit, edit the private input, and generate a real zero-knowledge proof in your
+        browser.<span class="pk-demo-mobile-hide">
+          Witness never leaves this page; only the public hash + proof get published.</span
+        >
+      </p>
+    </div>
+
+    <!-- 01 Circuit picker -->
+    <div class="pk-demo-block">
+      <div class="pk-demo-block-head"><span class="pk-demo-block-label">01 · Circuit</span></div>
+      <div class="pk-demo-hash-grid">
+        <button
+          type="button"
+          class="pk-demo-scen is-active"
+          data-demo-circuit="sha"
+          aria-pressed="true"
+        >
+          <span class="pk-demo-scen-label">SHA-256 preimage</span>
+          <span class="pk-demo-scen-sub"
+            >Prove you know x such that SHA256(x) = y · up to 1024 bytes</span
+          >
+        </button>
+        <button
+          type="button"
+          class="pk-demo-scen"
+          data-demo-circuit="poseidon"
+          aria-pressed="false"
+        >
+          <span class="pk-demo-scen-label">Poseidon · 1000 rounds</span>
+          <span class="pk-demo-scen-sub"
+            >Prove the result of 1000 Poseidon2 permutations on 4 field elements</span
+          >
+        </button>
+      </div>
+    </div>
+
+    <!-- 02 Private input -->
+    <div class="pk-demo-block">
+      <div class="pk-demo-block-head">
+        <span class="pk-demo-block-label">02 · Private witness</span>
+        <span class="pk-demo-block-badge"
+          ><span class="pk-demo-block-dot"></span>NEVER LEAVES BROWSER</span
+        >
+      </div>
+      <div class="pk-demo-card pk-demo-card-canvas">
+        <label class="pk-demo-input-wrap">
+          <textarea
+            class="pk-demo-input"
+            data-demo-input
+            spellcheck="false"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            rows="3">hello, provekit</textarea
+          >
+          <div class="pk-demo-input-meta">
+            <span data-demo-input-meta>15 / 1024 bytes</span>
+            <span data-demo-input-hint
+              >Text is zero-padded to 1024 bytes; only `len` bytes are hashed</span
+            >
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- 03 Public statement -->
+    <div class="pk-demo-block">
+      <div class="pk-demo-block-head">
+        <span class="pk-demo-block-label">03 · Public statement</span>
+      </div>
+      <div class="pk-demo-card pk-demo-card-ink">
+        <div class="pk-demo-statement" data-demo-statement>I know x such that SHA256(x) = y</div>
+        <div class="pk-demo-hash">
+          <span class="pk-demo-hash-label">y</span>
+          <code class="pk-demo-hash-value" data-demo-hash>revealed after proof</code>
+        </div>
+        <div class="pk-demo-publics" data-demo-publics></div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="pk-demo-cta">
+      <button type="button" class="pk-btn pk-btn--primary pk-demo-go" data-demo-go disabled>
+        <span data-demo-go-label>LOADING RUNTIME…</span>
+        <ArrowRight />
+      </button>
+      <button type="button" class="pk-btn pk-btn--secondary pk-demo-reset" data-demo-reset hidden>
+        RESET
+      </button>
+    </div>
+  </div>
+
+  <div class="pk-demo-right">
+    <div class="pk-demo-status">
+      <span data-demo-status-info>SHA-256 · 17 rounds · 32-byte preimage</span>
+      <span class="pk-demo-status-state">
+        <span class="pk-demo-status-dot" data-demo-status-dot></span>
+        <span data-demo-status-label>BOOTING</span>
+      </span>
+    </div>
+    <div class="pk-demo-steps" data-demo-steps></div>
+    <div class="pk-demo-kpis">
+      <div class="pk-demo-kpi">
+        <div class="pk-demo-kpi-label">Proving time</div>
+        <div class="pk-demo-kpi-value" data-demo-kpi="total">…</div>
+      </div>
+      <div class="pk-demo-kpi">
+        <div class="pk-demo-kpi-label">Proof size</div>
+        <div class="pk-demo-kpi-value" data-demo-kpi="size">…</div>
+      </div>
+      <div class="pk-demo-kpi">
+        <div class="pk-demo-kpi-label">Constraints</div>
+        <div class="pk-demo-kpi-value" data-demo-kpi="constraints">…</div>
+      </div>
+      <div class="pk-demo-kpi">
+        <div class="pk-demo-kpi-label">Witnesses</div>
+        <div class="pk-demo-kpi-value" data-demo-kpi="witnesses">…</div>
+      </div>
+      <div class="pk-demo-kpi pk-demo-kpi-last">
+        <div class="pk-demo-kpi-label">Status</div>
+        <div class="pk-demo-kpi-value" data-demo-kpi="status">BOOTING</div>
+      </div>
+    </div>
+  </div>
+</Panel>
+
+<style is:global>
+  /* Single-column layout: inputs on top, run output (status + steps +
+   * KPI strip) underneath. Keeps the section compact with no empty rail. */
+  .pk-demo-grid {
+    display: flex;
+    flex-direction: column;
+  }
+  .pk-demo-left {
+    padding: 48px 48px 40px;
+    border-bottom: 1px solid var(--pk-line);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .pk-demo-right {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+  }
+  .pk-demo-eyebrow {
+    font: 400 14px/1 var(--pk-font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pk-mute-2);
+    margin-bottom: 16px;
+  }
+  .pk-demo-mobile-only {
+    display: none;
+  }
+  @media (max-width: 720px) {
+    .pk-demo-mobile-hide {
+      display: none !important;
+    }
+    .pk-demo-mobile-only {
+      display: inline !important;
+    }
+  }
+  .pk-demo-sub {
+    margin: 16px 0 0;
+    font: 300 20px/1.45 var(--pk-font-sans);
+    color: var(--pk-mute-2);
+    max-width: 560px;
+  }
+  .pk-demo-block-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .pk-demo-block-label {
+    font: 400 13px/1 var(--pk-font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pk-mute-2);
+  }
+  .pk-demo-block-badge {
+    font: 400 12px/1 var(--pk-font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pk-brand);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pk-demo-block-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--pk-brand);
+    display: inline-block;
+  }
+  .pk-demo-card {
+    border: 1px solid var(--pk-line);
+  }
+  .pk-demo-card-canvas {
+    background: var(--pk-canvas);
+  }
+  .pk-demo-card-ink {
+    padding: 24px 28px;
+    border: 1px solid var(--pk-ink);
+    background: #fff;
+  }
+  .pk-demo-input-wrap {
+    display: block;
+    padding: 16px 20px;
+  }
+  .pk-demo-input {
+    display: block;
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    resize: vertical;
+    min-height: 64px;
+    font: 400 16px/1.45 var(--pk-font-mono);
+    color: var(--pk-ink);
+    letter-spacing: 0.01em;
+  }
+  .pk-demo-input:focus {
+    outline: 0;
+  }
+  .pk-demo-input.is-invalid {
+    color: #e91900;
+  }
+  .pk-demo-input-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--pk-line);
+    font: 400 12px/1 var(--pk-font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--pk-mute-2);
+  }
+  .pk-demo-input-meta span:first-child {
+    color: var(--pk-ink);
+  }
+  .pk-demo-statement {
+    font: 500 24px/1.3 var(--pk-font-sans);
+    letter-spacing: -0.01em;
+    color: var(--pk-ink);
+  }
+  .pk-demo-hash {
+    margin-top: 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .pk-demo-hash-label {
+    font: 400 13px/1 var(--pk-font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--pk-mute-2);
+  }
+  .pk-demo-hash-value {
+    font: 400 14px/1.4 var(--pk-font-mono);
+    letter-spacing: 0;
+    /* Placeholder reads as a gentle hint; turns brand-blue when the
+     * proof reveals the actual public output. */
+    color: var(--pk-mute-3);
+    word-break: break-all;
+    flex: 1;
+    min-width: 0;
+    font-style: italic;
+  }
+  .pk-demo-hash-value.is-revealed {
+    color: var(--pk-brand);
+    font-style: normal;
+  }
+  .pk-demo-publics {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  .pk-demo-publics > span {
+    font: 400 13px/1 var(--pk-font-mono);
+    color: var(--pk-mute-2);
+    letter-spacing: 0.04em;
+  }
+  .pk-demo-publics .lbl {
+    text-transform: uppercase;
+  }
+  .pk-demo-publics .sep {
+    margin: 0 8px;
+    color: var(--pk-mute-3);
+  }
+  .pk-demo-publics .val {
+    color: var(--pk-ink);
+  }
+
+  .pk-demo-hash-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--pk-line);
+  }
+  .pk-demo-scen {
+    padding: 20px;
+    text-align: left;
+    cursor: pointer;
+    border: 0;
+    border-right: 1px solid var(--pk-line);
+    background: #fff;
+    color: var(--pk-ink);
+    font: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition:
+      background 0.28s var(--pk-easing),
+      color 0.28s var(--pk-easing);
+  }
+  .pk-demo-scen:last-child {
+    border-right: 0;
+  }
+  .pk-demo-scen:hover {
+    background: var(--pk-line-soft);
+  }
+  .pk-demo-scen.is-active,
+  .pk-demo-scen.is-active:hover {
+    background: var(--pk-brand);
+    color: #fff;
+  }
+  .pk-demo-scen-label {
+    font: 500 22px/1 var(--pk-font-sans);
+    letter-spacing: -0.01em;
+  }
+  .pk-demo-scen-sub {
+    font: 400 13px/1.2 var(--pk-font-mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .pk-demo-cta {
+    display: flex;
+    gap: 12px;
+  }
+  .pk-demo-go {
+    height: 64px !important;
+    padding: 0 28px !important;
+    flex: 1;
+    justify-content: space-between !important;
+  }
+  .pk-demo-go:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .pk-demo-reset {
+    height: 64px !important;
+    padding: 0 24px !important;
+    flex: 0 0 auto;
+    width: 140px;
+  }
+
+  .pk-demo-status {
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--pk-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font: 400 13px/1 var(--pk-font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pk-mute-2);
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .pk-demo-status-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pk-demo-status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--pk-mute-3);
+    display: inline-block;
+    transition: background 0.18s ease;
+  }
+  .pk-demo-status[data-phase='running'] .pk-demo-status-dot,
+  .pk-demo-status[data-phase='booting'] .pk-demo-status-dot {
+    background: var(--pk-brand);
+    animation: pk-demo-pulse 0.9s ease-in-out infinite;
+  }
+  .pk-demo-status[data-phase='done'] .pk-demo-status-dot {
+    background: var(--pk-brand);
+  }
+  .pk-demo-status[data-phase='error'] .pk-demo-status-dot {
+    background: #e91900;
+  }
+  .pk-demo-status[data-phase='running'] span[data-demo-status-label],
+  .pk-demo-status[data-phase='done'] span[data-demo-status-label] {
+    color: var(--pk-ink);
+  }
+  .pk-demo-status[data-phase='error'] span[data-demo-status-label] {
+    color: #e91900;
+  }
+
+  .pk-demo-steps {
+    padding: 12px 32px 24px;
+  }
+  .pk-demo-step {
+    position: relative;
+    padding: 20px 0;
+    border-bottom: 1px dashed var(--pk-line);
+  }
+  .pk-demo-step.is-last {
+    border-bottom: 0;
+  }
+  .pk-demo-step-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .pk-demo-step-info {
+    display: inline-flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .pk-demo-step-dot {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    position: relative;
+    border: 1px solid var(--pk-mute-3);
+    background: transparent;
+    transition:
+      background 0.18s ease,
+      border-color 0.18s ease;
+  }
+  .pk-demo-step.is-active .pk-demo-step-dot,
+  .pk-demo-step.is-done .pk-demo-step-dot {
+    border-color: var(--pk-brand);
+  }
+  .pk-demo-step.is-done .pk-demo-step-dot {
+    background: var(--pk-brand);
+  }
+  .pk-demo-step-dot-pulse {
+    position: absolute;
+    inset: 3px;
+    background: var(--pk-brand);
+    opacity: 0;
+  }
+  .pk-demo-step.is-active .pk-demo-step-dot-pulse {
+    opacity: 1;
+    animation: pk-demo-pulse 0.9s ease-in-out infinite;
+  }
+  .pk-demo-step-check {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .pk-demo-step.is-done .pk-demo-step-check {
+    opacity: 1;
+  }
+  .pk-demo-step-num {
+    font: 400 14px/1 var(--pk-font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--pk-mute-3);
+    min-width: 24px;
+  }
+  .pk-demo-step-label {
+    font: 500 22px/1 var(--pk-font-sans);
+    letter-spacing: -0.01em;
+    color: var(--pk-mute-2);
+    transition: color 0.2s ease;
+  }
+  .pk-demo-step.is-active .pk-demo-step-label,
+  .pk-demo-step.is-done .pk-demo-step-label {
+    color: var(--pk-ink);
+  }
+  .pk-demo-step-time {
+    font: 400 16px/1 var(--pk-font-mono);
+    letter-spacing: 0.04em;
+    color: var(--pk-mute-3);
+  }
+  .pk-demo-step.is-active .pk-demo-step-time {
+    color: var(--pk-brand);
+  }
+  .pk-demo-step.is-done .pk-demo-step-time {
+    color: var(--pk-ink);
+  }
+  .pk-demo-step-bar {
+    margin-top: 12px;
+    height: 2px;
+    background: var(--pk-line-soft);
+    position: relative;
+    overflow: hidden;
+  }
+  .pk-demo-step-bar-fill {
+    height: 100%;
+    width: 0;
+    background: var(--pk-brand);
+    transition: width 0.1s linear;
+  }
+  .pk-demo-step.is-done .pk-demo-step-bar-fill {
+    width: 100% !important;
+    transition: width 0.25s ease;
+  }
+  .pk-demo-step.is-error .pk-demo-step-dot {
+    background: #e91900;
+    border-color: #e91900;
+  }
+  .pk-demo-step.is-error .pk-demo-step-time,
+  .pk-demo-step.is-error .pk-demo-step-label {
+    color: #e91900;
+  }
+
+  .pk-demo-kpis {
+    display: flex;
+    border-top: 1px solid var(--pk-line);
+  }
+  .pk-demo-kpi {
+    flex: 1 1 0;
+    padding: 32px 24px;
+    border-right: 1px solid var(--pk-line);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pk-demo-kpi-last {
+    border-right: 0;
+  }
+  .pk-demo-kpi-label {
+    font: 400 13px/1 var(--pk-font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pk-mute-2);
+  }
+  .pk-demo-kpi-value {
+    font: 300 36px/1 var(--pk-font-sans);
+    letter-spacing: -0.02em;
+    color: var(--pk-ink);
+  }
+  .pk-demo-kpi-value.is-accent {
+    color: var(--pk-brand);
+  }
+  .pk-demo-kpi-value.is-error {
+    color: #e91900;
+  }
+
+  @keyframes pk-demo-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .pk-demo-grid {
+      grid-template-columns: 1fr;
+    }
+    .pk-demo-left {
+      padding: 28px 20px;
+      border-right: 0;
+      border-bottom: 1px solid var(--pk-line);
+      gap: 24px;
+    }
+    .pk-demo-h {
+      font: 500 28px/32px var(--pk-font-sans) !important;
+      text-wrap: balance;
+    }
+    .pk-demo-sub {
+      font-size: 14px !important;
+      line-height: 1.45 !important;
+    }
+    .pk-demo-card-ink {
+      padding: 16px 18px;
+    }
+    .pk-demo-statement {
+      font-size: 18px !important;
+    }
+    .pk-demo-input {
+      font-size: 13px !important;
+    }
+    /* Stack input meta vertically so the byte counter and hint don't crash. */
+    .pk-demo-input-meta {
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start !important;
+    }
+    /* Stack circuit picker so each card has full width to read its label. */
+    .pk-demo-hash-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .pk-demo-scen {
+      padding: 14px;
+      border-right: 0 !important;
+      border-bottom: 1px solid var(--pk-line);
+    }
+    .pk-demo-scen:last-child {
+      border-bottom: 0;
+    }
+    .pk-demo-scen-label {
+      font-size: 18px !important;
+    }
+    .pk-demo-scen-sub {
+      font-size: 11px !important;
+    }
+    .pk-demo-cta {
+      flex-direction: column;
+    }
+    .pk-demo-go,
+    .pk-demo-reset {
+      flex: 0 0 auto !important;
+      height: 72px !important;
+      width: 100% !important;
+      font-size: 16px !important;
+      letter-spacing: 0.06em !important;
+    }
+    .pk-demo-go .pk-arrow,
+    .pk-demo-reset .pk-arrow {
+      width: 20px !important;
+      height: 20px !important;
+    }
+    .pk-demo-status {
+      padding: 14px 16px;
+      font-size: 11px;
+    }
+    .pk-demo-steps {
+      padding: 8px 16px 16px;
+    }
+    .pk-demo-step-label {
+      font-size: 14px !important;
+    }
+    .pk-demo-step-time {
+      font-size: 12px !important;
+      flex-shrink: 0;
+    }
+    .pk-demo-step-info {
+      min-width: 0;
+      overflow: hidden;
+    }
+    .pk-demo-step-label {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* KPI strip: 5 cells × 78px is unreadable. Switch to a 2-col grid and
+     * hide the Status cell since the same value is already shown above in
+     * the status bar with the pulsing dot. */
+    .pk-demo-kpis {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr;
+    }
+    .pk-demo-kpi {
+      padding: 18px 14px !important;
+      border-right: 0 !important;
+      border-bottom: 1px solid var(--pk-line);
+    }
+    .pk-demo-kpi:nth-child(odd) {
+      border-right: 1px solid var(--pk-line) !important;
+    }
+    /* Hide the Status KPI on phones — redundant with the .pk-demo-status bar. */
+    .pk-demo-kpi-last {
+      display: none !important;
+    }
+    .pk-demo-kpi-value {
+      font-size: 22px !important;
+    }
+    .pk-demo-hash-value {
+      font-size: 12px !important;
+      overflow-wrap: anywhere;
+    }
+  }
+</style>
+
+<script is:inline type="module">
+  // ProvekitDemo runtime — loads Verity + Noir.js via importmap, generates
+  // REAL zero-knowledge proofs in the browser using artifacts built from
+  // the local provekit/playground/wasm-demo setup.
+  const root = document.querySelector('section[aria-labelledby="demo-title"]');
+  if (!root) {
+    console.error('ProvekitDemo: section not found');
+  } else {
+    const STEPS = [
+      { key: 'runtime', label: 'Load WASM runtime' },
+      { key: 'prove', label: 'Generate proof' },
+      { key: 'verify', label: 'Verify locally' },
+    ];
+
+    const CIRCUITS = {
+      sha: {
+        key: 'sha',
+        label: 'SHA-256 preimage',
+        statement: 'I know x such that SHA256(x) = y',
+        inputHint: 'Text is zero-padded to 1024 bytes; only `len` bytes are hashed',
+        defaultText: 'hello, provekit',
+        maxBytes: 1024,
+        statusLabel: 'SHA-256 preimage · up to 1024 bytes',
+        artifactsBase: '/artifacts/sha256/',
+        // Build circuit inputs from user text. Pad UTF-8 bytes to 1024
+        // and pass the actual length. The hash itself is a PUBLIC OUTPUT
+        // of the circuit — we also compute it here via Web Crypto so the
+        // UI can display the value live as the user types; the proof
+        // commits to exactly this value because the circuit is deterministic.
+        buildInputs: async (text) => {
+          const enc = new TextEncoder().encode(text);
+          const len = Math.min(enc.length, 1024);
+          const padded = new Uint8Array(1024);
+          padded.set(enc.subarray(0, len), 0);
+          const digest = new Uint8Array(
+            await crypto.subtle.digest('SHA-256', enc.subarray(0, len)),
+          );
+          return {
+            inputs: { input: Array.from(padded), len: String(len) },
+            hash: '0x' + digest.reduce((acc, b) => acc + b.toString(16).padStart(2, '0'), ''),
+            publics: [
+              { label: 'len', value: `${len}` },
+              { label: 'Max bytes', value: '1,024' },
+            ],
+          };
+        },
+      },
+      poseidon: {
+        key: 'poseidon',
+        label: 'Poseidon · 1000 rounds',
+        statement: 'I know x such that Poseidon^1000(x) = y',
+        inputHint: 'Text → SHA-256 → split into 4 BN254 field elements',
+        defaultText: 'merkle leaves rendered as a feed',
+        maxBytes: 256,
+        statusLabel: 'Poseidon · 1000 rounds · 4 field inputs',
+        artifactsBase: '/artifacts/poseidon/',
+        // 4 BN254 field elements derived from SHA-256 of the user text.
+        buildInputs: async (text) => {
+          const bytes = new Uint8Array(
+            await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)),
+          );
+          // Split into 4 × 8-byte chunks and treat each as a u64-ish field element.
+          const plains = [];
+          for (let i = 0; i < 4; i++) {
+            let hex = '0x';
+            for (let j = 0; j < 8; j++) hex += bytes[i * 8 + j].toString(16).padStart(2, '0');
+            plains.push(hex);
+          }
+          return {
+            inputs: { plains },
+            publics: [
+              { label: 'Rounds', value: '1,000' },
+              { label: 'Field elements', value: '4' },
+            ],
+          };
+        },
+      },
+    };
+
+    let runtime = null;
+    let circuitKey = 'sha';
+    let activeArtifactsKey = null;
+    let activeProver = null;
+    let activeVerifier = null;
+    let phase = 'booting'; // booting | ready | running | done | error
+    let currentStep = -1;
+    let currentStepStartedAt = 0;
+    // Expected step durations (ms) used to draw an estimated progress bar
+    // while the worker-thread WASM is busy and the main thread can't tick.
+    const EXPECTED_MS = {
+      // "Generate proof" rolls up artifact load (~750ms cold, 0 cached) +
+      // witness build (~0) + the heavy prove() call (~2s on 14 threads).
+      runtime: 500,
+      prove: 3000,
+      verify: 400,
+    };
+    let rafHandle = 0;
+    const timings = {};
+    let proofSize = 0;
+    let constraintsCount = null;
+    let witnessesCount = null;
+    let lastError = null;
+    // Wall-clock the WASM runtime took to initialize at page boot. Surfaced
+    // as the first step's time on the first run; subsequent runs show
+    // "cached" since the runtime is already alive across runs.
+    let runtimeBootMs = 0;
+    let runtimeShown = false;
+    // Step keys whose recorded time should render as "cached" instead of
+    // a ms count (because the work is being reused, not redone).
+    const cachedSteps = new Set();
+
+    const inputEl = root.querySelector('[data-demo-input]');
+    const inputMetaEl = root.querySelector('[data-demo-input-meta]');
+    const inputHintEl = root.querySelector('[data-demo-input-hint]');
+    const stEl = root.querySelector('[data-demo-statement]');
+    const hashEl = root.querySelector('[data-demo-hash]');
+    const pubEl = root.querySelector('[data-demo-publics]');
+    const statusInfoEl = root.querySelector('[data-demo-status-info]');
+    const statusLabelEl = root.querySelector('[data-demo-status-label]');
+    const statusEl = root.querySelector('.pk-demo-status');
+    const stepsEl = root.querySelector('[data-demo-steps]');
+    const goBtn = root.querySelector('[data-demo-go]');
+    const goLabel = root.querySelector('[data-demo-go-label]');
+    const resetBtn = root.querySelector('[data-demo-reset]');
+    const kpiTotal = root.querySelector('[data-demo-kpi="total"]');
+    const kpiSize = root.querySelector('[data-demo-kpi="size"]');
+    const kpiConstraints = root.querySelector('[data-demo-kpi="constraints"]');
+    const kpiWitnesses = root.querySelector('[data-demo-kpi="witnesses"]');
+    const kpiStatus = root.querySelector('[data-demo-kpi="status"]');
+    const circuitBtns = root.querySelectorAll('[data-demo-circuit]');
+
+    function byteLen(s) {
+      return new TextEncoder().encode(s).length;
+    }
+    function fmtMs(ms) {
+      return ms >= 1000 ? `${(ms / 1000).toFixed(2)} s` : `${Math.round(ms)} ms`;
+    }
+    function fmtBytes(n) {
+      if (n >= 1024 * 1024) return `${(n / 1024 / 1024).toFixed(2)} MB`;
+      if (n >= 1024) return `${(n / 1024).toFixed(1)} KB`;
+      return `${n} B`;
+    }
+
+    function updateInputMeta() {
+      const c = CIRCUITS[circuitKey];
+      const bytes = byteLen(inputEl.value);
+      if (inputMetaEl) inputMetaEl.textContent = `${bytes} / ${c.maxBytes} bytes`;
+      if (inputHintEl) inputHintEl.textContent = c.inputHint;
+      const over = bytes > c.maxBytes;
+      inputEl.classList.toggle('is-invalid', over);
+      if (goBtn) goBtn.disabled = phase === 'booting' || phase === 'running' || over || bytes === 0;
+    }
+
+    let hashToken = 0;
+    function clearHashDisplay() {
+      if (hashEl) {
+        hashEl.textContent = 'revealed after proof';
+        hashEl.classList.remove('is-revealed');
+      }
+    }
+    // Live mode: only update the publics chips (len, etc.) as the user
+    // types. The hash itself stays hidden until the proof reveals it,
+    // matching the zero-knowledge story: input is private, hash is
+    // a public output of the circuit (not a precomputed value).
+    async function refreshHash() {
+      const c = CIRCUITS[circuitKey];
+      const value = inputEl.value;
+      clearHashDisplay();
+      if (!value) {
+        if (pubEl) pubEl.innerHTML = '';
+        return;
+      }
+      const token = ++hashToken;
+      try {
+        const { publics } = await c.buildInputs(value);
+        if (token !== hashToken) return;
+        if (pubEl) {
+          pubEl.innerHTML = '';
+          for (const p of publics) {
+            const sp = document.createElement('span');
+            sp.innerHTML = `<span class="lbl">${p.label}</span><span class="sep">·</span><span class="val">${p.value}</span>`;
+            pubEl.appendChild(sp);
+          }
+        }
+      } catch (e) {
+        if (token !== hashToken) return;
+        if (hashEl) hashEl.textContent = 'error: ' + e.message;
+      }
+    }
+    // Cache one Noir.js executor per circuit so revealHash() can compute
+    // the actual public output (return value of main()) by running the
+    // compiled ACIR. SHA-256's output would also match Web Crypto, but
+    // Poseidon's algebraic hash has no Web equivalent — Noir.execute is
+    // the only honest source of truth for both.
+    const noirCache = {};
+    async function getNoirExecutor(c) {
+      if (noirCache[c.key]) return noirCache[c.key];
+      const [{ Noir }, circuitResp] = await Promise.all([
+        import('@noir-lang/noir_js'),
+        fetch(c.artifactsBase + 'circuit.json'),
+      ]);
+      const circuit = await circuitResp.json();
+      const noir = new Noir(circuit);
+      noirCache[c.key] = noir;
+      return noir;
+    }
+    function returnValueToHex(value) {
+      // Noir returns u8 arrays as numbers/strings, Field arrays as 0x-prefixed
+      // hex strings. We normalize either into a single hex string.
+      if (Array.isArray(value)) {
+        // Determine if entries look like bytes (0..255 decimal-ish) or fields.
+        const first = value[0];
+        const isField = typeof first === 'string' && first.startsWith('0x') && first.length > 4;
+        if (isField) {
+          // Concatenate field hex (strip "0x" except the leading one).
+          return '0x' + value.map((v) => v.replace(/^0x/, '').padStart(64, '0')).join('');
+        }
+        // Bytes: each value is 0..255.
+        return (
+          '0x' +
+          value
+            .map((v) => {
+              const n = typeof v === 'number' ? v : Number(v);
+              return Math.max(0, Math.min(255, n)).toString(16).padStart(2, '0');
+            })
+            .join('')
+        );
+      }
+      // Single Field
+      if (typeof value === 'string' && value.startsWith('0x')) return value;
+      return String(value);
+    }
+    // Reveal-on-success: called after the proof finishes verifying.
+    // Runs the compiled circuit via Noir.js to get the real public
+    // output committed to by the proof.
+    async function revealHash() {
+      if (!hashEl) return;
+      const c = CIRCUITS[circuitKey];
+      try {
+        const { inputs } = await c.buildInputs(inputEl.value);
+        const noir = await getNoirExecutor(c);
+        const { returnValue } = await noir.execute(inputs);
+        hashEl.textContent = returnValueToHex(returnValue);
+        hashEl.classList.add('is-revealed');
+      } catch (e) {
+        console.warn('revealHash failed', e);
+      }
+    }
+
+    function applyCircuit() {
+      const c = CIRCUITS[circuitKey];
+      if (stEl) stEl.textContent = c.statement;
+      if (statusInfoEl) statusInfoEl.textContent = c.statusLabel;
+      circuitBtns.forEach((b) => {
+        const active = b.dataset.demoCircuit === circuitKey;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-pressed', String(active));
+      });
+      // Reset run state
+      resetRun();
+      updateInputMeta();
+      refreshHash();
+    }
+
+    function renderSteps() {
+      if (!stepsEl) return;
+      stepsEl.innerHTML = '';
+      const now = performance.now();
+      STEPS.forEach((step, i) => {
+        const isActive = i === currentStep && phase === 'running';
+        const isDone = timings[step.key] != null;
+        const isError = phase === 'error' && i === currentStep;
+        const last = i === STEPS.length - 1;
+        const cls =
+          'pk-demo-step' +
+          (isActive ? ' is-active' : '') +
+          (isDone ? ' is-done' : '') +
+          (isError ? ' is-error' : '') +
+          (last ? ' is-last' : '');
+        let timeStr;
+        let pct;
+        if (isDone) {
+          timeStr = cachedSteps.has(step.key) ? 'cached' : fmtMs(timings[step.key]);
+          pct = 100;
+        } else if (isActive) {
+          const elapsed = now - currentStepStartedAt;
+          // Asymptote at 95% so the bar keeps creeping but never claims to be
+          // done before the await actually resolves. Tuned so a 2× faster step
+          // still shows clear motion, and a 2× slower step doesn't hit 100%.
+          const exp = EXPECTED_MS[step.key] ?? 1000;
+          pct = Math.min(95, (elapsed / exp) * 95);
+          timeStr = fmtMs(elapsed);
+        } else if (isError) {
+          timeStr = 'failed';
+          pct = 0;
+        } else {
+          timeStr = '…';
+          pct = 0;
+        }
+        const row = document.createElement('div');
+        row.className = cls;
+        row.innerHTML = `
+          <div class="pk-demo-step-row">
+            <span class="pk-demo-step-info">
+              <span class="pk-demo-step-dot">
+                <span class="pk-demo-step-dot-pulse"></span>
+                <svg class="pk-demo-step-check" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                  <path d="M4 9.5l3 3 7-7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="square"/>
+                </svg>
+              </span>
+              <span class="pk-demo-step-num">${String(i + 1).padStart(2, '0')}</span>
+              <span class="pk-demo-step-label">${step.label}</span>
+            </span>
+            <span class="pk-demo-step-time">${timeStr}</span>
+          </div>
+          <div class="pk-demo-step-bar"><div class="pk-demo-step-bar-fill" style="width:${pct}%"></div></div>
+        `;
+        stepsEl.appendChild(row);
+      });
+    }
+
+    function startTicker() {
+      if (rafHandle) return;
+      const tick = () => {
+        if (phase !== 'running') {
+          rafHandle = 0;
+          return;
+        }
+        renderSteps();
+        // Total-time KPI stays at '…' during the run; the active step has
+        // its own live-ms counter. The final total is revealed at 'done'.
+        rafHandle = requestAnimationFrame(tick);
+      };
+      rafHandle = requestAnimationFrame(tick);
+    }
+    function stopTicker() {
+      if (rafHandle) cancelAnimationFrame(rafHandle);
+      rafHandle = 0;
+    }
+
+    function updateKpis() {
+      const provingMs = timings.prove ?? 0;
+      const statusText = {
+        booting: 'BOOTING',
+        ready: 'READY',
+        running: 'RUNNING',
+        done: 'VERIFIED',
+        error: 'ERROR',
+      }[phase];
+      // Reveal all run-derived KPIs together at the end of a run, so the
+      // user doesn't see a partial set while the proof is still in flight.
+      const revealNumbers = phase === 'done';
+      // "Proving time" = the prove() step only (excludes runtime boot + verify).
+      if (kpiTotal) kpiTotal.textContent = revealNumbers ? fmtMs(provingMs) : '…';
+      if (kpiSize) kpiSize.textContent = revealNumbers && proofSize > 0 ? fmtBytes(proofSize) : '…';
+      if (kpiConstraints)
+        kpiConstraints.textContent =
+          revealNumbers && constraintsCount ? constraintsCount.toLocaleString() : '…';
+      if (kpiWitnesses)
+        kpiWitnesses.textContent =
+          revealNumbers && witnessesCount ? witnessesCount.toLocaleString() : '…';
+      if (kpiStatus) {
+        kpiStatus.textContent = statusText;
+        kpiStatus.classList.toggle('is-accent', phase === 'done');
+        kpiStatus.classList.toggle('is-error', phase === 'error');
+      }
+      if (statusLabelEl) statusLabelEl.textContent = statusText;
+      if (statusEl) statusEl.setAttribute('data-phase', phase);
+    }
+
+    function resetRun() {
+      phase = phase === 'booting' ? 'booting' : 'ready';
+      currentStep = -1;
+      for (const k of Object.keys(timings)) delete timings[k];
+      proofSize = 0;
+      cachedSteps.clear();
+      // Keep constraintsCount/witnessesCount across resets so cache-hit
+      // re-runs still surface them at the end; they're refreshed inside
+      // loadArtifacts on a real fetch (circuit change).
+      lastError = null;
+      if (resetBtn) resetBtn.hidden = true;
+      clearHashDisplay();
+      setGoLabel();
+      renderSteps();
+      updateKpis();
+      updateInputMeta();
+    }
+
+    function setGoLabel() {
+      if (!goLabel) return;
+      if (phase === 'booting') goLabel.textContent = 'LOADING RUNTIME…';
+      else if (phase === 'running') goLabel.textContent = 'RUNNING…';
+      else if (phase === 'done') goLabel.textContent = 'GENERATE AGAIN';
+      else if (phase === 'error') goLabel.textContent = 'TRY AGAIN';
+      else goLabel.textContent = 'GENERATE PROOF';
+    }
+
+    async function timed(stepIdx, stepKey, fn) {
+      currentStep = stepIdx;
+      currentStepStartedAt = performance.now();
+      renderSteps();
+      try {
+        const out = await fn();
+        timings[stepKey] = performance.now() - currentStepStartedAt;
+        renderSteps();
+        updateKpis();
+        return out;
+      } catch (e) {
+        timings[stepKey] = performance.now() - currentStepStartedAt;
+        throw e;
+      }
+    }
+
+    async function loadArtifacts(c) {
+      if (activeArtifactsKey === c.key && activeProver && activeVerifier) return;
+      // Dispose previous
+      if (activeProver)
+        try {
+          activeProver.dispose();
+        } catch {}
+      if (activeVerifier)
+        try {
+          activeVerifier.dispose();
+        } catch {}
+      activeProver = null;
+      activeVerifier = null;
+      activeArtifactsKey = null;
+      const [pkpResp, pkvResp] = await Promise.all([
+        fetch(c.artifactsBase + 'prover.pkp'),
+        fetch(c.artifactsBase + 'verifier.pkv'),
+      ]);
+      if (!pkpResp.ok || !pkvResp.ok) throw new Error('Artifact fetch failed');
+      const [pkpBytes, pkvBytes] = await Promise.all([
+        new Uint8Array(await pkpResp.arrayBuffer()),
+        new Uint8Array(await pkvResp.arrayBuffer()),
+      ]);
+      const [pr, vr] = await Promise.all([
+        runtime.loadProver(pkpBytes),
+        runtime.loadVerifier(pkvBytes),
+      ]);
+      activeProver = pr;
+      activeVerifier = vr;
+      activeArtifactsKey = c.key;
+      // Pull constraint + witness counts from the inspector if available.
+      try {
+        const inspector = await import('provekit-inspector');
+        await inspector.default();
+        const ins = new inspector.Prover(pkpBytes);
+        constraintsCount = ins.getNumConstraints();
+        witnessesCount = ins.getNumWitnesses();
+        ins.free();
+      } catch (e) {
+        console.warn('inspector failed', e);
+      }
+    }
+
+    async function start() {
+      if (phase === 'running' || phase === 'booting') return;
+      const c = CIRCUITS[circuitKey];
+
+      // Run state
+      phase = 'running';
+      currentStep = -1;
+      for (const k of Object.keys(timings)) delete timings[k];
+      proofSize = 0;
+      lastError = null;
+      if (resetBtn) resetBtn.hidden = false;
+      setGoLabel();
+      goBtn.disabled = true;
+      updateKpis();
+      startTicker();
+
+      try {
+        // Step 0 "Load WASM runtime" — first run reflects the page-boot
+        // duration; subsequent runs are 'cached' (runtime stays alive).
+        cachedSteps.delete('runtime');
+        await timed(0, 'runtime', async () => {});
+        if (runtimeShown) {
+          cachedSteps.add('runtime');
+        } else {
+          timings.runtime = runtimeBootMs;
+          runtimeShown = true;
+        }
+        renderSteps();
+
+        // Step 1 "Generate proof": rolls up artifact load + witness build +
+        // the heavy prove() call. Bar ticks for the whole bundle.
+        const proof = await timed(1, 'prove', async () => {
+          await loadArtifacts(c);
+          const { inputs } = await c.buildInputs(inputEl.value);
+          return activeProver.prove(inputs);
+        });
+        proofSize = proof.size;
+        updateKpis();
+
+        // Step 2 "Verify locally"
+        const ok = await timed(2, 'verify', () => activeVerifier.verify(proof));
+        if (!ok) throw new Error('Verification rejected proof');
+        // Surface the public output (hash) that the proof committed to.
+        await revealHash();
+
+        currentStep = -1;
+        phase = 'done';
+      } catch (e) {
+        console.error('proof error', e);
+        lastError = e instanceof Error ? e.message : String(e);
+        phase = 'error';
+        if (kpiStatus) kpiStatus.textContent = 'ERROR';
+      } finally {
+        stopTicker();
+        setGoLabel();
+        renderSteps();
+        updateKpis();
+        updateInputMeta();
+      }
+    }
+
+    // Boot the runtime
+    (async () => {
+      renderSteps();
+      updateKpis();
+      try {
+        const { Verity, Backend } = await import('@atheonxyz/verity');
+        const hasSAB = typeof SharedArrayBuffer !== 'undefined';
+        // Use every available hardware thread on every device. SAB-less
+        // environments fall back to single-threaded.
+        const threads = hasSAB ? navigator.hardwareConcurrency || 4 : false;
+        const bootStart = performance.now();
+        runtime = await Verity.create(Backend.ProveKit, { threads });
+        runtimeBootMs = performance.now() - bootStart;
+        console.log(
+          '[provekit-demo] runtime ready, threads:',
+          threads,
+          '· boot:',
+          Math.round(runtimeBootMs),
+          'ms',
+        );
+        const statusInfoEl = document.querySelector('[data-demo-status-info]');
+        if (statusInfoEl) {
+          const t =
+            typeof threads === 'number'
+              ? `${threads} thread${threads === 1 ? '' : 's'}`
+              : '1 thread';
+          statusInfoEl.textContent = `SHA-256 preimage · up to 1024 bytes · ${t}`;
+        }
+        timings.runtime = 0;
+        phase = 'ready';
+        setGoLabel();
+        updateKpis();
+        updateInputMeta();
+      } catch (e) {
+        console.error('runtime boot failed', e);
+        const sab = typeof SharedArrayBuffer !== 'undefined';
+        const coi = self.crossOriginIsolated;
+        const diag = `SAB=${sab} COI=${coi} HC=${navigator.hardwareConcurrency} | `;
+        lastError = diag + (e instanceof Error ? e.message : String(e));
+        phase = 'error';
+        if (statusLabelEl) statusLabelEl.textContent = 'RUNTIME ERROR';
+        const goLabelEl = document.querySelector('[data-demo-go-label]');
+        if (goLabelEl) goLabelEl.textContent = lastError.slice(0, 120);
+        updateKpis();
+      }
+    })();
+
+    // Wire UI
+    circuitBtns.forEach((b) => {
+      b.addEventListener('click', () => {
+        const next = b.dataset.demoCircuit;
+        if (next === circuitKey || phase === 'running' || phase === 'booting') return;
+        circuitKey = next;
+        applyCircuit();
+      });
+    });
+    inputEl?.addEventListener('input', () => {
+      updateInputMeta();
+      refreshHash();
+      if (phase === 'done' || phase === 'error') resetRun();
+    });
+    goBtn?.addEventListener('click', start);
+    resetBtn?.addEventListener('click', resetRun);
+
+    applyCircuit();
+    renderSteps();
+    updateKpis();
+  }
+</script>

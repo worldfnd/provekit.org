@@ -71,8 +71,7 @@ type DotState = 'idle' | 'active' | 'done';
 
 function StepDot({ state }: { state: DotState }) {
   const reduce = useReducedMotion();
-  const borderColor =
-    state === 'idle' ? 'var(--pk-mute-3, #B7B7B7)' : 'var(--pk-brand)';
+  const borderColor = state === 'idle' ? 'var(--pk-mute-3, #B7B7B7)' : 'var(--pk-brand)';
   return (
     <span
       style={{
@@ -123,22 +122,13 @@ type StepRowProps = {
   last: boolean;
 };
 
-function StepRow({
-  step,
-  idx,
-  currentStep,
-  timing,
-  livePhaseMs,
-  effEstMs,
-  last,
-}: StepRowProps) {
+function StepRow({ step, idx, currentStep, timing, livePhaseMs, effEstMs, last }: StepRowProps) {
   const isCurrent = idx === currentStep;
   const isDone = timing != null;
   const target = effEstMs * step.weight;
   const liveMs = isCurrent ? livePhaseMs : isDone ? (timing as number) : 0;
   const pct = isDone ? 100 : isCurrent ? Math.min(100, (livePhaseMs / target) * 100) : 0;
-  const labelColor =
-    isCurrent || isDone ? 'var(--pk-ink)' : 'var(--pk-mute-2)';
+  const labelColor = isCurrent || isDone ? 'var(--pk-ink)' : 'var(--pk-mute-2)';
   const dotState: DotState = isDone ? 'done' : isCurrent ? 'active' : 'idle';
 
   return (
@@ -270,10 +260,26 @@ const ARROW = 'M5 12h14M13 6l6 6-6 6';
 function ArrowRight() {
   return (
     <span className="pk-arrow" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="square">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="square"
+      >
         <path d={ARROW} />
       </svg>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="square">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="square"
+      >
         <path d={ARROW} />
       </svg>
     </span>
@@ -293,9 +299,7 @@ export default function LiveDemo() {
 
   const [phase, setPhase] = useState<Phase>('idle');
   const [currentStep, setCurrentStep] = useState(-1);
-  const [stepTimings, setStepTimings] = useState<Partial<Record<StepKey, number>>>(
-    {},
-  );
+  const [stepTimings, setStepTimings] = useState<Partial<Record<StepKey, number>>>({});
   const [livePhaseMs, setLivePhaseMs] = useState(0);
   const [proof, setProof] = useState<string[]>([]);
   const [revealedBytes, setRevealedBytes] = useState(0);
@@ -378,10 +382,8 @@ export default function LiveDemo() {
   useEffect(() => () => void (runIdRef.current += 1), []);
 
   const totalMs =
-    Object.values(stepTimings).reduce<number>((a, b) => a + (b ?? 0), 0) +
-    livePhaseMs;
-  const statusLabel =
-    phase === 'running' ? 'RUNNING' : phase === 'done' ? 'VERIFIED' : 'READY';
+    Object.values(stepTimings).reduce<number>((a, b) => a + (b ?? 0), 0) + livePhaseMs;
+  const statusLabel = phase === 'running' ? 'RUNNING' : phase === 'done' ? 'VERIFIED' : 'READY';
   const statusColor =
     phase === 'running'
       ? 'var(--pk-brand)'
@@ -427,7 +429,8 @@ export default function LiveDemo() {
               color: 'var(--pk-mute)',
             }}
           >
-            Edit the inputs, then watch a zero-knowledge proof generate live. Nothing leaves this page.
+            Edit the inputs, then watch a zero-knowledge proof generate live. Nothing leaves this
+            page.
           </p>
         </header>
 
@@ -566,9 +569,7 @@ export default function LiveDemo() {
                   }}
                 >
                   <span style={{ textTransform: 'uppercase' }}>{p.label}</span>
-                  <span style={{ margin: '0 6px', color: 'var(--pk-mute-3, #B7B7B7)' }}>
-                    ·
-                  </span>
+                  <span style={{ margin: '0 6px', color: 'var(--pk-mute-3, #B7B7B7)' }}>·</span>
                   <span style={{ color: 'var(--pk-ink)' }}>{p.value}</span>
                 </span>
               ))}
@@ -620,8 +621,7 @@ export default function LiveDemo() {
                     background: active ? 'var(--pk-brand)' : '#fff',
                     color: active ? '#fff' : 'var(--pk-ink)',
                     font: 'inherit',
-                    transition:
-                      'background 0.28s var(--pk-easing), color 0.28s var(--pk-easing)',
+                    transition: 'background 0.28s var(--pk-easing), color 0.28s var(--pk-easing)',
                   }}
                 >
                   <span
@@ -661,8 +661,7 @@ export default function LiveDemo() {
                 color: 'var(--pk-mute-2)',
               }}
             >
-              ≈ {effConstraints.toLocaleString()} constraints · est{' '}
-              {Math.round(effEstMs)} ms
+              ≈ {effConstraints.toLocaleString()} constraints · est {Math.round(effEstMs)} ms
             </motion.div>
           </AnimatePresence>
         </section>
@@ -714,11 +713,7 @@ export default function LiveDemo() {
             <motion.span
               aria-hidden="true"
               style={{ width: 7, height: 7, background: statusColor }}
-              animate={
-                phase === 'running' && !reduce
-                  ? { opacity: [1, 0.35, 1] }
-                  : { opacity: 1 }
-              }
+              animate={phase === 'running' && !reduce ? { opacity: [1, 0.35, 1] } : { opacity: 1 }}
               transition={
                 phase === 'running'
                   ? { duration: 0.9, repeat: Infinity, ease: 'easeInOut' }

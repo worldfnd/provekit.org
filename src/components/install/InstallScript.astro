@@ -7,32 +7,36 @@ const command = 'cargo install provekit-cli';
 <Panel
   tab="INSTALL SCRIPT"
   titleId="install-title"
+  contentClass="pk-row-stack"
   contentStyle="display:flex;padding:0;align-items:stretch"
 >
   <div
-    class="pk-reveal"
-    style="flex:1 1 0;padding:72px 48px;display:flex;flex-direction:column;gap:48px;min-width:0"
+    class="pk-reveal pk-install-copy"
+    style="flex:1 1 0;padding:var(--pk-pad-panel-y) var(--pk-pad-panel-x);display:flex;flex-direction:column;gap:48px;min-width:0"
   >
     <div>
       <h2
         id="install-title"
+        class="pk-display-headline"
         style="margin:0;font:500 72px/80px var(--pk-font-sans);letter-spacing:-0.02em;color:var(--pk-ink);white-space:pre-line"
       >
-        {'To install Provekit\nrun this simple install script'}
+        {'Get proving in\none command'}
       </h2>
       <p
+        class="pk-sub-deck"
         style="margin:16px 0 0;max-width:655px;font:300 24px/32px var(--pk-font-sans);color:var(--pk-mute)"
       >
-        Discover Provekit. Check out the comprehensive guide for a seamless introduction and
-        installation.
+        Install the CLI from Cargo and you have everything you need to compile a Noir circuit,
+        generate a proof, and verify it in minutes, right from your terminal.
       </p>
     </div>
     <div>
       <a
-        href="#"
+        href="https://docs.provekit.atheon.xyz/"
         class="pk-btn pk-btn--primary"
         style="height:52px;padding:8px 16px;min-width:208px"
-        data-todo="guide"
+        target="_blank"
+        rel="noopener"
       >
         READ GUIDE
         <ArrowRight />
@@ -40,8 +44,8 @@ const command = 'cargo install provekit-cli';
     </div>
   </div>
   <div
-    class="pk-reveal"
-    style="width:600px;padding:72px 48px 72px 0;display:flex;align-items:center;justify-content:center;position:relative;min-width:0"
+    class="pk-reveal pk-install-code"
+    style="width:600px;padding:var(--pk-pad-panel-y) var(--pk-pad-panel-x) var(--pk-pad-panel-y) 0;display:flex;align-items:center;justify-content:center;position:relative;min-width:0"
   >
     <!-- Bloom backdrop -->
     <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none" aria-hidden="true">
@@ -58,43 +62,410 @@ const command = 'cargo install provekit-cli';
     </div>
     <!-- Code panel -->
     <div
-      style="position:relative;width:100%;max-width:540px;border:2px solid var(--pk-line);background:#fff"
+      class="pk-code-block"
+      data-pk-code
+      style="position:relative;width:100%;max-width:540px;border:2px solid var(--pk-line);background:#fff;overflow:hidden"
     >
       <div
-        style="display:flex;justify-content:space-between;align-items:stretch;border-bottom:2px solid var(--pk-line)"
+        style="display:flex;justify-content:space-between;align-items:stretch;border-bottom:2px solid var(--pk-line);position:relative"
       >
         <div
+          class="pk-code-label"
           style="padding:16px 24px;font:400 24px/1 var(--pk-font-mono);letter-spacing:0.02em;color:var(--pk-mute);text-transform:uppercase"
         >
           BASH
         </div>
         <button
           type="button"
-          data-copy={command}
+          data-pk-copy={command}
           aria-label="Copy install command"
-          style="width:64px;height:64px;background:#fff;border:0;border-left:1px solid var(--pk-line);display:flex;align-items:center;justify-content:center;cursor:pointer"
+          class="pk-code-copy-btn"
         >
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#949494"
-            stroke-width="2"
-            stroke-linecap="square"
-            aria-hidden="true"
-          >
-            <rect x="9" y="9" width="11" height="11"></rect>
-            <path d="M5 15V5a1 1 0 0 1 1-1h10"></path>
-          </svg>
+          <span class="pk-code-icon pk-code-icon-clip">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="square"
+              aria-hidden="true"
+            >
+              <rect x="9" y="9" width="11" height="11"></rect>
+              <path d="M5 15V5a1 1 0 0 1 1-1h10"></path>
+            </svg>
+          </span>
+          <span class="pk-code-icon pk-code-icon-check">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#FFFFFF"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 12.5 L10 17.5 L19 7.5"
+                stroke-dasharray="22"
+                stroke-dashoffset="22"
+                class="pk-code-check-path"></path>
+            </svg>
+          </span>
           <span class="sr-only" data-copy-label>Copy</span>
         </button>
+        <div class="pk-code-toast" aria-hidden="true">Copied to clipboard</div>
       </div>
-      <div
-        style="padding:30px;font:400 24px/1 var(--pk-font-mono);letter-spacing:0.02em;color:var(--pk-ink);overflow-x:auto"
-      >
-        {command}
+      <div class="pk-code-body">
+        <span class="pk-code-prompt">$</span>
+        <span class="pk-code-cmd" data-pk-code-cmd>{command}</span><span
+          class="pk-code-caret"
+          aria-hidden="true"></span><span class="pk-code-shimmer" aria-hidden="true"></span><span
+          class="pk-code-bar"
+          aria-hidden="true"></span>
       </div>
     </div>
   </div>
 </Panel>
+
+<style>
+  .pk-code-copy-btn {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    background: #fff;
+    border: 0;
+    border-left: 1px solid var(--pk-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    color: #949494;
+    transition:
+      background 0.25s ease,
+      transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+      color 0.2s ease;
+  }
+  .pk-code-copy-btn:hover {
+    background: #f7f8fa;
+    color: var(--pk-brand);
+  }
+  .pk-code-copy-btn:active {
+    background: #f1f1f1;
+    transform: scale(0.94);
+  }
+  .pk-code-block.is-copied .pk-code-copy-btn {
+    background: var(--pk-brand);
+    color: #fff;
+  }
+  .pk-code-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      opacity 0.22s ease,
+      transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .pk-code-icon-clip {
+    opacity: 1;
+  }
+  .pk-code-icon-check {
+    opacity: 0;
+    transform: scale(0.5) rotate(12deg);
+  }
+  .pk-code-block.is-copied .pk-code-icon-clip {
+    opacity: 0;
+    transform: scale(0.6) rotate(-12deg);
+  }
+  .pk-code-block.is-copied .pk-code-icon-check {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+  .pk-code-toast {
+    position: absolute;
+    right: 76px;
+    top: 50%;
+    font: 500 11px/1 var(--pk-font-mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--pk-brand);
+    background: rgb(13 116 255 / 0.08);
+    border: 1px solid rgb(13 116 255 / 0.4);
+    padding: 7px 10px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-12px, -50%) scale(0.9);
+  }
+  .pk-code-block.is-copied .pk-code-toast {
+    animation: pk-toast 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  .pk-code-body {
+    position: relative;
+    padding: 30px;
+    font: 400 24px/1 var(--pk-font-mono);
+    letter-spacing: 0.02em;
+    color: var(--pk-ink);
+    overflow: hidden;
+  }
+  .pk-code-prompt {
+    color: var(--pk-brand);
+    margin-right: 12px;
+    display: inline-block;
+  }
+  .pk-code-cmd {
+    transition: color 0.6s ease 0.2s;
+    white-space: nowrap;
+  }
+  .pk-code-char {
+    display: inline-block;
+    white-space: pre;
+    transition: color 0.25s ease;
+  }
+  .pk-code-block.is-copied .pk-code-char {
+    color: var(--pk-brand);
+    animation: pk-char-rise 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--char-i, 0) * 12ms);
+  }
+  @keyframes pk-char-rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  /* Check-stroke draw animation when the icon morphs in. */
+  .pk-code-block.is-copied .pk-code-check-path {
+    animation: pk-code-check 0.42s cubic-bezier(0.4, 1.4, 0.5, 1) both;
+  }
+  @keyframes pk-code-check {
+    from {
+      stroke-dashoffset: 22;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  /* Click ripple on the copy button. */
+  .pk-code-ripple {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgb(13 116 255 / 0.45);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: pk-code-ripple 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  .pk-code-block.is-copied .pk-code-ripple {
+    background: rgb(255 255 255 / 0.6);
+  }
+  @keyframes pk-code-ripple {
+    from {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0.45;
+    }
+    to {
+      transform: translate(-50%, -50%) scale(8);
+      opacity: 0;
+    }
+  }
+  .pk-code-caret {
+    display: inline-block;
+    width: 7px;
+    height: 20px;
+    margin-left: 6px;
+    background: var(--pk-ink);
+    vertical-align: -1px;
+    animation: pk-prompt-blink 1.1s steps(1) infinite;
+  }
+  .pk-code-shimmer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 40%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(13 116 255 / 0.18) 50%,
+      transparent 100%
+    );
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-120%);
+  }
+  .pk-code-block.is-copied .pk-code-shimmer {
+    animation: pk-shimmer 0.95s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  .pk-code-bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    background: var(--pk-brand);
+    transform-origin: left center;
+    transform: scaleX(0);
+  }
+  .pk-code-block.is-copied .pk-code-bar {
+    animation: pk-bar-grow 1.6s linear forwards;
+  }
+
+  @keyframes pk-prompt-blink {
+    0%,
+    55% {
+      opacity: 1;
+    }
+    56%,
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes pk-shimmer {
+    0% {
+      transform: translateX(-120%);
+      opacity: 0;
+    }
+    15% {
+      opacity: 1;
+    }
+    85% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(220%);
+      opacity: 0;
+    }
+  }
+  @keyframes pk-toast {
+    0% {
+      opacity: 0;
+      transform: translate(-12px, -50%) scale(0.9);
+    }
+    12% {
+      opacity: 1;
+      transform: translate(0, -50%) scale(1);
+    }
+    78% {
+      opacity: 1;
+      transform: translate(0, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(8px, -50%) scale(0.96);
+    }
+  }
+  @keyframes pk-bar-grow {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .pk-install-copy {
+      gap: 24px !important;
+      padding: var(--pk-pad-panel-y) var(--pk-pad-panel-x) !important;
+    }
+    .pk-install-code {
+      width: 100% !important;
+      padding: 0 var(--pk-pad-panel-x) var(--pk-pad-panel-y) !important;
+    }
+    .pk-code-label {
+      padding: 10px 14px !important;
+      font-size: 13px !important;
+      line-height: 1 !important;
+    }
+    .pk-code-copy-btn {
+      width: 44px !important;
+      height: 40px !important;
+    }
+    .pk-code-body {
+      padding: 16px 18px !important;
+      font: 400 13px/1 var(--pk-font-mono) !important;
+      white-space: nowrap;
+      /* Safety: if the command ever grows past the panel width on narrow
+       * phones, scroll horizontally instead of clipping. */
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .pk-code-body::-webkit-scrollbar {
+      display: none;
+    }
+    .pk-code-caret {
+      width: 7px;
+      height: 13px;
+      vertical-align: -2px;
+    }
+    .pk-code-toast {
+      right: 56px;
+      font-size: 9px;
+      padding: 5px 8px;
+    }
+  }
+</style>
+
+<script>
+  // Copy button: writes to clipboard, then triggers the .is-copied animation
+  // state (icon morph, toast slide, shimmer wipe, progress bar).
+  document.querySelectorAll<HTMLElement>('[data-pk-code]').forEach((block) => {
+    const btn = block.querySelector<HTMLButtonElement>('[data-pk-copy]');
+    const cmdEl = block.querySelector<HTMLElement>('[data-pk-code-cmd]');
+    if (!btn || !cmdEl) return;
+    const cmd = btn.dataset.pkCopy ?? '';
+    const originalText = cmdEl.textContent ?? cmd;
+    let timer: number | null = null;
+
+    function wrapChars() {
+      cmdEl!.innerHTML = originalText
+        .split('')
+        .map((c, i) => {
+          const ch = c === ' ' ? '&nbsp;' : c.replace(/[&<>]/g, (m) => `&#${m.charCodeAt(0)};`);
+          return `<span class="pk-code-char" style="--char-i:${i}">${ch}</span>`;
+        })
+        .join('');
+    }
+    function unwrapChars() {
+      cmdEl!.textContent = originalText;
+    }
+
+    btn.addEventListener('click', async (e) => {
+      // Click-position ripple on the copy button.
+      const rect = btn.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'pk-code-ripple';
+      ripple.style.left = `${e.clientX - rect.left}px`;
+      ripple.style.top = `${e.clientY - rect.top}px`;
+      btn.appendChild(ripple);
+      window.setTimeout(() => ripple.remove(), 700);
+
+      try {
+        await navigator.clipboard.writeText(cmd);
+      } catch {
+        // ignore; visual feedback still fires
+      }
+
+      // Reset state, wrap chars for staggered rise, mark copied.
+      block.classList.remove('is-copied');
+      void block.offsetWidth;
+      wrapChars();
+      block.classList.add('is-copied');
+      if (timer) window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        block.classList.remove('is-copied');
+        unwrapChars();
+      }, 1900);
+    });
+  });
+</script>
