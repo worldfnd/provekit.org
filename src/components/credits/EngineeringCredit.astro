@@ -1,6 +1,13 @@
 ---
 import Panel from '~/components/panel/Panel.astro';
 import ArrowRight from '~/components/icons/ArrowRight.astro';
+
+const partnerLinks = {
+  world: 'https://world.org/',
+  atheon: 'https://atheon.xyz/',
+  reilabs: 'https://reilabs.io/',
+  nethermind: 'https://www.nethermind.io/',
+};
 ---
 
 <Panel
@@ -29,13 +36,21 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         data-partner-logo
         style="display:flex;align-items:center;height:48px;padding:0 16px;transition:filter 0.5s cubic-bezier(0.32,0.72,0,1),opacity 0.5s cubic-bezier(0.32,0.72,0,1),transform 0.5s cubic-bezier(0.32,0.72,0,1)"
       >
-        <img
-          src="/figma/world-logo.svg"
-          alt="World"
-          loading="lazy"
-          decoding="async"
-          style="height:32px;width:auto;display:block;transform:translateY(4px);pointer-events:none"
-        />
+        <a
+          href={partnerLinks.world}
+          class="pk-partner-link"
+          aria-label="Visit World"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="/figma/world-logo.svg"
+            alt="World"
+            loading="lazy"
+            decoding="async"
+            style="height:32px;width:auto;display:block;transform:translateY(4px);pointer-events:none"
+          />
+        </a>
       </div>
       <div
         class="pk-partner-divider"
@@ -49,13 +64,21 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         data-partner-logo
         style="display:flex;align-items:center;height:48px;padding:0 16px;transition:filter 0.5s cubic-bezier(0.32,0.72,0,1),opacity 0.5s cubic-bezier(0.32,0.72,0,1),transform 0.5s cubic-bezier(0.32,0.72,0,1)"
       >
-        <img
-          src="/figma/atheon-logo.svg"
-          alt="Atheon"
-          loading="lazy"
-          decoding="async"
-          style="height:36px;width:auto;display:block;pointer-events:none"
-        />
+        <a
+          href={partnerLinks.atheon}
+          class="pk-partner-link"
+          aria-label="Visit Atheon"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="/figma/atheon-logo.svg"
+            alt="Atheon"
+            loading="lazy"
+            decoding="async"
+            style="height:36px;width:auto;display:block;pointer-events:none"
+          />
+        </a>
       </div>
       <div
         class="pk-partner-divider"
@@ -69,13 +92,21 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         data-partner-logo
         style="display:flex;align-items:center;height:48px;padding:0 16px;transition:filter 0.5s cubic-bezier(0.32,0.72,0,1),opacity 0.5s cubic-bezier(0.32,0.72,0,1),transform 0.5s cubic-bezier(0.32,0.72,0,1)"
       >
-        <img
-          src="/figma/reilabs-logo.svg"
-          alt="Reilabs"
-          loading="lazy"
-          decoding="async"
-          style="height:36px;width:auto;display:block;pointer-events:none"
-        />
+        <a
+          href={partnerLinks.reilabs}
+          class="pk-partner-link"
+          aria-label="Visit Reilabs"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="/figma/reilabs-logo.svg"
+            alt="Reilabs"
+            loading="lazy"
+            decoding="async"
+            style="height:36px;width:auto;display:block;pointer-events:none"
+          />
+        </a>
       </div>
       <div
         class="pk-partner-divider"
@@ -89,13 +120,21 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         data-partner-logo
         style="display:flex;align-items:center;height:48px;padding:0 16px;transition:filter 0.5s cubic-bezier(0.32,0.72,0,1),opacity 0.5s cubic-bezier(0.32,0.72,0,1),transform 0.5s cubic-bezier(0.32,0.72,0,1)"
       >
-        <img
-          src="/figma/nethermind-logo.svg"
-          alt="Nethermind"
-          loading="lazy"
-          decoding="async"
-          style="height:28px;width:auto;display:block;pointer-events:none"
-        />
+        <a
+          href={partnerLinks.nethermind}
+          class="pk-partner-link"
+          aria-label="Visit Nethermind"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="/figma/nethermind-logo.svg"
+            alt="Nethermind"
+            loading="lazy"
+            decoding="async"
+            style="height:28px;width:auto;display:block;pointer-events:none"
+          />
+        </a>
       </div>
     </div>
     <div>
@@ -125,6 +164,19 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
 </Panel>
 
 <style>
+  .pk-partner-link {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pk-partner-link:focus-visible {
+    outline: 2px solid var(--pk-brand);
+    outline-offset: 8px;
+  }
+
   @media (min-width: 721px) and (max-width: 1199px) {
     /* Keep background image hidden at tablet too – it overlaps the text at
      * narrower viewports where the flex column fills full width. */
