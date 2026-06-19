@@ -151,7 +151,14 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
   .pk-hero-grain {
     position: absolute;
     inset: 0;
-    background: url('/figma/grain-texture.png') center/cover;
+    background-image: url('/figma/grain-texture.png');
+    background-image: image-set(
+      url('/figma/grain-texture.avif') type('image/avif'),
+      url('/figma/grain-texture.webp') type('image/webp'),
+      url('/figma/grain-texture.png') type('image/png')
+    );
+    background-position: center;
+    background-size: cover;
     opacity: 0.12;
     mix-blend-mode: overlay;
   }
