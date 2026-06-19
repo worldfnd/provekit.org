@@ -1,6 +1,8 @@
 ---
 import Panel from '~/components/panel/Panel.astro';
 import ArrowRight from '~/components/icons/ArrowRight.astro';
+
+const DOCS_URL = 'https://docs.provekit.org/';
 ---
 
 <!-- Interactive proof-graph banner (canvas particle simulation + animated CSS blooms).
@@ -27,6 +29,12 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
 
   <!-- HUD readout follows cursor -->
   <div data-pk-hero-readout class="pk-hero-readout"><span>x:000 y:000</span></div>
+
+  <!-- Corner marker labels -->
+  <div class="pk-hero-corner pk-hero-corner--tl">◆ PROOF GRAPH · LIVE</div>
+  <div class="pk-hero-corner pk-hero-corner--tr">HOVER · CLICK TO PULSE →</div>
+  <div class="pk-hero-corner pk-hero-corner--bl">v1.0.0 / R1CS</div>
+  <div class="pk-hero-corner pk-hero-corner--br">CLIENT-SIDE ZK</div>
 </div>
 
 <!-- Headline panel -->
@@ -64,11 +72,9 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       <span style="font:400 22px/1 var(--pk-font-mono);letter-spacing:0.02em">{'{ }'}</span>
     </a>
     <a
-      href="https://docs.provekit.atheon.xyz/"
+      href={DOCS_URL}
       class="pk-btn pk-btn--primary"
       style="height:52px;padding:8px 16px;min-width:237px"
-      target="_blank"
-      rel="noopener"
     >
       EXPLORE DOCS
       <ArrowRight />
@@ -229,6 +235,65 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
     }
   }
 
+  @media (min-width: 721px) and (max-width: 1199px) {
+    .pk-hero-banner {
+      height: 420px !important;
+    }
+    .pk-hero-corner {
+      font-size: 10px !important;
+    }
+    /* Inline style on h1/p hardcodes desktop px — override with !important
+     * in this scoped block (Astro adds [data-astro-cid-*] which wins over
+     * a plain global class rule and overrides the unstyled inline). */
+    #hero-title {
+      font-size: 42px !important;
+      line-height: 1.1 !important;
+      white-space: normal !important;
+    }
+    .pk-sub-deck {
+      font-size: 18px !important;
+      line-height: 1.45 !important;
+    }
+    /* On desktop the site is rendered with zoom:0.75, which visually scales
+     * all blur/size values by 0.75x. Without zoom on tablet the blooms are
+     * ~33% heavier and wash out the canvas. Scale them down to match the
+     * desktop apparent visual density (targeting ~960px midpoint). */
+    .pk-hero-blooms {
+      filter: blur(25px) !important;
+      opacity: 0.58 !important;
+    }
+    .pk-hero-bloom-a {
+      width: 500px !important;
+      height: 500px !important;
+      filter: blur(62px) !important;
+      opacity: 0.6 !important;
+    }
+    .pk-hero-bloom-b {
+      width: 390px !important;
+      height: 390px !important;
+      filter: blur(68px) !important;
+      opacity: 0.55 !important;
+    }
+    .pk-hero-bloom-c {
+      width: 440px !important;
+      height: 440px !important;
+      filter: blur(80px) !important;
+      opacity: 0.52 !important;
+    }
+    .pk-hero-bloom-d {
+      width: 330px !important;
+      height: 330px !important;
+      filter: blur(62px) !important;
+      opacity: 0.52 !important;
+    }
+    .pk-hero-bloom-e {
+      width: 300px !important;
+      height: 300px !important;
+      filter: blur(58px) !important;
+      opacity: 0.58 !important;
+    }
+  }
+
   @media (max-width: 720px) {
     .pk-hero-banner {
       height: 340px !important;
@@ -281,6 +346,39 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       opacity: 0.75 !important;
     }
   }
+  .pk-hero-corner {
+    position: absolute;
+    font:
+      400 11px/1 ui-monospace,
+      'SF Mono',
+      Menlo,
+      monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .pk-hero-corner--tl {
+    left: 12px;
+    top: 12px;
+    color: #0d74ff;
+  }
+  .pk-hero-corner--tr {
+    right: 12px;
+    top: 12px;
+    color: rgba(45, 45, 43, 0.6);
+  }
+  .pk-hero-corner--bl {
+    left: 12px;
+    bottom: 12px;
+    color: rgba(45, 45, 43, 0.6);
+  }
+  .pk-hero-corner--br {
+    right: 12px;
+    bottom: 12px;
+    color: rgba(45, 45, 43, 0.6);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .pk-hero-bloom {
       animation: none !important;

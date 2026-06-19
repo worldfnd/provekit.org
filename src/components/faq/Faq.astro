@@ -74,7 +74,24 @@ import { faqEntries } from '~/content/faq';
 </section>
 
 <style>
+  @media (min-width: 721px) and (max-width: 1199px) {
+    #faq-title {
+      font-size: 38px !important;
+      line-height: 1.15 !important;
+      white-space: normal !important;
+    }
+    .pk-faq-cta-copy {
+      font-size: 24px !important;
+    }
+    .pk-faq-inner {
+      gap: 32px !important;
+    }
+  }
+
   @media (max-width: 720px) {
+    .pk-faq-bloom {
+      display: none !important;
+    }
     .pk-faq-body {
       justify-content: flex-start !important;
     }

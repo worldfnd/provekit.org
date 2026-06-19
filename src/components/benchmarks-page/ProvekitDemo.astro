@@ -253,7 +253,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
     border: 0;
     outline: 0;
     background: transparent;
-    resize: vertical;
+    resize: none;
     min-height: 64px;
     font: 400 16px/1.45 var(--pk-font-mono);
     color: var(--pk-ink);
@@ -595,6 +595,22 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
     }
     50% {
       opacity: 0.35;
+    }
+  }
+
+  @media (min-width: 721px) and (max-width: 1199px) {
+    #demo-title {
+      font-size: 36px !important;
+      line-height: 1.15 !important;
+      white-space: normal !important;
+    }
+    .pk-demo-sub {
+      font-size: 16px !important;
+      line-height: 1.5 !important;
+    }
+    .pk-demo-left {
+      padding: var(--pk-pad-panel-y) var(--pk-pad-panel-x);
+      gap: 28px;
     }
   }
 
