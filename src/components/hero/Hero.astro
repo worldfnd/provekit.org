@@ -1,6 +1,8 @@
 ---
 import Panel from '~/components/panel/Panel.astro';
 import ArrowRight from '~/components/icons/ArrowRight.astro';
+
+const DOCS_URL = 'https://docs.provekit.org/';
 ---
 
 <!-- Interactive proof-graph banner (canvas particle simulation + animated CSS blooms).
@@ -70,11 +72,9 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       <span style="font:400 22px/1 var(--pk-font-mono);letter-spacing:0.02em">{'{ }'}</span>
     </a>
     <a
-      href="https://docs.provekit.atheon.xyz/"
+      href={DOCS_URL}
       class="pk-btn pk-btn--primary"
       style="height:52px;padding:8px 16px;min-width:237px"
-      target="_blank"
-      rel="noopener"
     >
       EXPLORE DOCS
       <ArrowRight />

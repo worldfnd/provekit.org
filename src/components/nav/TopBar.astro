@@ -1,15 +1,17 @@
 ---
 import ArrowRight from '~/components/icons/ArrowRight.astro';
 
+const DOCS_URL = 'https://docs.provekit.org/';
+const INSTALL_URL = `${DOCS_URL}getting-started/installation/`;
+
 const NAV_ITEMS = [
   { num: '01', label: 'Home', href: '/', meta: 'The landing page' },
   { num: '02', label: 'Benchmarks', href: '/benchmarks', meta: 'Compare performance' },
   {
     num: '03',
     label: 'Documentation',
-    href: 'https://docs.provekit.atheon.xyz/',
+    href: DOCS_URL,
     meta: 'Guides & API reference',
-    external: true,
   },
   {
     num: '04',
@@ -37,11 +39,9 @@ const NAV_ITEMS = [
     </div>
     <div class="pk-topbar-actions">
       <a
-        href="https://docs.provekit.atheon.xyz/"
+        href={DOCS_URL}
         class="pk-btn pk-btn--primary pk-topbar-docs"
         style="height:52px;padding-left:16px;padding-right:16px;width:auto;min-width:0"
-        target="_blank"
-        rel="noopener"
       >
         DOCS
         <ArrowRight />
@@ -135,12 +135,10 @@ const NAV_ITEMS = [
     <div class="pk-nav-cta">
       <span class="pk-nav-cta-label">GET STARTED</span>
       <a
-        href="https://docs.provekit.atheon.xyz/getting-started/installation/"
+        href={INSTALL_URL}
         class="pk-btn pk-btn--primary"
         style="height:52px;padding:8px 16px;min-width:240px"
         data-nav-close
-        target="_blank"
-        rel="noopener"
       >
         INSTALL PROVEKIT
         <ArrowRight />

@@ -1,6 +1,8 @@
 ---
 import Panel from '~/components/panel/Panel.astro';
 import ArrowRight from '~/components/icons/ArrowRight.astro';
+
+const DOCS_URL = 'https://docs.provekit.org/';
 const command = 'cargo install provekit-cli';
 ---
 
@@ -32,11 +34,9 @@ const command = 'cargo install provekit-cli';
     </div>
     <div>
       <a
-        href="https://docs.provekit.atheon.xyz/"
+        href={DOCS_URL}
         class="pk-btn pk-btn--primary"
         style="height:52px;padding:8px 16px;min-width:208px"
-        target="_blank"
-        rel="noopener"
       >
         READ GUIDE
         <ArrowRight />

@@ -4,9 +4,11 @@ interface Props {
 }
 const { onBenchmarks = false } = Astro.props;
 
+const DOCS_URL = 'https://docs.provekit.org/';
+
 const product = [
-  { label: 'DOCS', href: 'https://docs.provekit.atheon.xyz/', external: true },
-  { label: 'GUIDE', href: 'https://docs.provekit.atheon.xyz/', external: true },
+  { label: 'DOCS', href: DOCS_URL, external: false },
+  { label: 'GUIDE', href: DOCS_URL, external: false },
   onBenchmarks
     ? { label: 'HOME', href: '/', external: false }
     : { label: 'BENCHMARKS', href: '/benchmarks', external: false },
