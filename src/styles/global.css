@@ -15,9 +15,10 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Site is designed to feel like browser-zoom 75% — apply on desktop only,
-   * leave mobile at native scale since its layout was authored for phones. */
-  @media (min-width: 721px) {
+  /* Site is designed to feel like browser-zoom 75% — apply on desktop only
+   * (≥1200px) where 1600px × 0.75 = 1200px fits the viewport.
+   * Tablets (721–1199px) use their own responsive layout without zoom. */
+  @media (min-width: 1200px) {
     html {
       zoom: 0.75;
     }
@@ -242,7 +243,9 @@
     }
   }
 
-  /* Bars chart hover: dim other rows, reveal value label. */
+  /* Bars chart hover: dim other rows, reveal value label.
+   * The value span carries inline opacity:0 so !important is required to
+   * override it — inline styles rank above normal author-layer rules. */
   .pk-bars:hover .pk-bars-row {
     opacity: 0.35;
   }
@@ -250,18 +253,19 @@
     opacity: 1;
   }
   .pk-bars .pk-bars-row:hover .pk-bars-value {
-    opacity: 1;
+    opacity: 1 !important;
   }
   .pk-bars .pk-bars-row:hover .pk-bars-label {
     color: var(--pk-ink);
   }
 
-  /* Columns chart hover: hatch + value labels fade in per group. */
+  /* Columns chart hover: hatch + value labels fade in per group.
+   * Both rects carry inline opacity:0 so !important is required. */
   .pk-col-group:hover .pk-col-hatch {
-    opacity: 1;
+    opacity: 1 !important;
   }
   .pk-col-group:hover .pk-col-value {
-    opacity: 1;
+    opacity: 1 !important;
   }
   .pk-col-group:hover .pk-col-label {
     fill: var(--pk-ink);
@@ -341,6 +345,43 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+}
+
+/* Tablet responsive section — 721px to 1199px.
+ * No zoom in this range; containers already have max-width:100% so they
+ * naturally fill the viewport. Token scale is handled in tokens.css. */
+@media (min-width: 721px) and (max-width: 1199px) {
+  .pk-stage,
+  .pk-strip {
+    width: 100%;
+  }
+
+  /* Scale headlines and sub-decks via design tokens (same pattern as mobile).
+   * Components hardcode desktop px values in inline style; these overrides
+   * win with !important so the type ramp is consistent across all sections. */
+  .pk-display-headline {
+    font: 500 var(--pk-fs-display) / var(--pk-lh-display) var(--pk-font-sans) !important;
+    letter-spacing: var(--pk-tracking-tight) !important;
+    text-wrap: balance;
+  }
+  .pk-sub-deck {
+    font: 300 var(--pk-fs-body) / var(--pk-lh-body) var(--pk-font-sans) !important;
+  }
+
+  /* Stack rows that are side-by-side on desktop */
+  .pk-row-stack-tablet {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .pk-row-stack-tablet > * {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Buttons stay auto-width on tablet (unlike mobile full-width) */
+  .pk-btn {
+    min-width: 0 !important;
   }
 }
 

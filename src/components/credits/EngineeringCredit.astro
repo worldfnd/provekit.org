@@ -1,6 +1,13 @@
 ---
 import Panel from '~/components/panel/Panel.astro';
 import ArrowRight from '~/components/icons/ArrowRight.astro';
+
+const partnerLinks = {
+  world: 'https://world.org/',
+  atheon: 'https://atheon.xyz/',
+  reilabs: 'https://reilabs.io/',
+  nethermind: 'https://www.nethermind.io/',
+};
 ---
 
 <Panel
@@ -19,48 +26,115 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
     >
       {'Engineered by some of\nthe best technical brains'}
     </h2>
-    <div class="pk-partner-row" style="display:flex;align-items:center;gap:36px;flex-wrap:wrap">
-      <div style="display:flex;align-items:center;height:48px;padding:0 16px">
-        <img
-          src="/figma/world-logo.svg"
-          alt="World"
-          loading="lazy"
-          decoding="async"
-          style="height:32px;width:auto;display:block;transform:translateY(4px)"
-        />
+    <div
+      class="pk-partner-row"
+      data-pk-partners
+      style="display:flex;align-items:center;gap:36px;flex-wrap:wrap"
+    >
+      <div
+        class="pk-partner-logo"
+        data-partner-logo
+        style="display:flex;align-items:center;height:48px;padding:0 16px;transition:filter 0.5s cubic-bezier(0.32,0.72,0,1),opacity 0.5s cubic-bezier(0.32,0.72,0,1),transform 0.5s cubic-bezier(0.32,0.72,0,1)"
+      >
+        <a
+          href={partnerLinks.world}
+          class="pk-partner-link"
+          aria-label="Visit World"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="/figma/world-logo.svg"
+            alt="World"
+            loading="lazy"
+            decoding="async"
+            style="height:32px;width:auto;display:block;transform:translateY(4px);pointer-events:none"
+          />
+        </a>
       </div>
-      <div style="width:0;height:40px;border-left:2px solid var(--pk-line-soft)" aria-hidden="true">
+      <div
+        class="pk-partner-divider"
+        data-partner-divider
+        style="width:0;height:40px;border-left:2px solid var(--pk-line-soft);transition:opacity 0.5s cubic-bezier(0.32,0.72,0,1)"
+        aria-hidden="true"
+      >
       </div>
-      <div style="display:flex;align-items:center;height:48px;padding:0 16px">
-        <img
-          src="/figma/atheon-logo.svg"
-          alt="Atheon"
-          loading="lazy"
-          decoding="async"
-          style="height:36px;width:auto;display:block"
-        />
+      <div
+        class="pk-partner-logo"
+        data-partner-logo
+        style="display:flex;align-items:center;height:48px;padding:0 16px;transition:filter 0.5s cubic-bezier(0.32,0.72,0,1),opacity 0.5s cubic-bezier(0.32,0.72,0,1),transform 0.5s cubic-bezier(0.32,0.72,0,1)"
+      >
+        <a
+          href={partnerLinks.atheon}
+          class="pk-partner-link"
+          aria-label="Visit Atheon"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="/figma/atheon-logo.svg"
+            alt="Atheon"
+            loading="lazy"
+            decoding="async"
+            style="height:36px;width:auto;display:block;pointer-events:none"
+          />
+        </a>
       </div>
-      <div style="width:0;height:40px;border-left:2px solid var(--pk-line-soft)" aria-hidden="true">
+      <div
+        class="pk-partner-divider"
+        data-partner-divider
+        style="width:0;height:40px;border-left:2px solid var(--pk-line-soft);transition:opacity 0.5s cubic-bezier(0.32,0.72,0,1)"
+        aria-hidden="true"
+      >
       </div>
-      <div style="display:flex;align-items:center;height:48px;padding:0 16px">
-        <img
-          src="/figma/reilabs-logo.svg"
-          alt="Reilabs"
-          loading="lazy"
-          decoding="async"
-          style="height:36px;width:auto;display:block"
-        />
+      <div
+        class="pk-partner-logo"
+        data-partner-logo
+        style="display:flex;align-items:center;height:48px;padding:0 16px;transition:filter 0.5s cubic-bezier(0.32,0.72,0,1),opacity 0.5s cubic-bezier(0.32,0.72,0,1),transform 0.5s cubic-bezier(0.32,0.72,0,1)"
+      >
+        <a
+          href={partnerLinks.reilabs}
+          class="pk-partner-link"
+          aria-label="Visit Reilabs"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="/figma/reilabs-logo.svg"
+            alt="Reilabs"
+            loading="lazy"
+            decoding="async"
+            style="height:36px;width:auto;display:block;pointer-events:none"
+          />
+        </a>
       </div>
-      <div style="width:0;height:40px;border-left:2px solid var(--pk-line-soft)" aria-hidden="true">
+      <div
+        class="pk-partner-divider"
+        data-partner-divider
+        style="width:0;height:40px;border-left:2px solid var(--pk-line-soft);transition:opacity 0.5s cubic-bezier(0.32,0.72,0,1)"
+        aria-hidden="true"
+      >
       </div>
-      <div style="display:flex;align-items:center;height:48px;padding:0 16px">
-        <img
-          src="/figma/nethermind-logo.svg"
-          alt="Nethermind"
-          loading="lazy"
-          decoding="async"
-          style="height:28px;width:auto;display:block"
-        />
+      <div
+        class="pk-partner-logo"
+        data-partner-logo
+        style="display:flex;align-items:center;height:48px;padding:0 16px;transition:filter 0.5s cubic-bezier(0.32,0.72,0,1),opacity 0.5s cubic-bezier(0.32,0.72,0,1),transform 0.5s cubic-bezier(0.32,0.72,0,1)"
+      >
+        <a
+          href={partnerLinks.nethermind}
+          class="pk-partner-link"
+          aria-label="Visit Nethermind"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="/figma/nethermind-logo.svg"
+            alt="Nethermind"
+            loading="lazy"
+            decoding="async"
+            style="height:28px;width:auto;display:block;pointer-events:none"
+          />
+        </a>
       </div>
     </div>
     <div>
@@ -85,11 +159,40 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
     loading="lazy"
     decoding="async"
     class="pk-partners-bg"
-    style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:right center;display:block;pointer-events:none"
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:calc(100% + 8px) center;display:block;pointer-events:none"
   />
 </Panel>
 
 <style>
+  .pk-partner-link {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pk-partner-link:focus-visible {
+    outline: 2px solid var(--pk-brand);
+    outline-offset: 8px;
+  }
+
+  @media (min-width: 721px) and (max-width: 1199px) {
+    /* Keep background image hidden at tablet too – it overlaps the text at
+     * narrower viewports where the flex column fills full width. */
+    .pk-partners-bg {
+      display: none !important;
+    }
+    .pk-partner-row {
+      gap: 20px !important;
+    }
+    #credit-title {
+      font-size: 38px !important;
+      line-height: 1.15 !important;
+      white-space: normal !important;
+    }
+  }
+
   @media (max-width: 720px) {
     .pk-partner-row {
       display: grid !important;
@@ -102,7 +205,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
     }
     /* Clean 2×2 grid: each cell gets bottom+right dividers, outer border
      * comes from the row. Avoids the negative-margin alignment glitches. */
-    .pk-partner-row > div {
+    .pk-partner-logo {
       height: 64px !important;
       padding: 0 !important;
       justify-content: center;
@@ -111,21 +214,47 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       border-right: 1px solid var(--pk-line-soft) !important;
       margin: 0 !important;
     }
-    .pk-partner-row > div:nth-child(2n) {
+    .pk-partner-logo:nth-of-type(2n) {
       border-right: 0 !important;
     }
-    .pk-partner-row > div:nth-last-child(-n + 2) {
+    .pk-partner-logo:nth-last-of-type(-n + 2) {
       border-bottom: 0 !important;
     }
-    /* On mobile, pin the graphic behind the headline only so it doesn't
-     * clash with the 2x2 logo grid below. */
     .pk-partners-bg {
-      inset: 0 0 auto 0 !important;
-      width: 100% !important;
-      height: 220px !important;
-      object-position: right top !important;
-      opacity: 0.28 !important;
-      transform: none !important;
+      display: none !important;
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-pk-partners]').forEach((row) => {
+    const logos = Array.from(row.querySelectorAll<HTMLElement>('[data-partner-logo]'));
+    const dividers = Array.from(row.querySelectorAll<HTMLElement>('[data-partner-divider]'));
+
+    logos.forEach((logo) => {
+      logo.addEventListener('mouseenter', () => {
+        logos.forEach((other) => {
+          if (other === logo) {
+            other.style.transform = 'scale(1.04)';
+            other.style.filter = 'blur(0px)';
+            other.style.opacity = '1';
+          } else {
+            other.style.transform = 'scale(1)';
+            other.style.filter = 'blur(5px)';
+            other.style.opacity = '0.35';
+          }
+        });
+        dividers.forEach((d) => (d.style.opacity = '0.25'));
+      });
+    });
+
+    row.addEventListener('mouseleave', () => {
+      logos.forEach((logo) => {
+        logo.style.transform = 'scale(1)';
+        logo.style.filter = 'blur(0px)';
+        logo.style.opacity = '1';
+      });
+      dividers.forEach((d) => (d.style.opacity = '1'));
+    });
+  });
+</script>

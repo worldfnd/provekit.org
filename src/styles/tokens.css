@@ -65,6 +65,30 @@
   --pk-dur-fast: 120ms;
 }
 
+/* Tablet token overrides — 721px to 1199px.
+ * Intermediate scale between mobile and desktop so the layout stays
+ * readable without the 0.75 desktop zoom that only kicks in at ≥1200px. */
+@media (min-width: 721px) and (max-width: 1199px) {
+  :root {
+    --pk-fs-display: 52px;
+    --pk-fs-h1: 36px;
+    --pk-fs-h3: 22px;
+    --pk-fs-body: 18px;
+    --pk-fs-mono: 16px;
+    --pk-fs-mono-lg: 16px;
+
+    --pk-lh-display: 1.1;
+    --pk-lh-body: 1.4;
+
+    --pk-tracking-mono: 0.03em;
+
+    --pk-pad-panel-y: 48px;
+    --pk-pad-panel-x: 32px;
+    --pk-gap-strip: 48px;
+    --pk-gutter: 32px;
+  }
+}
+
 /* Mobile token overrides — narrower viewports scale the entire ramp down
  * so the 1600px desktop layout collapses to a phone-friendly 430px column.
  * Mirrors mobile/tokens.css from the design system. */

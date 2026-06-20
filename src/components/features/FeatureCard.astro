@@ -59,6 +59,22 @@ const { num, title, body, image, borderColor } = Astro.props;
     transform: rotate(-4deg) scale(1.08);
   }
 
+  @media (min-width: 721px) and (max-width: 1199px) {
+    .pk-feature-card {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+    .pk-feature-image {
+      flex: none !important;
+      height: 260px !important;
+    }
+    .pk-feature-body {
+      height: auto !important;
+      padding: 28px 24px !important;
+      font: 300 16px/1.45 var(--pk-font-sans) !important;
+    }
+  }
+
   @media (max-width: 720px) {
     .pk-feature-card {
       max-width: 100% !important;
