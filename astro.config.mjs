@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import react from '@astrojs/react';
 
 // COOP/COEP enable Cross-Origin Isolation so the in-browser ZK prover can
 // use SharedArrayBuffer + Web Workers for multi-threaded proving. Without
@@ -17,7 +18,7 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'auto',
   },
-  integrations: [sitemap()],
+  integrations: [sitemap(), react({ include: ['**/*.tsx'] })],
   vite: {
     plugins: [tailwindcss()],
     server: { headers: crossOriginIsolation },

@@ -6,6 +6,8 @@
     "exactOptionalPropertyTypes": true,
     "verbatimModuleSyntax": true,
     "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
