@@ -109,8 +109,8 @@ const barW = (groupInner - (metric.series.length - 1) * 4) / metric.series.lengt
             const x = innerLeft + j * (barW + 4);
             // Floor tiny non-zero columns at 3px so near-zero values (e.g. a
             // 200 B proof against a 180 KB axis) stay visible.
-            const v = s.values[i] ?? 0;
-            const h = v > 0 ? Math.max(CHART_H - PAD_B - yAt(v), 3) : 0;
+            const v = s.values[i];
+            const h = v != null && v > 0 ? Math.max(CHART_H - PAD_B - yAt(v), 3) : 0;
             const y = CHART_H - PAD_B - h;
             return (
               <g style="pointer-events:none">
@@ -129,7 +129,7 @@ const barW = (groupInner - (metric.series.length - 1) * 4) / metric.series.lengt
                   paint-order="stroke"
                   style="opacity:0;transition:opacity 0.22s ease"
                 >
-                  {s.values[i]}
+                  {v == null ? 'OOM' : v}
                 </text>
               </g>
             );

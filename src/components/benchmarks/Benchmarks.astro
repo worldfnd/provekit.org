@@ -1,14 +1,14 @@
 ---
 import ArrowRight from '~/components/icons/ArrowRight.astro';
-import BarsChart from '~/components/charts/BarsChart.astro';
 import ColumnsChart from '~/components/charts/ColumnsChart.astro';
 import { METRICS } from '~/data/benchmarks';
 
-const labels = ['Proving time · Bars', 'Memory footprint · Columns', 'Setup artifacts · Columns'];
+const teaserMetrics = METRICS.slice(0, 3);
+const labels = ['iPhone · Columns', 'Moto E15 · Columns', 'Browser · Columns'];
 const legend = [
-  { label: 'BARRETENBERG', color: '#DE00FF' },
-  { label: 'CIRCOM', color: '#E91900' },
-  { label: 'PROVEKIT', color: '#0D74FF' },
+  { label: 'CIRCOM + GROTH16', color: '#DE00FF' },
+  { label: 'NOIR + BARRETENBERG', color: '#E91900' },
+  { label: 'PROVEKIT V1', color: '#0D74FF' },
 ];
 ---
 
@@ -38,7 +38,7 @@ const legend = [
         style="display:flex;flex-direction:column;gap:24px"
       >
         {
-          METRICS.map((m, i) => (
+          teaserMetrics.map((m, i) => (
             <>
               <button
                 type="button"
@@ -64,7 +64,7 @@ const legend = [
                   {m.body}
                 </span>
               </button>
-              {i < METRICS.length - 1 && (
+              {i < teaserMetrics.length - 1 && (
                 <div style="border-top:2px solid var(--pk-line)" aria-hidden="true" />
               )}
             </>
@@ -118,18 +118,18 @@ const legend = [
           }
         </div>
         <div data-chart="0" class="pk-bench-anim pk-bench-chart">
-          <BarsChart metric={METRICS[0]} />
+          <ColumnsChart metric={teaserMetrics[0]!} hatchId="pk-col-hatch-landing-0" />
         </div>
         <div data-chart="1" class="pk-bench-anim pk-bench-chart" hidden>
-          <ColumnsChart metric={METRICS[1]} hatchId="pk-col-hatch-landing-1" />
+          <ColumnsChart metric={teaserMetrics[1]!} hatchId="pk-col-hatch-landing-1" />
         </div>
         <div data-chart="2" class="pk-bench-anim pk-bench-chart" hidden>
-          <ColumnsChart metric={METRICS[2]} hatchId="pk-col-hatch-landing-2" />
+          <ColumnsChart metric={teaserMetrics[2]!} hatchId="pk-col-hatch-landing-2" />
         </div>
       </div>
     </div>
     {
-      METRICS.map((m, i) => (
+      teaserMetrics.map((m, i) => (
         <div data-kpis={i} class="pk-bench-anim" hidden={i !== 0} style="display:flex">
           {m.kpis.map((k, j) => (
             <div

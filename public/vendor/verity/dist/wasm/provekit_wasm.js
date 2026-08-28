@@ -219,7 +219,7 @@ export function wbg_rayon_start_worker(receiver) {
 }
 
 function __wbg_adapter_78(arg0, arg1, arg2, arg3) {
-    wasm.wasm_bindgen_66b12b5a02f6ae0a___convert__closures__invoke2_mut___wasm_bindgen_66b12b5a02f6ae0a___JsValue__wasm_bindgen_66b12b5a02f6ae0a___JsValue_____(arg0, arg1, addHeapObject(arg2), addHeapObject(arg3));
+    wasm.wasm_bindgen_5fbe90763fcdd72e___convert__closures__invoke2_mut___wasm_bindgen_5fbe90763fcdd72e___JsValue__wasm_bindgen_5fbe90763fcdd72e___JsValue_____(arg0, arg1, addHeapObject(arg2), addHeapObject(arg3));
 }
 
 const ProverFinalization = (typeof FinalizationRegistry === 'undefined')

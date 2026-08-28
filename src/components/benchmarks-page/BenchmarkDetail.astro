@@ -1,15 +1,14 @@
 ---
 import Panel from '~/components/panel/Panel.astro';
-import BarsChart from '~/components/charts/BarsChart.astro';
 import ColumnsChart from '~/components/charts/ColumnsChart.astro';
 import { METRICS, DETAIL_EXTRAS } from '~/data/benchmarks';
 
 interface Props {
-  index: 0 | 1 | 2;
+  index: number;
 }
 const { index } = Astro.props;
-const metric = METRICS[index];
-const extra = DETAIL_EXTRAS[metric.key];
+const metric = METRICS[index]!;
+const extra = DETAIL_EXTRAS[metric.key]!;
 const num = String(index + 1).padStart(2, '0');
 const headlineKpi = metric.kpis[0]?.value ?? '';
 ---
@@ -88,12 +87,7 @@ const headlineKpi = metric.kpis[0]?.value ?? '';
       </div>
     </div>
     <div class="pk-reveal" style="min-width:0">
-      {metric.chart === 'bars' && <BarsChart metric={metric} />}
-      {
-        metric.chart === 'columns' && (
-          <ColumnsChart metric={metric} hatchId={`pk-col-hatch-detail-${index}`} />
-        )
-      }
+      <ColumnsChart metric={metric} hatchId={`pk-col-hatch-detail-${index}`} />
     </div>
   </div>
 

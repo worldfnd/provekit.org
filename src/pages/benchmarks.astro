@@ -8,12 +8,13 @@ import BenchmarksMethodology from '~/components/benchmarks-page/BenchmarksMethod
 import BenchmarkDetail from '~/components/benchmarks-page/BenchmarkDetail.astro';
 import BenchmarksSummary from '~/components/benchmarks-page/BenchmarksSummary.astro';
 import SiteFooter from '~/components/footer/SiteFooter.astro';
+import { METRICS } from '~/data/benchmarks';
 ---
 
 <BaseLayout
   title="ProveKit · Benchmarks"
-  description="A reproducible look at how ProveKit performs against Barretenberg and Circom across proving time, memory, and setup artifacts, measured on commodity client hardware."
-  canonical="https://provekit.atheon.xyz/benchmarks"
+  description="Reproducible ProveKit v1 input-to-proof benchmarks across iPhone, low-end Android, and browser, including proving time, memory, payload, and proof size."
+  canonical="https://provekit.org/benchmarks"
 >
   <TopBar />
   <main id="main" class="pk-stage">
@@ -26,12 +27,14 @@ import SiteFooter from '~/components/footer/SiteFooter.astro';
     <div class="pk-strip" aria-hidden="true"></div>
     <BenchmarksMethodology />
     <div class="pk-strip" aria-hidden="true"></div>
-    <BenchmarkDetail index={0} />
-    <div class="pk-strip" aria-hidden="true"></div>
-    <BenchmarkDetail index={1} />
-    <div class="pk-strip" aria-hidden="true"></div>
-    <BenchmarkDetail index={2} />
-    <div class="pk-strip" aria-hidden="true"></div>
+    {
+      METRICS.map((_, index) => (
+        <>
+          <BenchmarkDetail index={index} />
+          <div class="pk-strip" aria-hidden="true" />
+        </>
+      ))
+    }
     <BenchmarksSummary />
     <div class="pk-strip" aria-hidden="true"></div>
     <SiteFooter onBenchmarks />

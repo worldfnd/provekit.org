@@ -166,7 +166,7 @@ export function abiDecodeError(abi, raw_error) {
 }
 
 function __wbg_adapter_30(arg0, arg1, arg2, arg3) {
-    wasm.closure188_externref_shim(arg0, arg1, arg2, arg3);
+    wasm.closure245_externref_shim(arg0, arg1, arg2, arg3);
 }
 
 async function __wbg_load(module, imports) {
@@ -203,7 +203,7 @@ async function __wbg_load(module, imports) {
 function __wbg_get_imports() {
     const imports = {};
     imports.wbg = {};
-    imports.wbg.__wbg_constructor_ed9503ce5bc87935 = function(arg0) {
+    imports.wbg.__wbg_constructor_be92991eedb32eeb = function(arg0) {
         const ret = new Error(arg0);
         return ret;
     };
@@ -235,12 +235,12 @@ function __wbg_get_imports() {
             state0.a = state0.b = 0;
         }
     };
-    imports.wbg.__wbg_new_8a6f238a6ece86ea = function() {
-        const ret = new Error();
+    imports.wbg.__wbg_new_07be285e4e47e52e = function() {
+        const ret = new Map();
         return ret;
     };
-    imports.wbg.__wbg_new_c3abe73bba3e4945 = function() {
-        const ret = new Map();
+    imports.wbg.__wbg_new_8a6f238a6ece86ea = function() {
+        const ret = new Error();
         return ret;
     };
     imports.wbg.__wbg_parse_def2e24ef1252aff = function() { return handleError(function (arg0, arg1) {

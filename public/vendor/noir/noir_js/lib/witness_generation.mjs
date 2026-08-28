@@ -59,10 +59,10 @@ export async function generateWitness(compiledProgram, inputs, foreignCallHandle
         return solvedWitness;
     }
     catch (err) {
-        // Typescript types caught errors as unknown or any, so we need to narrow its type to check if it has raw assertion payload.
+        // Typescript types catched errors as unknown or any, so we need to narrow its type to check if it has raw assertion payload.
         if (typeof err === 'object' && err !== null && 'rawAssertionPayload' in err) {
             throw enrichExecutionError(compiledProgram, err);
         }
-        throw new Error(`Circuit execution failed: ${err}`, { cause: err });
+        throw new Error(`Circuit execution failed: ${err}`);
     }
 }

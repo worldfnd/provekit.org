@@ -197,16 +197,145 @@ function debugString(val) {
     // TODO we could test for more things here, like `Set`s and `Map`s.
     return className;
 }
+/**
+ * Performs a bitwise AND operation between `lhs` and `rhs`
+ * @param {string} lhs
+ * @param {string} rhs
+ * @returns {string}
+ */
+export function and(lhs, rhs) {
+    const ret = wasm.and(lhs, rhs);
+    return ret;
+}
 
-function takeFromExternrefTable0(idx) {
-    const value = wasm.__wbindgen_export_2.get(idx);
-    wasm.__externref_table_dealloc(idx);
-    return value;
+/**
+ * Performs a bitwise XOR operation between `lhs` and `rhs`
+ * @param {string} lhs
+ * @param {string} rhs
+ * @returns {string}
+ */
+export function xor(lhs, rhs) {
+    const ret = wasm.xor(lhs, rhs);
+    return ret;
+}
+
+let cachedUint32ArrayMemory0 = null;
+
+function getUint32ArrayMemory0() {
+    if (cachedUint32ArrayMemory0 === null || cachedUint32ArrayMemory0.byteLength === 0) {
+        cachedUint32ArrayMemory0 = new Uint32Array(wasm.memory.buffer);
+    }
+    return cachedUint32ArrayMemory0;
+}
+
+function passArray32ToWasm0(arg, malloc) {
+    const ptr = malloc(arg.length * 4, 4) >>> 0;
+    getUint32ArrayMemory0().set(arg, ptr / 4);
+    WASM_VECTOR_LEN = arg.length;
+    return ptr;
+}
+
+function getArrayU32FromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    return getUint32ArrayMemory0().subarray(ptr / 4, ptr / 4 + len);
+}
+/**
+ * Sha256 compression function
+ * @param {Uint32Array} inputs
+ * @param {Uint32Array} state
+ * @returns {Uint32Array}
+ */
+export function sha256_compression(inputs, state) {
+    const ptr0 = passArray32ToWasm0(inputs, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ptr1 = passArray32ToWasm0(state, wasm.__wbindgen_malloc);
+    const len1 = WASM_VECTOR_LEN;
+    const ret = wasm.sha256_compression(ptr0, len0, ptr1, len1);
+    var v3 = getArrayU32FromWasm0(ret[0], ret[1]).slice();
+    wasm.__wbindgen_free(ret[0], ret[1] * 4, 4);
+    return v3;
+}
+
+function passArray8ToWasm0(arg, malloc) {
+    const ptr = malloc(arg.length * 1, 1) >>> 0;
+    getUint8ArrayMemory0().set(arg, ptr / 1);
+    WASM_VECTOR_LEN = arg.length;
+    return ptr;
 }
 
 function getArrayU8FromWasm0(ptr, len) {
     ptr = ptr >>> 0;
     return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
+}
+/**
+ * Calculates the Blake2s256 hash of the input bytes
+ * @param {Uint8Array} inputs
+ * @returns {Uint8Array}
+ */
+export function blake2s256(inputs) {
+    const ptr0 = passArray8ToWasm0(inputs, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.blake2s256(ptr0, len0);
+    var v2 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
+    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    return v2;
+}
+
+/**
+ * Verifies a ECDSA signature over the secp256k1 curve.
+ * @param {Uint8Array} hashed_msg
+ * @param {Uint8Array} public_key_x_bytes
+ * @param {Uint8Array} public_key_y_bytes
+ * @param {Uint8Array} signature
+ * @returns {boolean}
+ */
+export function ecdsa_secp256k1_verify(hashed_msg, public_key_x_bytes, public_key_y_bytes, signature) {
+    const ptr0 = passArray8ToWasm0(hashed_msg, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ptr1 = passArray8ToWasm0(public_key_x_bytes, wasm.__wbindgen_malloc);
+    const len1 = WASM_VECTOR_LEN;
+    const ptr2 = passArray8ToWasm0(public_key_y_bytes, wasm.__wbindgen_malloc);
+    const len2 = WASM_VECTOR_LEN;
+    const ptr3 = passArray8ToWasm0(signature, wasm.__wbindgen_malloc);
+    const len3 = WASM_VECTOR_LEN;
+    const ret = wasm.ecdsa_secp256k1_verify(ptr0, len0, ptr1, len1, ptr2, len2, ptr3, len3);
+    return ret !== 0;
+}
+
+/**
+ * Verifies a ECDSA signature over the secp256r1 curve.
+ * @param {Uint8Array} hashed_msg
+ * @param {Uint8Array} public_key_x_bytes
+ * @param {Uint8Array} public_key_y_bytes
+ * @param {Uint8Array} signature
+ * @returns {boolean}
+ */
+export function ecdsa_secp256r1_verify(hashed_msg, public_key_x_bytes, public_key_y_bytes, signature) {
+    const ptr0 = passArray8ToWasm0(hashed_msg, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ptr1 = passArray8ToWasm0(public_key_x_bytes, wasm.__wbindgen_malloc);
+    const len1 = WASM_VECTOR_LEN;
+    const ptr2 = passArray8ToWasm0(public_key_y_bytes, wasm.__wbindgen_malloc);
+    const len2 = WASM_VECTOR_LEN;
+    const ptr3 = passArray8ToWasm0(signature, wasm.__wbindgen_malloc);
+    const len3 = WASM_VECTOR_LEN;
+    const ret = wasm.ecdsa_secp256r1_verify(ptr0, len0, ptr1, len1, ptr2, len2, ptr3, len3);
+    return ret !== 0;
+}
+
+/**
+ * Returns the `BuildInfo` object containing information about how the installed package was built.
+ * @returns {BuildInfo} - Information on how the installed package was built.
+ */
+export function buildInfo() {
+    const ret = wasm.buildInfo();
+    return ret;
+}
+
+function takeFromExternrefTable0(idx) {
+    const value = wasm.__wbindgen_export_2.get(idx);
+    wasm.__externref_table_dealloc(idx);
+    return value;
 }
 /**
  * Compresses a `WitnessMap` into the binary format outputted by Nargo.
@@ -224,12 +353,6 @@ export function compressWitness(witness_map) {
     return v1;
 }
 
-function passArray8ToWasm0(arg, malloc) {
-    const ptr = malloc(arg.length * 1, 1) >>> 0;
-    getUint8ArrayMemory0().set(arg, ptr / 1);
-    WASM_VECTOR_LEN = arg.length;
-    return ptr;
-}
 /**
  * Decompresses a compressed witness as outputted by Nargo into a `WitnessMap`.
  * This should be used to only fetch the witness map for the main function.
@@ -386,130 +509,6 @@ export function getPublicWitness(program, solved_witness) {
 }
 
 /**
- * Performs a bitwise AND operation between `lhs` and `rhs`
- * @param {string} lhs
- * @param {string} rhs
- * @returns {string}
- */
-export function and(lhs, rhs) {
-    const ret = wasm.and(lhs, rhs);
-    return ret;
-}
-
-/**
- * Performs a bitwise XOR operation between `lhs` and `rhs`
- * @param {string} lhs
- * @param {string} rhs
- * @returns {string}
- */
-export function xor(lhs, rhs) {
-    const ret = wasm.xor(lhs, rhs);
-    return ret;
-}
-
-let cachedUint32ArrayMemory0 = null;
-
-function getUint32ArrayMemory0() {
-    if (cachedUint32ArrayMemory0 === null || cachedUint32ArrayMemory0.byteLength === 0) {
-        cachedUint32ArrayMemory0 = new Uint32Array(wasm.memory.buffer);
-    }
-    return cachedUint32ArrayMemory0;
-}
-
-function passArray32ToWasm0(arg, malloc) {
-    const ptr = malloc(arg.length * 4, 4) >>> 0;
-    getUint32ArrayMemory0().set(arg, ptr / 4);
-    WASM_VECTOR_LEN = arg.length;
-    return ptr;
-}
-
-function getArrayU32FromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    return getUint32ArrayMemory0().subarray(ptr / 4, ptr / 4 + len);
-}
-/**
- * Sha256 compression function
- * @param {Uint32Array} inputs
- * @param {Uint32Array} state
- * @returns {Uint32Array}
- */
-export function sha256_compression(inputs, state) {
-    const ptr0 = passArray32ToWasm0(inputs, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ptr1 = passArray32ToWasm0(state, wasm.__wbindgen_malloc);
-    const len1 = WASM_VECTOR_LEN;
-    const ret = wasm.sha256_compression(ptr0, len0, ptr1, len1);
-    var v3 = getArrayU32FromWasm0(ret[0], ret[1]).slice();
-    wasm.__wbindgen_free(ret[0], ret[1] * 4, 4);
-    return v3;
-}
-
-/**
- * Calculates the Blake2s256 hash of the input bytes
- * @param {Uint8Array} inputs
- * @returns {Uint8Array}
- */
-export function blake2s256(inputs) {
-    const ptr0 = passArray8ToWasm0(inputs, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.blake2s256(ptr0, len0);
-    var v2 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
-    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
-    return v2;
-}
-
-/**
- * Verifies a ECDSA signature over the secp256k1 curve.
- * @param {Uint8Array} hashed_msg
- * @param {Uint8Array} public_key_x_bytes
- * @param {Uint8Array} public_key_y_bytes
- * @param {Uint8Array} signature
- * @returns {boolean}
- */
-export function ecdsa_secp256k1_verify(hashed_msg, public_key_x_bytes, public_key_y_bytes, signature) {
-    const ptr0 = passArray8ToWasm0(hashed_msg, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ptr1 = passArray8ToWasm0(public_key_x_bytes, wasm.__wbindgen_malloc);
-    const len1 = WASM_VECTOR_LEN;
-    const ptr2 = passArray8ToWasm0(public_key_y_bytes, wasm.__wbindgen_malloc);
-    const len2 = WASM_VECTOR_LEN;
-    const ptr3 = passArray8ToWasm0(signature, wasm.__wbindgen_malloc);
-    const len3 = WASM_VECTOR_LEN;
-    const ret = wasm.ecdsa_secp256k1_verify(ptr0, len0, ptr1, len1, ptr2, len2, ptr3, len3);
-    return ret !== 0;
-}
-
-/**
- * Verifies a ECDSA signature over the secp256r1 curve.
- * @param {Uint8Array} hashed_msg
- * @param {Uint8Array} public_key_x_bytes
- * @param {Uint8Array} public_key_y_bytes
- * @param {Uint8Array} signature
- * @returns {boolean}
- */
-export function ecdsa_secp256r1_verify(hashed_msg, public_key_x_bytes, public_key_y_bytes, signature) {
-    const ptr0 = passArray8ToWasm0(hashed_msg, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ptr1 = passArray8ToWasm0(public_key_x_bytes, wasm.__wbindgen_malloc);
-    const len1 = WASM_VECTOR_LEN;
-    const ptr2 = passArray8ToWasm0(public_key_y_bytes, wasm.__wbindgen_malloc);
-    const len2 = WASM_VECTOR_LEN;
-    const ptr3 = passArray8ToWasm0(signature, wasm.__wbindgen_malloc);
-    const len3 = WASM_VECTOR_LEN;
-    const ret = wasm.ecdsa_secp256r1_verify(ptr0, len0, ptr1, len1, ptr2, len2, ptr3, len3);
-    return ret !== 0;
-}
-
-/**
- * Returns the `BuildInfo` object containing information about how the installed package was built.
- * @returns {BuildInfo} - Information on how the installed package was built.
- */
-export function buildInfo() {
-    const ret = wasm.buildInfo();
-    return ret;
-}
-
-/**
  * Sets the package's logging level.
  *
  * @param {LogLevel} level - The maximum level of logging to be emitted.
@@ -524,15 +523,15 @@ export function initLogLevel(filter) {
 }
 
 function __wbg_adapter_30(arg0, arg1, arg2) {
-    wasm.closure445_externref_shim(arg0, arg1, arg2);
+    wasm.closure645_externref_shim(arg0, arg1, arg2);
 }
 
 function __wbg_adapter_89(arg0, arg1, arg2, arg3, arg4) {
-    wasm.closure924_externref_shim(arg0, arg1, arg2, arg3, arg4);
+    wasm.closure1317_externref_shim(arg0, arg1, arg2, arg3, arg4);
 }
 
 function __wbg_adapter_110(arg0, arg1, arg2, arg3) {
-    wasm.closure928_externref_shim(arg0, arg1, arg2, arg3);
+    wasm.closure1321_externref_shim(arg0, arg1, arg2, arg3);
 }
 
 async function __wbg_load(module, imports) {
@@ -581,11 +580,11 @@ function __wbg_get_imports() {
         const ret = arg0.call(arg1, arg2, arg3);
         return ret;
     }, arguments) };
-    imports.wbg.__wbg_constructor_2b49e4454d172081 = function(arg0) {
+    imports.wbg.__wbg_constructor_78d4b46bae4ee3a6 = function(arg0) {
         const ret = new Error(arg0);
         return ret;
     };
-    imports.wbg.__wbg_constructor_dddf0209b25406fd = function(arg0) {
+    imports.wbg.__wbg_constructor_e15d65f40a39eb05 = function(arg0) {
         const ret = new Error(arg0);
         return ret;
     };
@@ -686,10 +685,6 @@ function __wbg_get_imports() {
             state0.a = state0.b = 0;
         }
     };
-    imports.wbg.__wbg_new_2812f5f6a6bd8bcf = function() {
-        const ret = new Array();
-        return ret;
-    };
     imports.wbg.__wbg_new_5e0be73521bc8c17 = function() {
         const ret = new Map();
         return ret;
@@ -702,12 +697,16 @@ function __wbg_get_imports() {
         const ret = new Error();
         return ret;
     };
-    imports.wbg.__wbg_new_b110592360513189 = function() {
+    imports.wbg.__wbg_new_95a101145c23dc1d = function() {
         const ret = new Map();
         return ret;
     };
     imports.wbg.__wbg_new_c68d7209be747379 = function(arg0, arg1) {
         const ret = new Error(getStringFromWasm0(arg0, arg1));
+        return ret;
+    };
+    imports.wbg.__wbg_new_d1312de2c48bf990 = function() {
+        const ret = new Array();
         return ret;
     };
     imports.wbg.__wbg_newnoargs_105ed471475aaf50 = function(arg0, arg1) {
@@ -798,8 +797,8 @@ function __wbg_get_imports() {
         const ret = false;
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper1366 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 446, __wbg_adapter_30);
+    imports.wbg.__wbindgen_closure_wrapper2146 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 646, __wbg_adapter_30);
         return ret;
     };
     imports.wbg.__wbindgen_debug_string = function(arg0, arg1) {
