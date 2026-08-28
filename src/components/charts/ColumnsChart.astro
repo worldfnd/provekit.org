@@ -9,7 +9,9 @@ const { metric, hatchId = 'pk-col-hatch' } = Astro.props;
 
 const CHART_W = 640,
   CHART_H = 320,
-  PAD_L = 56,
+  // Leave enough room for four-digit ticks such as "1800 MB". A narrower
+  // gutter clips the leading digit at the SVG viewBox edge.
+  PAD_L = 72,
   PAD_R = 24,
   PAD_T = 24,
   PAD_B = 48;
