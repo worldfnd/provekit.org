@@ -223,12 +223,12 @@ export interface SummaryRow {
   better: 'low' | 'high';
 }
 export const SUMMARY_ROWS: SummaryRow[] = [
-  { label: 'Passport P1 payload', unit: ' MB', values: [508.33, 271.71, 2.55], better: 'low' },
-  { label: 'WebAuthn payload', unit: ' MB', values: [1753.62, 271.13, 2.39], better: 'low' },
-  { label: 'OPRF payload', unit: ' MB', values: [26.81, 271.06, 1.65], better: 'low' },
-  { label: 'Passport P1 proof', unit: ' KB', values: [0.93, 16.32, 715.89], better: 'low' },
-  { label: 'WebAuthn proof', unit: ' KB', values: [1, 21.09, 716.22], better: 'low' },
-  { label: 'OPRF proof', unit: ' KB', values: [0.13, 16.55, 634.96], better: 'low' },
+  { label: 'iPhone input-to-proof', unit: ' s', values: [14.34, 4.9, 2.43], better: 'low' },
+  { label: 'Moto E15 input-to-proof', unit: ' s', values: [241.61, 117.15, 22], better: 'low' },
+  { label: 'Browser input-to-proof', unit: ' s', values: [12.56, 4.95, 5.48], better: 'low' },
+  { label: 'Proving payload', unit: ' MB', values: [508.33, 271.71, 2.55], better: 'low' },
+  { label: 'Serialized proof', unit: ' KB', values: [0.93, 16.32, 715.89], better: 'low' },
+  { label: 'Moto E15 peak RSS', unit: ' MB', values: [293.37, 465.15, 474.07], better: 'low' },
 ];
 export const SUMMARY_TOOLKITS = [
   { label: 'CIRCOM + GROTH16', color: CIRCOM },

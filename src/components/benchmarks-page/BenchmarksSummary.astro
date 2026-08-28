@@ -24,14 +24,11 @@ function fmtN(v: number, unit: string) {
   return `${n}${unit}`;
 }
 
-// Server-side: default sort by PROVEKIT (idx 2) — strongest first.
-const defaultSortIdx = 2;
+// Keep the six Passport P1 categories in narrative order by default. Readers
+// can still sort them interactively by selecting a toolkit column.
+const defaultSortIdx = -1;
+const defaultToolkit = SUMMARY_TOOLKITS[0];
 const indexedRows = SUMMARY_ROWS.map((r, originalIdx) => ({ ...r, originalIdx }));
-indexedRows.sort(
-  (a, b) =>
-    barFraction(b.values, defaultSortIdx, b.better) -
-    barFraction(a.values, defaultSortIdx, a.better),
-);
 
 // Serialize data for client script
 const summaryData = JSON.stringify({ rows: SUMMARY_ROWS, toolkits: SUMMARY_TOOLKITS });
@@ -49,27 +46,27 @@ const summaryData = JSON.stringify({ rows: SUMMARY_ROWS, toolkits: SUMMARY_TOOLK
           class="pk-reveal"
           style="margin:0;font:500 48px/56px var(--pk-font-sans);letter-spacing:-0.02em;color:var(--pk-ink)"
         >
-          Side-by-side
+          Passport P1, side-by-side
         </h2>
         <p
           class="pk-reveal"
           style="margin:16px 0 0;max-width:760px;font:300 20px/1.4 var(--pk-font-sans);color:var(--pk-mute-2)"
         >
-          Payload and proof size expose the central trade-off: ProveKit avoids large setup downloads
-          while its transparent, post-quantum proofs remain below one megabyte.
+          One circuit across six categories: input-to-proof time on iPhone, low-end Android, and the
+          browser, followed by proving payload, proof size, and peak memory on the Moto E15.
         </p>
       </div>
       <div
         data-sort-indicator
-        style="font:400 13px/1 var(--pk-font-mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--pk-mute-2);display:flex;align-items:center;gap:8px"
+        style="font:400 13px/1 var(--pk-font-mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--pk-mute-2);display:none;align-items:center;gap:8px"
       >
         Sorted by
         <span
           data-sort-swatch
-          style={`width:10px;height:10px;display:inline-block;background:${SUMMARY_TOOLKITS[defaultSortIdx]?.color}`}
+          style={`width:10px;height:10px;display:inline-block;background:${defaultToolkit.color}`}
         ></span>
         <span data-sort-label style="color:var(--pk-ink)">
-          {SUMMARY_TOOLKITS[defaultSortIdx]?.label}
+          {defaultToolkit.label}
         </span>
         <button
           data-sort-reset
