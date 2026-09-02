@@ -10,6 +10,13 @@ const legend = [
   { label: 'NOIR + BARRETENBERG', color: '#E91900' },
   { label: 'PROVEKIT V1', color: '#0D74FF' },
 ];
+const highlights = [
+  { value: '2–3s', label: 'iPhone SE 3' },
+  { value: '<30s', label: 'Moto E15' },
+  { value: '<3 MB', label: 'Proving payload' },
+  { value: '<500 MB', label: 'Peak phone RSS' },
+  { value: '<1 MB', label: 'Proof size' },
+];
 ---
 
 <section
@@ -29,8 +36,25 @@ const legend = [
         class="pk-reveal"
         style="margin:0;font:500 64px/72px var(--pk-font-sans);letter-spacing:-0.02em;color:var(--pk-ink);white-space:pre-line"
       >
-        {'A client-side ZK toolkit\nthat excels in every aspect'}
+        {'Real-world proofs,\nright on the client'}
       </h2>
+      <p
+        class="pk-reveal"
+        style="max-width:700px;margin:0;font:300 22px/1.45 var(--pk-font-sans);color:var(--pk-mute-2)"
+      >
+        ProveKit v1 turns structured input into a serialized proof in seconds on everyday
+        devices—including witness generation. No trusted setup, no server round trip.
+      </p>
+      <div class="pk-bench-highlights pk-reveal" aria-label="ProveKit v1 benchmark highlights">
+        {
+          highlights.map((highlight) => (
+            <div class="pk-bench-highlight">
+              <strong>{highlight.value}</strong>
+              <span>{highlight.label}</span>
+            </div>
+          ))
+        }
+      </div>
       <div
         class="pk-reveal"
         role="tablist"
@@ -147,6 +171,35 @@ const legend = [
 </section>
 
 <style>
+  .pk-bench-highlights {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--pk-line);
+    border-left: 1px solid var(--pk-line);
+  }
+  .pk-bench-highlight {
+    min-width: 0;
+    padding: 16px;
+    border-right: 1px solid var(--pk-line);
+    border-bottom: 1px solid var(--pk-line);
+  }
+  .pk-bench-highlight strong,
+  .pk-bench-highlight span {
+    display: block;
+  }
+  .pk-bench-highlight strong {
+    font: 500 28px/1 var(--pk-font-sans);
+    letter-spacing: -0.02em;
+    color: var(--pk-brand);
+  }
+  .pk-bench-highlight span {
+    margin-top: 8px;
+    font: 400 13px/1.2 var(--pk-font-mono);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--pk-mute-2);
+  }
+
   /* Direction-aware exit/enter transitions on metric switch. The --dir
    * custom property is set on the section root in JS to +1 (next) or -1 (prev). */
   .pk-bench-sweep-rail {
@@ -238,6 +291,12 @@ const legend = [
   }
   .pk-bench.is-enter [data-bench-kpi] {
     perspective: 600px;
+  }
+
+  @media (max-width: 720px) {
+    .pk-bench-highlights {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
   .pk-bench.is-enter [data-bench-kpi] .pk-flip-num-char {
     display: inline-block;
