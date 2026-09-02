@@ -8,6 +8,7 @@ export interface ColumnsMetric {
   xAxisLabel: string;
   series: { label: string; color: string; values: (number | null)[] }[];
   yMax: number;
+  breakOverflow?: boolean;
   kpis: { value: string }[];
 }
 
@@ -47,7 +48,10 @@ export const METRICS: ColumnsMetric[] = [
       { label: 'NOIR + BARRETENBERG', color: BARRETENBERG, values: [4.9, 5.12, 2.92] },
       { label: 'PROVEKIT V1', color: PROVEKIT, values: [2.43, 3.03, 1.2] },
     ],
-    yMax: 160,
+    // Keep the meaningful comparison range legible; the 151.42 s Circom
+    // WebAuthn outlier is rendered as a broken, clipped column.
+    yMax: 16,
+    breakOverflow: true,
     kpis: [{ value: '2–3s' }],
   },
   {
