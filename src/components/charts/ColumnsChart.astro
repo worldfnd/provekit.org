@@ -154,7 +154,7 @@ const barW = (groupInner - (metric.series.length - 1) * 4) / metric.series.lengt
                   stroke="#fff"
                   stroke-width="3"
                   paint-order="stroke"
-                  style="opacity:0;transition:opacity 0.22s ease"
+                  style={`opacity:${v == null ? 1 : 0};transition:opacity 0.22s ease`}
                 >
                   {v == null ? 'OOM' : v}
                 </text>
