@@ -82,7 +82,7 @@ export interface InitOutput {
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
   readonly __wbindgen_exn_store: (a: number) => void;
   readonly __wbindgen_free: (a: number, b: number, c: number) => void;
-  readonly wasm_bindgen_66b12b5a02f6ae0a___convert__closures__invoke2_mut___wasm_bindgen_66b12b5a02f6ae0a___JsValue__wasm_bindgen_66b12b5a02f6ae0a___JsValue_____: (a: number, b: number, c: number, d: number) => void;
+  readonly wasm_bindgen_5fbe90763fcdd72e___convert__closures__invoke2_mut___wasm_bindgen_5fbe90763fcdd72e___JsValue__wasm_bindgen_5fbe90763fcdd72e___JsValue_____: (a: number, b: number, c: number, d: number) => void;
   readonly __wbindgen_thread_destroy: (a?: number, b?: number, c?: number) => void;
   readonly __wbindgen_start: (a: number) => void;
 }

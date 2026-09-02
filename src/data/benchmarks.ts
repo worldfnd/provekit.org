@@ -1,29 +1,24 @@
-// Mirror of design-system/ui_kits/landing/BenchmarkSection.jsx METRICS + DETAIL_EXTRAS
-//
-// Data: ProveKit-team measurements of three toolkits proving the same
-// SHA-256 preimage circuit on a MacBook Air (Apple M2 · 16 GB), witness
-// generation included, June 2026. Systems: ProveKit v1 (WHIR · 52,029
-// R1CS constraints), Barretenberg (UltraHonk · 20,524 gates), Circom
-// (Groth16 · native rapidsnark · 90,633 R1CS).
-
-export type ChartKind = 'line' | 'bars' | 'columns';
-export type MetricKey = 'proving' | 'memory' | 'artifacts';
-
-export interface LineMetric {
-  key: MetricKey;
+export interface ColumnsMetric {
+  key: string;
   title: string;
   body: string;
-  chart: 'line';
+  chart: 'columns';
   unit: string;
   xLabels: string[];
   xAxisLabel: string;
-  series: { label: string; color: string; values: number[] }[];
+  series: { label: string; color: string; values: (number | null)[] }[];
   yMax: number;
+  breakOverflow?: boolean;
   kpis: { value: string }[];
 }
 
+export interface LineMetric extends Omit<ColumnsMetric, 'chart' | 'series'> {
+  chart: 'line';
+  series: { label: string; color: string; values: number[] }[];
+}
+
 export interface BarsMetric {
-  key: MetricKey;
+  key: string;
   title: string;
   body: string;
   chart: 'bars';
@@ -33,139 +28,214 @@ export interface BarsMetric {
   kpis: { value: string }[];
 }
 
-export interface ColumnsMetric {
-  key: MetricKey;
-  title: string;
-  body: string;
-  chart: 'columns';
-  unit: string;
-  xLabels: string[];
-  xAxisLabel: string;
-  series: { label: string; color: string; values: number[] }[];
-  yMax: number;
-  kpis: { value: string }[];
-}
+export type Metric = ColumnsMetric;
 
-export type Metric = LineMetric | BarsMetric | ColumnsMetric;
+const CIRCOM = '#DE00FF';
+const BARRETENBERG = '#E91900';
+const PROVEKIT = '#0D74FF';
 
-export const METRICS: [BarsMetric, ColumnsMetric, ColumnsMetric] = [
+export const METRICS: ColumnsMetric[] = [
   {
-    key: 'proving',
-    title: 'Proving time',
-    body: 'ProveKit proves SHA-256 in 0.37 s on a MacBook Air, ahead of Barretenberg at 0.39 s and Circom at 0.40 s, witness generation included.',
-    chart: 'bars',
+    key: 'iphone-time',
+    title: 'iPhone SE 3 proving time',
+    body: 'On a mid-tier 2022 phone, ProveKit finishes the demanding Passport and WebAuthn claims in about three seconds from structured input to serialized proof.',
+    chart: 'columns',
     unit: 's',
+    xLabels: ['Passport P1', 'WebAuthn', 'OPRF'],
+    xAxisLabel: 'PROVABLE CLAIM · COLD MEDIAN',
     series: [
-      { label: 'BARRETENBERG', color: '#DE00FF', value: 0.39 },
-      { label: 'CIRCOM', color: '#E91900', value: 0.4 },
-      { label: 'PROVEKIT', color: '#0D74FF', value: 0.37 },
+      { label: 'CIRCOM + GROTH16', color: CIRCOM, values: [14.34, 151.42, 1.19] },
+      { label: 'NOIR + BARRETENBERG', color: BARRETENBERG, values: [4.9, 5.12, 2.92] },
+      { label: 'PROVEKIT V1', color: PROVEKIT, values: [2.43, 3.03, 1.2] },
     ],
-    max: 0.5,
-    kpis: [{ value: '0.37s' }, { value: 'Fastest prover' }],
+    // Keep the meaningful comparison range legible; the 151.42 s Circom
+    // WebAuthn outlier is rendered as a broken, clipped column.
+    yMax: 16,
+    breakOverflow: true,
+    kpis: [{ value: '2–3s' }],
   },
   {
-    key: 'memory',
-    title: 'Memory footprint',
-    body: 'Proving peaks at 118.9 MiB resident, well within a phone-class memory budget.',
+    key: 'e15-time',
+    title: 'Moto E15 proving time',
+    body: 'On a 2 GB, 32-bit Android phone, ProveKit keeps Passport P1 and WebAuthn below 30 seconds. Circom WebAuthn cannot complete its cold run because the proving key exhausts memory.',
     chart: 'columns',
-    unit: ' MiB',
-    xLabels: ['While proving'],
-    xAxisLabel: 'PEAK RSS',
+    unit: 's',
+    xLabels: ['Passport P1', 'WebAuthn', 'OPRF'],
+    xAxisLabel: 'PROVABLE CLAIM · COLD MEDIAN',
     series: [
-      { label: 'BARRETENBERG', color: '#DE00FF', values: [157.9] },
-      { label: 'CIRCOM', color: '#E91900', values: [96.7] },
-      { label: 'PROVEKIT', color: '#0D74FF', values: [118.9] },
+      { label: 'CIRCOM + GROTH16', color: CIRCOM, values: [241.61, null, 11.5] },
+      { label: 'NOIR + BARRETENBERG', color: BARRETENBERG, values: [117.15, 114.65, 70.15] },
+      { label: 'PROVEKIT V1', color: PROVEKIT, values: [22, 27.9, 12.68] },
     ],
-    yMax: 160,
-    kpis: [{ value: '118.9 MiB' }, { value: 'Peak while proving' }],
+    yMax: 250,
+    kpis: [{ value: '<30s' }],
   },
   {
-    key: 'artifacts',
-    title: 'Setup artifacts',
-    body: 'A device downloads under 1 MiB of ProveKit keys to start proving, against a 128 MiB CRS for Barretenberg or a 50.9 MiB zkey for Circom.',
+    key: 'browser-time',
+    title: 'Browser proving time',
+    body: 'Chrome on an M4 Max used fixed 16-worker policies. ProveKit stays in the same interactive range across all claims; SnarkJS WebAuthn reached extreme memory pressure and produced no proof.',
     chart: 'columns',
-    unit: ' MiB',
-    xLabels: ['Per circuit'],
-    xAxisLabel: 'SHA-256 CIRCUIT',
+    unit: 's',
+    xLabels: ['Passport P1', 'WebAuthn', 'OPRF'],
+    xAxisLabel: 'PROVABLE CLAIM · COLD MEDIAN',
     series: [
-      { label: 'BARRETENBERG', color: '#DE00FF', values: [128] },
-      { label: 'CIRCOM', color: '#E91900', values: [50.9] },
-      { label: 'PROVEKIT', color: '#0D74FF', values: [1] },
+      { label: 'CIRCOM + GROTH16', color: CIRCOM, values: [12.56, null, 0.34] },
+      { label: 'NOIR + BARRETENBERG', color: BARRETENBERG, values: [4.95, 5.5, 4.13] },
+      { label: 'PROVEKIT V1', color: PROVEKIT, values: [5.48, 5.08, 3.02] },
     ],
-    yMax: 140,
-    kpis: [{ value: '<1 MiB' }, { value: '50–128× smaller' }],
+    yMax: 14,
+    kpis: [{ value: '3–6s' }],
+  },
+  {
+    key: 'payload',
+    title: 'Download required to prove',
+    body: 'ProveKit needs no trusted setup and ships only a small circuit-specific proving payload. The alternatives require tens of megabytes to more than a gigabyte.',
+    chart: 'columns',
+    unit: 'MB',
+    xLabels: ['Passport P1', 'WebAuthn', 'OPRF'],
+    xAxisLabel: 'DEDUPLICATED PROVING PAYLOAD',
+    series: [
+      { label: 'CIRCOM + GROTH16', color: CIRCOM, values: [508.33, 1753.62, 26.81] },
+      { label: 'NOIR + BARRETENBERG', color: BARRETENBERG, values: [271.71, 271.13, 271.06] },
+      { label: 'PROVEKIT V1', color: PROVEKIT, values: [2.55, 2.39, 1.65] },
+    ],
+    yMax: 1800,
+    kpis: [{ value: '<3 MB' }],
+  },
+  {
+    key: 'proof-size',
+    title: 'Serialized proof size',
+    body: 'Transparent, post-quantum proofs are larger than pairing-based proofs, but every measured ProveKit proof remains below the product target of one megabyte.',
+    chart: 'columns',
+    unit: 'KB',
+    xLabels: ['Passport P1', 'WebAuthn', 'OPRF'],
+    xAxisLabel: 'SERIALIZED PROOF',
+    series: [
+      { label: 'CIRCOM + GROTH16', color: CIRCOM, values: [0.93, 1, 0.13] },
+      { label: 'NOIR + BARRETENBERG', color: BARRETENBERG, values: [16.32, 21.09, 16.55] },
+      { label: 'PROVEKIT V1', color: PROVEKIT, values: [715.89, 716.22, 634.96] },
+    ],
+    yMax: 750,
+    kpis: [{ value: '<1 MB' }],
+  },
+  {
+    key: 'e15-memory',
+    title: 'Memory on the low-end phone',
+    body: 'Peak process RSS stays below the one-gigabyte design goal for every successful Moto E15 run. The missing Circom WebAuthn result is an out-of-memory gap, not a zero.',
+    chart: 'columns',
+    unit: 'MB',
+    xLabels: ['Passport P1', 'WebAuthn', 'OPRF'],
+    xAxisLabel: 'PEAK PROCESS RSS · COLD MEDIAN',
+    series: [
+      { label: 'CIRCOM + GROTH16', color: CIRCOM, values: [293.37, null, 81.85] },
+      { label: 'NOIR + BARRETENBERG', color: BARRETENBERG, values: [465.15, 493.38, 306.09] },
+      { label: 'PROVEKIT V1', color: PROVEKIT, values: [474.07, 494.33, 145.08] },
+    ],
+    yMax: 550,
+    kpis: [{ value: '<500 MB' }],
   },
 ];
 
-// Detail-page metadata, mirror of BenchmarkDetail.jsx DETAIL_EXTRAS
 export const DETAIL_EXTRAS: Record<
-  Metric['key'],
-  {
-    extraKpis: { label: string; value: string }[];
-    notes: string[];
-  }
+  string,
+  { extraKpis: { label: string; value: string }[]; notes: string[] }
 > = {
-  proving: {
+  'iphone-time': {
     extraKpis: [
-      { label: 'ProveKit', value: '0.37s' },
-      { label: 'Barretenberg', value: '0.39s' },
-      { label: 'Circom', value: '0.40s' },
-      { label: 'One-time setup', value: '2.86s' },
+      { label: 'Passport P1', value: '2.43s' },
+      { label: 'WebAuthn', value: '3.03s' },
+      { label: 'OPRF', value: '1.20s' },
+      { label: 'Device', value: 'A15 / 4 GB' },
     ],
     notes: [
-      'SHA-256 preimage circuit · 52,029 R1CS constraints',
-      'Wall clock includes witness generation',
-      'Circom measured with native rapidsnark',
+      'iPhone SE 2022, iOS 15.4, native execution',
+      'Raw input → witness → serialized proof',
+      'Median of five measured samples after one warmup',
     ],
   },
-  memory: {
+  'e15-time': {
     extraKpis: [
-      { label: 'ProveKit', value: '118.9 MiB' },
-      { label: 'Barretenberg', value: '157.9 MiB' },
-      { label: 'Circom', value: '96.7 MiB' },
-      { label: 'Hardware', value: 'M2 Air' },
+      { label: 'Passport P1', value: '22.00s' },
+      { label: 'WebAuthn', value: '27.90s' },
+      { label: 'OPRF', value: '12.68s' },
+      { label: 'Circom WebAuthn', value: 'OOM' },
     ],
     notes: [
-      'Peak resident set while proving',
-      'Circom measured with native rapidsnark',
-      'All three fit comfortably in phone-class memory',
+      'Moto E15, Android 14 Go, 2 GB, 32-bit userspace',
+      'Circom WebAuthn cold run failed allocating its 1.73 GB zkey',
+      'Failed attempts are explicit gaps, never plotted as zero',
     ],
   },
-  artifacts: {
+  'browser-time': {
     extraKpis: [
-      { label: 'Prover key (.pkp)', value: '426 KiB' },
-      { label: 'Verifier key (.pkv)', value: '572 KiB' },
-      { label: 'One-time prepare', value: '2.86s' },
+      { label: 'Passport P1', value: '5.48s' },
+      { label: 'WebAuthn', value: '5.08s' },
+      { label: 'OPRF', value: '3.02s' },
+      { label: 'Workers', value: '16' },
+    ],
+    notes: [
+      'Chrome 151 on an Apple M4 Max MacBook Pro',
+      'Fixed 16-worker publication policy',
+      'SnarkJS WebAuthn stalled after extreme renderer memory pressure',
+    ],
+  },
+  payload: {
+    extraKpis: [
+      { label: 'Passport P1', value: '2.55 MB' },
+      { label: 'WebAuthn', value: '2.39 MB' },
+      { label: 'OPRF', value: '1.65 MB' },
       { label: 'Trusted setup', value: 'None' },
     ],
     notes: [
-      'Everything a device needs before proving: keys under 1 MiB',
-      'Circom additionally needs a 288 MiB ptau for its ceremony',
-      'Hash-based WHIR commitment, no trusted setup ceremony',
+      'Deduplicated circuit-specific proving payload',
+      'Excludes app bundles, test harnesses, and device uploads',
+      'Barretenberg includes reusable universal setup material',
+    ],
+  },
+  'proof-size': {
+    extraKpis: [
+      { label: 'Passport P1', value: '716 KB' },
+      { label: 'WebAuthn', value: '716 KB' },
+      { label: 'OPRF', value: '635 KB' },
+      { label: 'Product target', value: '<1 MB' },
+    ],
+    notes: [
+      'Exact serialized proof bytes',
+      'Larger proofs are the transparent, post-quantum trade-off',
+      'All ProveKit results remain below one megabyte',
+    ],
+  },
+  'e15-memory': {
+    extraKpis: [
+      { label: 'Passport P1', value: '474 MB' },
+      { label: 'WebAuthn', value: '494 MB' },
+      { label: 'OPRF', value: '145 MB' },
+      { label: 'Design goal', value: '<1 GB' },
+    ],
+    notes: [
+      'Peak process RSS for successful cold samples',
+      'Median of five measured samples',
+      'Circom WebAuthn is unavailable because the 32-bit process ran out of memory',
     ],
   },
 };
 
-// Summary table data — mirror of BenchmarksSummary.jsx
 export interface SummaryRow {
   label: string;
   unit: string;
   values: [number, number, number];
   better: 'low' | 'high';
 }
-
 export const SUMMARY_ROWS: SummaryRow[] = [
-  { label: 'Prove', unit: 's', values: [0.39, 0.4, 0.37], better: 'low' },
-  { label: 'Verify', unit: 'ms', values: [10, 1, 50], better: 'low' },
-  { label: 'Prove peak RSS', unit: ' MiB', values: [157.9, 96.7, 118.9], better: 'low' },
-  { label: 'Verify peak RSS', unit: ' MiB', values: [6, 1.8, 45.9], better: 'low' },
-  { label: 'Proof size', unit: ' KiB', values: [14.3, 0.7, 617], better: 'low' },
-  { label: 'Prover artifacts', unit: ' MiB', values: [128, 50.9, 1], better: 'low' },
-  { label: 'One-time setup', unit: 's', values: [0.37, 46.4, 2.86], better: 'low' },
+  { label: 'iPhone input-to-proof', unit: ' s', values: [14.34, 4.9, 2.43], better: 'low' },
+  { label: 'Moto E15 input-to-proof', unit: ' s', values: [241.61, 117.15, 22], better: 'low' },
+  { label: 'Browser input-to-proof', unit: ' s', values: [12.56, 4.95, 5.48], better: 'low' },
+  { label: 'Proving payload', unit: ' MB', values: [508.33, 271.71, 2.55], better: 'low' },
+  { label: 'Serialized proof', unit: ' KB', values: [0.93, 16.32, 715.89], better: 'low' },
+  { label: 'Moto E15 peak RSS', unit: ' MB', values: [293.37, 465.15, 474.07], better: 'low' },
 ];
-
 export const SUMMARY_TOOLKITS = [
-  { label: 'BARRETENBERG', color: '#DE00FF' },
-  { label: 'CIRCOM', color: '#E91900' },
-  { label: 'PROVEKIT', color: '#0D74FF' },
+  { label: 'CIRCOM + GROTH16', color: CIRCOM },
+  { label: 'NOIR + BARRETENBERG', color: BARRETENBERG },
+  { label: 'PROVEKIT V1', color: PROVEKIT },
 ] as const;

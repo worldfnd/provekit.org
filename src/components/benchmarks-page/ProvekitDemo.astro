@@ -4,7 +4,8 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
 ---
 
 <!-- Importmap for the in-browser ProveKit runtime (verity + Noir.js).
-     Vendored under /vendor — see public/vendor/. -->
+     The ProveKit core is rebuilt from v1 @ 9b2a6f37; see
+     public/vendor/verity/PROVEKIT_SOURCE.md. -->
 <script
   is:inline
   type="importmap"
@@ -25,7 +26,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
   <div class="pk-demo-left">
     <div>
       <div class="pk-demo-eyebrow">
-        Run on this device <span class="pk-demo-mobile-hide">· WebAssembly </span>· no server
+        ProveKit v1 · 9b2a6f37 · <span class="pk-demo-mobile-hide">WebAssembly · </span>no server
       </div>
       <h2
         id="demo-title"
@@ -36,8 +37,9 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         <span class="pk-demo-mobile-only">Try the demo</span>
       </h2>
       <p class="pk-sub-deck pk-demo-sub">
-        Pick a circuit, edit the private input, and generate a real zero-knowledge proof in your
-        browser.<span class="pk-demo-mobile-hide">
+        Edit the private input and generate a real zero-knowledge proof in your browser.<span
+          class="pk-demo-mobile-hide"
+        >
           Witness never leaves this page; only the public hash + proof get published.</span
         >
       </p>
@@ -56,17 +58,6 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
           <span class="pk-demo-scen-label">SHA-256 preimage</span>
           <span class="pk-demo-scen-sub"
             >Prove you know x such that SHA256(x) = y · up to 1024 bytes</span
-          >
-        </button>
-        <button
-          type="button"
-          class="pk-demo-scen"
-          data-demo-circuit="poseidon"
-          aria-pressed="false"
-        >
-          <span class="pk-demo-scen-label">Poseidon · 1000 rounds</span>
-          <span class="pk-demo-scen-sub"
-            >Prove the result of 1000 Poseidon2 permutations on 4 field elements</span
           >
         </button>
       </div>
@@ -735,9 +726,8 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
 </style>
 
 <script is:inline type="module">
-  // ProvekitDemo runtime — loads Verity + Noir.js via importmap, generates
-  // REAL zero-knowledge proofs in the browser using artifacts built from
-  // the local provekit/playground/wasm-demo setup.
+  // ProvekitDemo runtime — loads the ProveKit v1 core built from 9b2a6f37,
+  // wrapped by Verity and paired with Noir.js to generate real proofs.
   const root = document.querySelector('section[aria-labelledby="demo-title"]');
   if (!root) {
     console.error('ProvekitDemo: section not found');

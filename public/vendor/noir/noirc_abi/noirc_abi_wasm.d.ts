@@ -5,12 +5,12 @@ export function abiDecode(abi: Abi, witness_map: WitnessMap): any;
 export function serializeWitness(witness_map: WitnessMap): Uint8Array;
 export function abiDecodeError(abi: Abi, raw_error: RawAssertionPayload): any;
 
-export type ABIError = Error;
-
-
-
 import { Field, InputValue, InputMap, Visibility, Sign, AbiType, AbiParameter, Abi, WitnessMap, RawAssertionPayload } from "@noir-lang/types";
 export { Field, InputValue, InputMap, Visibility, Sign, AbiType, AbiParameter, Abi, WitnessMap, RawAssertionPayload } from "@noir-lang/types";
+
+
+
+export type ABIError = Error;
 
 
 
@@ -29,7 +29,7 @@ export interface InitOutput {
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
   readonly __externref_table_dealloc: (a: number) => void;
-  readonly closure188_externref_shim: (a: number, b: number, c: any, d: any) => void;
+  readonly closure245_externref_shim: (a: number, b: number, c: any, d: any) => void;
   readonly __wbindgen_start: () => void;
 }
 
