@@ -13,11 +13,17 @@ test('generates and verifies a real ProveKit WASM proof', async ({ page }, testI
 
   await page.goto('/benchmarks');
 
+  // The threaded WASM runtime requires cross-origin isolation. This assertion
+  // also protects the deployment headers in vercel.json from being removed:
+  // without them production silently falls back to a much slower single thread.
+  await expect.poll(() => page.evaluate(() => self.crossOriginIsolated)).toBe(true);
+
   const status = page.locator('[data-demo-status-label]');
   const generate = page.locator('[data-demo-go]');
   await generate.scrollIntoViewIfNeeded();
   await expect(status).toHaveText('READY');
   await expect(generate).toBeEnabled();
+  await expect(page.locator('[data-demo-status-info]')).not.toContainText(/· 1 thread$/);
 
   await generate.click();
 
