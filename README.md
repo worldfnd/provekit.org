@@ -3,7 +3,7 @@
 [![CI](https://github.com/atheonxyz/provekit.org/actions/workflows/ci.yml/badge.svg)](https://github.com/atheonxyz/provekit.org/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Astro](https://img.shields.io/badge/Astro-4.x-FF5D01.svg?logo=astro)](https://astro.build)
-[![pnpm](https://img.shields.io/badge/pnpm-9.x-F69220.svg?logo=pnpm)](https://pnpm.io)
+[![Bun](https://img.shields.io/badge/Bun-1.3-FBF0DF.svg?logo=bun)](https://bun.sh)
 
 The landing page for **[ProveKit](https://provekit.org)** — a client-side
 zero-knowledge proving toolkit written in Rust.
@@ -22,9 +22,9 @@ restrained mono chrome, and a soft pastel-bloom illustration language.
 | Styling     | [Tailwind v4](https://tailwindcss.com) via `@tailwindcss/vite` + CSS `@theme` |
 | Language    | TypeScript strict (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`)  |
 | Fonts       | Self-hosted Outfit (300/400/500/600) + Geist Mono (400) via `@fontsource`     |
-| Package mgr | [pnpm](https://pnpm.io)                                                       |
+| Package mgr | [Bun](https://bun.sh)                                                         |
 | Unit tests  | [Vitest](https://vitest.dev) (jsdom)                                          |
-| E2E tests   | [Playwright](https://playwright.dev) (Chromium, three viewports)              |
+| E2E tests   | [Playwright](https://playwright.dev) (Chromium, Firefox, and WebKit)          |
 | Performance | [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)                |
 | Deployment  | [Cloudflare Pages](https://pages.cloudflare.com) (or any static host)         |
 
@@ -82,21 +82,23 @@ the corresponding JSX files for provenance.
 ## Local development
 
 ```bash
-pnpm install
-pnpm dev          # http://localhost:4321
+bun install
+bun run dev          # http://localhost:4321
 ```
 
-| Script          | Purpose                                         |
-| --------------- | ----------------------------------------------- |
-| `pnpm dev`      | Astro dev server with HMR                       |
-| `pnpm build`    | Production static build to `./dist`             |
-| `pnpm preview`  | Serve the built `./dist`                        |
-| `pnpm check`    | `astro check` — TypeScript + Astro diagnostics  |
-| `pnpm lint`     | ESLint (flat config, TypeScript + Astro rules)  |
-| `pnpm format`   | Prettier --write across the project             |
-| `pnpm test`     | Vitest unit tests (jsdom)                       |
-| `pnpm test:e2e` | Playwright e2e across mobile / tablet / desktop |
-| `pnpm lhci`     | Lighthouse CI against the production build      |
+| Script                      | Purpose                                                  |
+| --------------------------- | -------------------------------------------------------- |
+| `bun run dev`               | Astro dev server with HMR                                |
+| `bun run build`             | Production static build to `./dist`                      |
+| `bun run preview`           | Serve the built `./dist`                                 |
+| `bun run check`             | `astro check` — TypeScript + Astro diagnostics           |
+| `bun run lint`              | ESLint (flat config, TypeScript + Astro rules)           |
+| `bun run format`            | Prettier --write across the project                      |
+| `bun run test`              | Vitest unit tests (jsdom)                                |
+| `bun run test:e2e`          | Playwright E2E across three browser engines              |
+| `bun run test:browser-wasm` | Real ProveKit WASM proof + verification in every browser |
+| `bun run prepush`           | Full local pre-push gate                                 |
+| `bun run lhci`              | Lighthouse CI against the production build               |
 
 ---
 
@@ -104,11 +106,11 @@ pnpm dev          # http://localhost:4321
 
 Every change is expected to pass:
 
-- **Type-check:** `pnpm check` — zero errors
-- **Lint:** `pnpm lint` — zero errors
-- **Format:** `pnpm format:check`
-- **Unit tests:** `pnpm test`
-- **E2E tests:** `pnpm test:e2e`
+- **Type-check:** `bun run check` — zero errors
+- **Lint:** `bun run lint` — zero errors
+- **Format:** `bun run format:check`
+- **Unit tests:** `bun run test`
+- **E2E tests:** `bun run test:e2e`
 - **Lighthouse budgets** (desktop preset):
   - Performance ≥ **0.98**
   - Accessibility = **1.0**
@@ -142,7 +144,7 @@ Cloudflare Pages auto-detects Astro:
 | Setting          | Value                   |
 | ---------------- | ----------------------- |
 | Framework preset | Astro                   |
-| Build command    | `pnpm build`            |
+| Build command    | `bun run build`         |
 | Output directory | `dist/`                 |
 | Node version     | `22` (matches `.nvmrc`) |
 

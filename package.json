@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "bun@1.3.13",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -15,33 +15,35 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:browser-wasm": "playwright test tests/wasm-demo.spec.ts",
+    "prepush": "bun run format:check && bun run lint && bun run check && bun run test && bun run test:browser-wasm",
+    "prepare": "simple-git-hooks",
     "lhci": "lhci autorun"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.7",
     "@astrojs/sitemap": "3.7.3",
-    "@atheonxyz/verity": "0.3.2-alpha",
     "@fontsource/geist-mono": "^5.1.0",
     "@fontsource/outfit": "^5.1.0",
-    "@noir-lang/acvm_js": "1.0.0-beta.11",
-    "@noir-lang/noir_js": "1.0.0-beta.11",
-    "@noir-lang/noirc_abi": "1.0.0-beta.11",
-    "@noir-lang/types": "1.0.0-beta.11",
+    "@noir-lang/acvm_js": "1.0.0-beta.20",
+    "@noir-lang/noir_js": "1.0.0-beta.20",
+    "@noir-lang/noirc_abi": "1.0.0-beta.20",
+    "@noir-lang/types": "1.0.0-beta.20",
     "@tailwindcss/vite": "^4.0.0",
+    "@worldcoin/provekit": "0.1.1",
     "astro": "^6.4.6",
     "framer-motion": "^11.11.17",
-    "pako": "2.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
     "@lhci/cli": "^0.14.0",
     "@playwright/test": "^1.49.0",
     "@types/node": "^22.10.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "eslint": "^9.16.0",
     "eslint-plugin-astro": "^1.3.1",
     "jsdom": "^29.1.1",
@@ -49,8 +51,13 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "sharp": "^0.34.5",
+    "simple-git-hooks": "2.13.1",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.59.2",
+    "vite": "7.3.5",
     "vitest": "^2.1.0"
+  },
+  "simple-git-hooks": {
+    "pre-push": "bun run prepush"
   }
 }

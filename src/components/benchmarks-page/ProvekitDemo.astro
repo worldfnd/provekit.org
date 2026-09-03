@@ -3,25 +3,6 @@ import Panel from '~/components/panel/Panel.astro';
 import ArrowRight from '~/components/icons/ArrowRight.astro';
 ---
 
-<!-- Importmap for the in-browser ProveKit runtime (verity + Noir.js).
-     The ProveKit core is rebuilt from v1 @ 9b2a6f37; see
-     public/vendor/verity/PROVEKIT_SOURCE.md. -->
-<script
-  is:inline
-  type="importmap"
-  set:html={`{
-  "imports": {
-    "@atheonxyz/verity": "/vendor/verity/dist/browser/index.js",
-    "@noir-lang/noir_js": "/vendor/noir/noir_js/lib/index.mjs",
-    "@noir-lang/acvm_js": "/vendor/noir/acvm_js/acvm_js.js",
-    "@noir-lang/noirc_abi": "/vendor/noir/noirc_abi/noirc_abi_wasm.js",
-    "@noir-lang/types": "/vendor/noir/types/lib/esm/types.js",
-    "pako": "/vendor/pako/pako.esm.mjs",
-    "provekit-inspector": "/vendor/verity/dist/wasm/provekit_wasm.js"
-  }
-}`}
-/>
-
 <Panel tab="LIVE DEMO" tabBrand titleId="demo-title" contentClass="pk-demo-grid">
   <div class="pk-demo-left">
     <div>
@@ -57,7 +38,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         >
           <span class="pk-demo-scen-label">SHA-256 preimage</span>
           <span class="pk-demo-scen-sub"
-            >Prove you know x such that SHA256(x) = y · up to 1024 bytes</span
+            >Prove you know x such that SHA256¹⁷(x) = y · 32-byte preimage</span
           >
         </button>
       </div>
@@ -83,10 +64,8 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
             rows="3">hello, provekit</textarea
           >
           <div class="pk-demo-input-meta">
-            <span data-demo-input-meta>15 / 1024 bytes</span>
-            <span data-demo-input-hint
-              >Text is zero-padded to 1024 bytes; only `len` bytes are hashed</span
-            >
+            <span data-demo-input-meta>15 / 32 bytes</span>
+            <span data-demo-input-hint>Text is zero-padded to a 32-byte preimage</span>
           </div>
         </label>
       </div>
@@ -725,9 +704,15 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
   }
 </style>
 
-<script is:inline type="module">
-  // ProvekitDemo runtime — loads the ProveKit v1 core built from 9b2a6f37,
-  // wrapped by Verity and paired with Noir.js to generate real proofs.
+<script>
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-nocheck -- this self-contained browser demo is intentionally plain JavaScript.
+  import { Noir } from '@noir-lang/noir_js';
+  import { initProveKit } from '@worldcoin/provekit';
+
+  // ProvekitDemo runtime — loads the first-party ProveKit SDK + Noir.js, generates
+  // REAL zero-knowledge proofs in the browser using artifacts built from
+  // the local provekit/playground/wasm-demo setup.
   const root = document.querySelector('section[aria-labelledby="demo-title"]');
   if (!root) {
     console.error('ProvekitDemo: section not found');
@@ -742,31 +727,29 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       sha: {
         key: 'sha',
         label: 'SHA-256 preimage',
-        statement: 'I know x such that SHA256(x) = y',
-        inputHint: 'Text is zero-padded to 1024 bytes; only `len` bytes are hashed',
+        statement: 'I know x such that SHA256¹⁷(x) = y',
+        inputHint: 'Text is zero-padded to a 32-byte preimage',
         defaultText: 'hello, provekit',
-        maxBytes: 1024,
-        statusLabel: 'SHA-256 preimage · up to 1024 bytes',
+        maxBytes: 32,
+        statusLabel: 'SHA-256 · 17 rounds · 32-byte preimage',
         artifactsBase: '/artifacts/sha256/',
-        // Build circuit inputs from user text. Pad UTF-8 bytes to 1024
-        // and pass the actual length. The hash itself is a PUBLIC OUTPUT
-        // of the circuit — we also compute it here via Web Crypto so the
-        // UI can display the value live as the user types; the proof
-        // commits to exactly this value because the circuit is deterministic.
+        // Build circuit inputs from user text. The circuit accepts a fixed
+        // 32-byte private preimage and binds its SHA-256 digest publicly.
         buildInputs: async (text) => {
           const enc = new TextEncoder().encode(text);
-          const len = Math.min(enc.length, 1024);
-          const padded = new Uint8Array(1024);
+          const len = Math.min(enc.length, 32);
+          const padded = new Uint8Array(32);
           padded.set(enc.subarray(0, len), 0);
-          const digest = new Uint8Array(
-            await crypto.subtle.digest('SHA-256', enc.subarray(0, len)),
-          );
+          let digest = padded;
+          for (let round = 0; round < 17; round += 1) {
+            digest = new Uint8Array(await crypto.subtle.digest('SHA-256', digest));
+          }
           return {
-            inputs: { input: Array.from(padded), len: String(len) },
+            inputs: { input: Array.from(padded), expected: Array.from(digest) },
             hash: '0x' + digest.reduce((acc, b) => acc + b.toString(16).padStart(2, '0'), ''),
             publics: [
-              { label: 'len', value: `${len}` },
-              { label: 'Max bytes', value: '1,024' },
+              { label: 'Input bytes', value: `${len}` },
+              { label: 'Circuit width', value: '32 bytes' },
             ],
           };
         },
@@ -921,10 +904,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
     const noirCache = {};
     async function getNoirExecutor(c) {
       if (noirCache[c.key]) return noirCache[c.key];
-      const [{ Noir }, circuitResp] = await Promise.all([
-        import('@noir-lang/noir_js'),
-        fetch(c.artifactsBase + 'circuit.json'),
-      ]);
+      const circuitResp = await fetch(c.artifactsBase + 'circuit.json');
       const circuit = await circuitResp.json();
       const noir = new Noir(circuit);
       noirCache[c.key] = noir;
@@ -963,10 +943,14 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       if (!hashEl) return;
       const c = CIRCUITS[circuitKey];
       try {
-        const { inputs } = await c.buildInputs(inputEl.value);
-        const noir = await getNoirExecutor(c);
-        const { returnValue } = await noir.execute(inputs);
-        hashEl.textContent = returnValueToHex(returnValue);
+        const { inputs, hash } = await c.buildInputs(inputEl.value);
+        if (hash) {
+          hashEl.textContent = hash;
+        } else {
+          const noir = await getNoirExecutor(c);
+          const { returnValue } = await noir.execute(inputs);
+          hashEl.textContent = returnValueToHex(returnValue);
+        }
         hashEl.classList.add('is-revealed');
       } catch (e) {
         console.warn('revealHash failed', e);
@@ -1091,7 +1075,11 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         kpiStatus.classList.toggle('is-error', phase === 'error');
       }
       if (statusLabelEl) statusLabelEl.textContent = statusText;
-      if (statusEl) statusEl.setAttribute('data-phase', phase);
+      if (statusEl) {
+        statusEl.setAttribute('data-phase', phase);
+        if (lastError) statusEl.setAttribute('data-error', lastError);
+        else statusEl.removeAttribute('data-error');
+      }
     }
 
     function resetRun() {
@@ -1167,16 +1155,13 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       activeProver = pr;
       activeVerifier = vr;
       activeArtifactsKey = c.key;
-      // Pull constraint + witness counts from the inspector if available.
+      // Pull constraint + witness counts from the first-party SDK.
       try {
-        const inspector = await import('provekit-inspector');
-        await inspector.default();
-        const ins = new inspector.Prover(pkpBytes);
-        constraintsCount = ins.getNumConstraints();
-        witnessesCount = ins.getNumWitnesses();
-        ins.free();
+        const stats = runtime.inspectProver(pkpBytes);
+        constraintsCount = stats.constraints ?? null;
+        witnessesCount = stats.witnesses ?? null;
       } catch (e) {
-        console.warn('inspector failed', e);
+        console.warn('artifact inspection failed', e);
       }
     }
 
@@ -1241,19 +1226,20 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       }
     }
 
-    // Boot the runtime
-    (async () => {
+    // Boot only when the demo approaches the viewport. This keeps the sizeable
+    // proving runtime off the homepage's critical path while still warming it
+    // before a visitor reaches the controls.
+    let bootStarted = false;
+    async function bootRuntime() {
+      if (bootStarted) return;
+      bootStarted = true;
       renderSteps();
       updateKpis();
       try {
-        const { Verity, Backend } = await import('@atheonxyz/verity');
-        const hasSAB = typeof SharedArrayBuffer !== 'undefined';
-        // Use every available hardware thread on every device. SAB-less
-        // environments fall back to single-threaded.
-        const threads = hasSAB ? navigator.hardwareConcurrency || 4 : false;
         const bootStart = performance.now();
-        runtime = await Verity.create(Backend.ProveKit, { threads });
+        runtime = await initProveKit({ threads: 'auto' });
         runtimeBootMs = performance.now() - bootStart;
+        const threads = runtime.threading.threads;
         console.log(
           '[provekit-demo] runtime ready, threads:',
           threads,
@@ -1267,7 +1253,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
             typeof threads === 'number'
               ? `${threads} thread${threads === 1 ? '' : 's'}`
               : '1 thread';
-          statusInfoEl.textContent = `SHA-256 preimage · up to 1024 bytes · ${t}`;
+          statusInfoEl.textContent = `SHA-256 · 17 rounds · 32-byte preimage · ${t}`;
         }
         timings.runtime = 0;
         phase = 'ready';
@@ -1286,7 +1272,21 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         if (goLabelEl) goLabelEl.textContent = lastError.slice(0, 120);
         updateKpis();
       }
-    })();
+    }
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          observer.disconnect();
+          void bootRuntime();
+        },
+        { rootMargin: '600px' },
+      );
+      observer.observe(root);
+    } else {
+      void bootRuntime();
+    }
 
     // Wire UI
     circuitBtns.forEach((b) => {
