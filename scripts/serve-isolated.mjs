@@ -7,7 +7,7 @@
  * so we drive the static dist/ output ourselves. Mirrors the production
  * Cloudflare _headers config in public/_headers.
  *
- * Usage: pnpm build && node scripts/serve-isolated.mjs
+ * Usage: bun run build && bun scripts/serve-isolated.mjs
  */
 
 import { createServer } from 'http';
