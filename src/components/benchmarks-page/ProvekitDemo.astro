@@ -723,6 +723,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
   if (!root) {
     console.error('ProvekitDemo: section not found');
   } else {
+    const SHA_HASH_COUNT = 17;
     const STEPS = [
       { key: 'runtime', label: 'Load WASM runtime' },
       { key: 'prove', label: 'Generate proof' },
@@ -732,12 +733,13 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
     const CIRCUITS = {
       sha: {
         key: 'sha',
-        label: '17 chained SHA-256 hashes',
-        statement: 'I know x such that applying SHA-256 17 times produces y',
+        hashCount: SHA_HASH_COUNT,
+        label: `${SHA_HASH_COUNT} chained SHA-256 hashes`,
+        statement: `I know x such that applying SHA-256 ${SHA_HASH_COUNT} times produces y`,
         inputHint: 'Text is zero-padded to a 32-byte preimage',
         defaultText: 'hello, provekit',
         maxBytes: 32,
-        statusLabel: '17 full SHA-256 hashes · chained · 32-byte preimage',
+        statusLabel: `${SHA_HASH_COUNT} full SHA-256 hashes · chained · 32-byte preimage`,
         artifactsBase: '/artifacts/sha256/',
         // Build circuit inputs from user text. The circuit accepts a fixed
         // 32-byte private preimage and binds its SHA-256 digest publicly.
@@ -747,7 +749,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
           const padded = new Uint8Array(32);
           padded.set(enc.subarray(0, len), 0);
           let digest = padded;
-          for (let round = 0; round < 17; round += 1) {
+          for (let round = 0; round < SHA_HASH_COUNT; round += 1) {
             digest = new Uint8Array(await crypto.subtle.digest('SHA-256', digest));
           }
           return {
@@ -1069,7 +1071,10 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       const revealNumbers = phase === 'done';
       // "Proving time" = the prove() step only (excludes runtime boot + verify).
       if (kpiTotal) kpiTotal.textContent = revealNumbers ? fmtMs(provingMs) : '…';
-      if (kpiPerHash) kpiPerHash.textContent = revealNumbers ? fmtMs(provingMs / 17) : '…';
+      if (kpiPerHash)
+        kpiPerHash.textContent = revealNumbers
+          ? fmtMs(provingMs / CIRCUITS[circuitKey].hashCount)
+          : '…';
       if (kpiSize) kpiSize.textContent = revealNumbers && proofSize > 0 ? fmtBytes(proofSize) : '…';
       if (kpiConstraints)
         kpiConstraints.textContent =
@@ -1261,7 +1266,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
             typeof threads === 'number'
               ? `${threads} thread${threads === 1 ? '' : 's'}`
               : '1 thread';
-          statusInfoEl.textContent = `17 full SHA-256 hashes · chained · 32-byte preimage · ${t}`;
+          statusInfoEl.textContent = `${SHA_HASH_COUNT} full SHA-256 hashes · chained · 32-byte preimage · ${t}`;
         }
         timings.runtime = 0;
         phase = 'ready';
