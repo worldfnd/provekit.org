@@ -33,5 +33,14 @@ test('generates and verifies a real ProveKit WASM proof', async ({ page }, testI
   expect(browserErrors, `${testInfo.project.name} emitted browser errors`).toEqual([]);
   await expect(status).toHaveText('VERIFIED');
   await expect(page.locator('[data-demo-kpi="size"]')).not.toHaveText('…');
+  const parseDurationMs = (duration: string) => {
+    const value = Number.parseFloat(duration);
+    return duration.endsWith(' s') ? value * 1000 : value;
+  };
+  const totalMs = parseDurationMs(await page.locator('[data-demo-kpi="total"]').innerText());
+  const perHashMs = parseDurationMs(await page.locator('[data-demo-kpi="per-hash"]').innerText());
+  // Both values are formatted independently; second-based values are rounded
+  // to 10 ms, so allow the resulting display-level rounding difference.
+  expect(Math.abs(perHashMs - totalMs / 17)).toBeLessThanOrEqual(6);
   await expect(page.locator('[data-demo-hash]')).toHaveClass(/is-revealed/);
 });
