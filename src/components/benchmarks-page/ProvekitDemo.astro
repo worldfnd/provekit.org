@@ -36,9 +36,9 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
           data-demo-circuit="sha"
           aria-pressed="true"
         >
-          <span class="pk-demo-scen-label">SHA-256 preimage</span>
+          <span class="pk-demo-scen-label">17 chained SHA-256 hashes</span>
           <span class="pk-demo-scen-sub"
-            >Prove you know x such that SHA256¹⁷(x) = y · 32-byte preimage</span
+            >Prove you know a 32-byte x that produces y after 17 full SHA-256 hashes</span
           >
         </button>
       </div>
@@ -77,7 +77,9 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         <span class="pk-demo-block-label">03 · Public statement</span>
       </div>
       <div class="pk-demo-card pk-demo-card-ink">
-        <div class="pk-demo-statement" data-demo-statement>I know x such that SHA256(x) = y</div>
+        <div class="pk-demo-statement" data-demo-statement>
+          I know x such that applying SHA-256 17 times produces y
+        </div>
         <div class="pk-demo-hash">
           <span class="pk-demo-hash-label">y</span>
           <code class="pk-demo-hash-value" data-demo-hash>revealed after proof</code>
@@ -100,7 +102,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
 
   <div class="pk-demo-right">
     <div class="pk-demo-status">
-      <span data-demo-status-info>SHA-256 · 17 rounds · 32-byte preimage</span>
+      <span data-demo-status-info>17 full SHA-256 hashes · chained · 32-byte preimage</span>
       <span class="pk-demo-status-state">
         <span class="pk-demo-status-dot" data-demo-status-dot></span>
         <span data-demo-status-label>BOOTING</span>
@@ -726,12 +728,12 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
     const CIRCUITS = {
       sha: {
         key: 'sha',
-        label: 'SHA-256 preimage',
-        statement: 'I know x such that SHA256¹⁷(x) = y',
+        label: '17 chained SHA-256 hashes',
+        statement: 'I know x such that applying SHA-256 17 times produces y',
         inputHint: 'Text is zero-padded to a 32-byte preimage',
         defaultText: 'hello, provekit',
         maxBytes: 32,
-        statusLabel: 'SHA-256 · 17 rounds · 32-byte preimage',
+        statusLabel: '17 full SHA-256 hashes · chained · 32-byte preimage',
         artifactsBase: '/artifacts/sha256/',
         // Build circuit inputs from user text. The circuit accepts a fixed
         // 32-byte private preimage and binds its SHA-256 digest publicly.
@@ -1253,7 +1255,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
             typeof threads === 'number'
               ? `${threads} thread${threads === 1 ? '' : 's'}`
               : '1 thread';
-          statusInfoEl.textContent = `SHA-256 · 17 rounds · 32-byte preimage · ${t}`;
+          statusInfoEl.textContent = `17 full SHA-256 hashes · chained · 32-byte preimage · ${t}`;
         }
         timings.runtime = 0;
         phase = 'ready';
