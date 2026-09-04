@@ -114,6 +114,10 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
         <div class="pk-demo-kpi-label">Proving time</div>
         <div class="pk-demo-kpi-value" data-demo-kpi="total">…</div>
       </div>
+      <div class="pk-demo-kpi" title="Total proving time divided by 17 full SHA-256 hashes">
+        <div class="pk-demo-kpi-label">Avg. time / hash</div>
+        <div class="pk-demo-kpi-value" data-demo-kpi="per-hash">…</div>
+      </div>
       <div class="pk-demo-kpi">
         <div class="pk-demo-kpi-label">Proof size</div>
         <div class="pk-demo-kpi-value" data-demo-kpi="size">…</div>
@@ -834,6 +838,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
     const goLabel = root.querySelector('[data-demo-go-label]');
     const resetBtn = root.querySelector('[data-demo-reset]');
     const kpiTotal = root.querySelector('[data-demo-kpi="total"]');
+    const kpiPerHash = root.querySelector('[data-demo-kpi="per-hash"]');
     const kpiSize = root.querySelector('[data-demo-kpi="size"]');
     const kpiConstraints = root.querySelector('[data-demo-kpi="constraints"]');
     const kpiWitnesses = root.querySelector('[data-demo-kpi="witnesses"]');
@@ -1064,6 +1069,7 @@ import ArrowRight from '~/components/icons/ArrowRight.astro';
       const revealNumbers = phase === 'done';
       // "Proving time" = the prove() step only (excludes runtime boot + verify).
       if (kpiTotal) kpiTotal.textContent = revealNumbers ? fmtMs(provingMs) : '…';
+      if (kpiPerHash) kpiPerHash.textContent = revealNumbers ? fmtMs(provingMs / 17) : '…';
       if (kpiSize) kpiSize.textContent = revealNumbers && proofSize > 0 ? fmtBytes(proofSize) : '…';
       if (kpiConstraints)
         kpiConstraints.textContent =

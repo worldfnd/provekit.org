@@ -33,5 +33,6 @@ test('generates and verifies a real ProveKit WASM proof', async ({ page }, testI
   expect(browserErrors, `${testInfo.project.name} emitted browser errors`).toEqual([]);
   await expect(status).toHaveText('VERIFIED');
   await expect(page.locator('[data-demo-kpi="size"]')).not.toHaveText('…');
+  await expect(page.locator('[data-demo-kpi="per-hash"]')).not.toHaveText('…');
   await expect(page.locator('[data-demo-hash]')).toHaveClass(/is-revealed/);
 });
